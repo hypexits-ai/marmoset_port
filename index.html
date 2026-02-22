@@ -7,72 +7,96 @@
     <link href="https://unpkg.com" rel="stylesheet">
     <style>
         :root { 
-            --bg: #ffffff; --text: #1a1a1a; --gray-light: rgba(255, 255, 255, 0.6); 
-            --accent: #000; --line: rgba(0,0,0,0.05); --border-color: #000; --transition: 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            --bg: #ffffff; --text: #1a1a1a; --gray-light: rgba(255, 255, 255, 0.4); 
+            --accent: #000; --line: rgba(0,0,0,0.05); --border-glass: rgba(0, 0, 0, 0.1); 
+            --glow: rgba(0, 0, 0, 0.2); --transition: 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
         [data-theme="dark"] {
-            --bg: #0a0a0a; --text: #f5f5f5; --gray-light: rgba(20, 20, 25, 0.6); 
-            --line: rgba(255,255,255,0.1); --accent: #fff; --border-color: #fff;
+            --bg: #0a0a0a; --text: #f5f5f5; --gray-light: rgba(20, 20, 25, 0.5); 
+            --line: rgba(255,255,255,0.05); --accent: #fff; --border-glass: rgba(255, 255, 255, 0.15);
+            --glow: rgba(255, 255, 255, 0.6);
         }
 
         html, body { max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; -webkit-overflow-scrolling: touch; }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background var(--transition), color var(--transition); }
         
-        /* ЖИВОЙ ФОН */
-        #gradient-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-
+        #gradient-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.8; }
         #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; z-index: 1000; }
 
         nav { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--gray-light); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 100; border-bottom: 1px solid var(--line); }
         .logo { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
-        
-        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 8px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; transition: 0.3s; text-decoration: none; display: inline-block; }
-        .btn-ui:hover { background: var(--accent); color: var(--bg); }
+        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 8px 15px; border-radius: 20px; font-size: 10px; font-weight: 700; transition: 0.3s; text-decoration: none; }
+
+        .site-version {
+            position: fixed; bottom: 15px; right: 15px;
+            padding: 5px 12px; border-radius: 10px;
+            font-size: 10px; font-weight: 800; letter-spacing: 1px;
+            background: var(--gray-light); backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass); color: var(--text);
+            opacity: 0.6; z-index: 999; pointer-events: none;
+        }
 
         header { padding: 60px 20px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
         header h1 { font-size: 2.2rem; margin: 0; font-weight: 800; line-height: 1.2; }
 
-        .about-section { padding: 30px; max-width: 1100px; margin: 20px auto; background: var(--gray-light); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 30px; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
-        .about-intro { font-size: 1.1rem; opacity: 0.9; line-height: 1.5; margin-bottom: 30px; text-align: center; }
-        .about-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
-        .about-list { list-style: none; padding: 0; margin: 0; }
-        .about-list li { margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; }
-        .about-list li::before { content: "•"; position: absolute; left: 0; color: var(--accent); }
+        .about-section, .contact-section, .card {
+            background: var(--gray-light) !important;
+            backdrop-filter: blur(25px) saturate(160%);
+            -webkit-backdrop-filter: blur(25px) saturate(160%);
+            border: 1px solid var(--border-glass) !important;
+            border-top: 1px solid rgba(255,255,255,0.4) !important;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            border-radius: 30px;
+            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
 
-        .gallery { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 20px; width: 100%; justify-items: center; box-sizing: border-box; }
+        /* ЭФФЕКТ ПОДСВЕТКИ ПРИ НАВЕДЕНИИ */
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--glow) !important;
+            box-shadow: 0 0 20px var(--glow), 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .about-section { padding: 40px; max-width: 1100px; margin: 20px auto; }
+        .about-intro { font-size: 1.15rem; opacity: 0.8; line-height: 1.6; margin-bottom: 40px; text-align: center; }
+        .about-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
         
-        /* КАРТОЧКИ С ЭФФЕКТОМ СТЕКЛА */
-        .card { width: 100%; max-width: 550px; border-radius: 25px; overflow: hidden; border: 2px solid var(--border-color); background: var(--gray-light); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); position: relative; touch-action: pan-y; margin: 0 auto; transition: transform 0.3s ease; }
-        .card:hover { transform: translateY(-5px); }
-        
+        @media (min-width: 768px) { 
+            header h1 { font-size: 3.5rem; text-align: left; } 
+            .about-grid { grid-template-columns: 1.2fr 1fr; }
+            .about-intro { text-align: left; }
+        }
+
+        .gallery { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 20px; justify-items: center; width: 100%; box-sizing: border-box; }
+        @media (min-width: 768px) { .gallery { grid-template-columns: repeat(2, 1fr); padding: 50px; gap: 60px; max-width: 1400px; margin: 0 auto; } }
+
+        .card { width: 100%; max-width: 550px; overflow: hidden; position: relative; touch-action: pan-y; margin: 0 auto; }
         .slider-viewport { position: relative; height: 350px; width: 100%; overflow: hidden; cursor: zoom-in; }
+        @media (min-width: 768px) { .slider-viewport { height: 500px; } }
+
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; }
         .slide.active { opacity: 1; z-index: 1; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.8s ease; }
+        .slide img.loaded { opacity: 1; }
+
+        .skeleton { background: linear-gradient(90deg, var(--gray-light) 25%, var(--line) 50%, var(--gray-light) 75%); background-size: 200% 100%; animation: shimmer 2s infinite; }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
         .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
-        .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-color); }
+        .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-glass); }
         .dot.active { background: var(--accent); width: 15px; border-radius: 4px; }
 
         #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; }
-        #lightbox img { max-width: 90%; max-height: 80%; object-fit: contain; border: 2px solid #fff; border-radius: 15px; }
+        #lightbox img { max-width: 90%; max-height: 85%; object-fit: contain; border: 2px solid #fff; border-radius: 15px; }
 
         #copy-toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--accent); color: var(--bg); padding: 10px 25px; border-radius: 30px; font-size: 12px; font-weight: 700; opacity: 0; transition: 0.3s; z-index: 2001; pointer-events: none; }
 
-        .contact-section { background: var(--gray-light); backdrop-filter: blur(15px); padding: 60px 20px; display: flex; flex-direction: column; gap: 40px; border-top: 1px solid var(--line); }
-        .copyable { cursor: copy; transition: 0.2s; font-weight: 600; padding: 10px; border-radius: 10px; display: inline-block; }
+        .contact-section { margin: 40px 20px; padding: 60px 20px; display: flex; flex-direction: column; gap: 40px; }
+        @media (min-width: 768px) { .contact-section { flex-direction: row; padding: 80px 50px; margin: 40px auto; max-width: 1100px; justify-content: space-around; } }
+        .copyable { cursor: copy; font-weight: 600; padding: 10px; border-radius: 10px; transition: 0.2s; display: inline-block; }
         .copyable:hover { background: var(--line); }
 
-        footer { padding: 40px; text-align: center; color: #888; font-size: 12px; opacity: 0.7; }
-
-        @media (min-width: 768px) {
-            header { padding: 80px 50px 20px; text-align: left; }
-            header h1 { font-size: 3.5rem; }
-            .about-grid { grid-template-columns: 1.2fr 1fr; }
-            .gallery { grid-template-columns: repeat(2, 1fr); padding: 50px; gap: 60px; max-width: 1400px; margin: 0 auto; }
-            .slider-viewport { height: 500px; }
-            .contact-section { flex-direction: row; padding: 100px 50px; justify-content: space-around; }
-        }
+        footer { padding: 40px; text-align: center; color: #888; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -80,7 +104,9 @@
 <canvas id="gradient-canvas"></canvas>
 <div id="progress-bar"></div>
 <div id="copy-toast">Copied!</div>
-<div id="lightbox" onclick="closeLB()"><img id="lb-img" src=""></div>
+<div id="lightbox" onclick="this.style.display='none'"><img id="lb-img" src=""></div>
+
+<div class="site-version">v1.0.1</div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
@@ -92,14 +118,14 @@
 </nav>
 
 <header data-aos="fade-up">
-    <h1 data-tr="header_title">3D Художник с Большим Опытом</h1>
+    <h1 data-tr="header_title">3D Художник — Воплощаю Идеи в Реальность</h1>
 </header>
 
 <section class="about-section" data-aos="fade-up">
     <p class="about-intro" data-tr="about_intro">Ищете опытного 3D художника? Я предлагаю широкий спектр услуг...</p>
     <div class="about-grid">
-        <div class="about-col"><h3 data-tr="skills_title">Навыки</h3><ul class="about-list" id="skills-list"></ul></div>
-        <div class="about-col"><h3 data-tr="help_title">Помогу</h3><ul class="about-list" id="help-list"></ul></div>
+        <div class="about-col"><h3 data-tr="skills_title">Навыки</h3><ul id="skills-list" style="list-style:none;padding:0;line-height:1.8;"></ul></div>
+        <div class="about-col"><h3 data-tr="help_title">Помогу</h3><ul id="help-list" style="list-style:none;padding:0;line-height:1.8;"></ul></div>
     </div>
 </section>
 
@@ -108,7 +134,7 @@
 <section class="contact-section" id="contact" data-aos="fade-up">
     <div class="contact-info">
         <h2 data-tr="contact_title">Контакты</h2>
-        <a href="https://kwork.ru" target="_blank" style="display:block; color:var(--text); margin-bottom:15px; text-decoration:none; font-weight:600;">💼 Kwork Profile</a>
+        <a href="https://kwork.ru" target="_blank" style="display:block; color:var(--text); margin-bottom:15px; text-decoration:none; font-weight:700;">💼 Kwork Profile</a>
         <div class="copyable" onclick="copyText('hypexits@mail.ru')">📧 hypexits@mail.ru</div><br>
         <div class="copyable" onclick="copyText('@WINDUP_MARMOSET')">✈️ @WINDUP_MARMOSET</div><br>
         <div class="copyable" onclick="copyText('+79251803895')">📞 +7 (925) 180-38-95</div>
@@ -119,44 +145,26 @@
 
 <script src="https://unpkg.com"></script>
 <script>
-    // --- ДИНАМИЧЕСКИЙ ФОН ---
+    // --- ЖИВОЙ ФОН ---
     const canvas = document.getElementById('gradient-canvas');
     const ctx = canvas.getContext('2d');
     let time = 0;
-
     function animate() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const isDark = document.body.getAttribute('data-theme') === 'dark';
-        
-        // Цвета: Темная тема (сине-фиолетовый), Светлая тема (бело-голубой)
-        const c1 = isDark ? {r: 8, g: 8, b: 18} : {r: 245, g: 247, b: 250};
-        const c2 = isDark ? {r: 25, g: 15, b: 45} : {r: 220, g: 228, b: 240};
-
+        const c1 = isDark ? {r:10,g:10,b:25} : {r:240,g:242,b:245};
+        const c2 = isDark ? {r:35,g:15,b:55} : {r:215,g:225,b:235};
         const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width);
         const shift = Math.sin(time) * 0.5 + 0.5;
-        
-        grad.addColorStop(0, `rgb(${c1.r}, ${c1.g}, ${c1.b})`);
-        grad.addColorStop(shift, `rgb(${c2.r}, ${c2.g}, ${c2.b})`);
-        grad.addColorStop(1, `rgb(${c1.r}, ${c1.g}, ${c1.b})`);
-        
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        time += 0.007;
-        requestAnimationFrame(animate);
+        grad.addColorStop(0, `rgb(${c1.r},${c1.g},${c1.b})`);
+        grad.addColorStop(shift, `rgb(${c2.r},${c2.g},${c2.b})`);
+        grad.addColorStop(1, `rgb(${c1.r},${c1.g},${c1.b})`);
+        ctx.fillStyle = grad; ctx.fillRect(0,0,canvas.width,canvas.height);
+        time += 0.006; requestAnimationFrame(animate);
     }
     animate();
 
-    // --- КОПИРОВАНИЕ ---
-    function copyText(text) {
-        navigator.clipboard.writeText(text).then(() => {
-            const toast = document.getElementById('copy-toast');
-            toast.style.opacity = '1';
-            setTimeout(() => toast.style.opacity = '0', 2000);
-        });
-    }
-
-    // --- ЛОГИКА КОНТЕНТА ---
+    // --- ПЕРЕВОДЫ ---
     const translations = {
         ru: {
             nav_contact: "КОНТАКТЫ",
@@ -164,8 +172,8 @@
             about_intro: "Ищете опытного 3D художника? Я предлагаю широкий спектр услуг, от визуализации до игровых ассетов и анимации.",
             skills_title: "Ключевые навыки",
             help_title: "Помогу вам",
-            skills: ["<b>3D Моделирование:</b> Детализированные модели.", "<b>Визуализация:</b> Фотореализм.", "<b>Оптимизация:</b> Игры/VR/AR.", "<b>Анимация:</b> Оживление моделей.", "<b>Софт:</b> Blender, Substance, Unreal, Unity."],
-            help: ["Маркетинг и рендеры.", "Игровые ассеты.", "Архитектура.", "Анимация."],
+            skills: ["• <b>3D Моделирование:</b> Детализация.","• <b>Визуализация:</b> Фотореализм.","• <b>Оптимизация:</b> Game-ready.","• <b>Софт:</b> Blender, Substance, UE5."],
+            help: ["Маркетинг продуктов.","Игровые миры.","Архитектура.","Анимация."],
             contact_title: "Связаться со мной",
             work_titles: ["Visualisation", "Character", "Interior", "Exterior", "High-Poly", "Environment"]
         },
@@ -175,64 +183,53 @@
             about_intro: "Looking for an experienced 3D artist? I offer a wide range of services, from visualization to game assets and animation.",
             skills_title: "Key Skills",
             help_title: "How I can help",
-            skills: ["<b>3D Modeling:</b> Detailed models.", "<b>Visualization:</b> Photorealism.", "<b>Optimization:</b> Game/VR/AR ready.", "<b>Animation:</b> Rigging & Motion.", "<b>Software:</b> Blender, Substance, Unreal, Unity."],
-            help: ["Product Marketing.", "Game Assets.", "ArchViz.", "Storytelling."],
+            skills: ["• <b>3D Modeling:</b> Details.","• <b>Visualization:</b> Photorealism.","• <b>Optimization:</b> Game-ready.","• <b>Software:</b> Blender, Substance, UE5."],
+            help: ["Product Marketing.","Game Worlds.","ArchViz.","Storytelling."],
             contact_title: "Get in Touch",
             work_titles: ["Visualisation", "Character", "Interior", "Exterior", "High-Poly", "Environment"]
         }
     };
 
     let currentLang = 'ru';
-    const myWorks = [
-        { titleIdx: 0, cat: "Commercial", images: ["images/p1_1.jpg", "images/p1_2.jpg"] },
-        { titleIdx: 0, cat: "Studio", images: ["images/p2_1.jpg", "images/p2_2.jpg"] },
-        { titleIdx: 0, cat: "Materials", images: ["images/p3_1.jpg", "images/p3_2.jpg"] },
-        { titleIdx: 0, cat: "Production", images: ["images/p4_1.jpg", "images/p4_2.jpg"] },
-        { titleIdx: 0, cat: "Rendering", images: ["images/p5_1.jpg", "images/p5_2.jpg"] },
-        { titleIdx: 2, cat: "ArchViz", images: ["images/p6_1.jpg", "images/p6_2.jpg"] },
-        { titleIdx: 1, cat: "Sculpting", images: ["images/p7_1.jpg", "images/p7_2.jpg"] },
-        { titleIdx: 3, cat: "Environment", images: ["images/p8_1.jpg", "images/p8_2.jpg"] },
-        { titleIdx: 4, cat: "Hard Surface", images: ["images/p9_1.jpg", "images/p9_2.jpg"] },
-        { titleIdx: 5, cat: "Low Poly", images: ["images/p10_1.jpg", "images/p10_2.jpg"] }
-    ];
-
-    function toggleLang() {
-        currentLang = currentLang === 'ru' ? 'en' : 'ru';
-        document.getElementById('lang-btn').innerText = currentLang === 'ru' ? 'EN' : 'RU';
-        updateUI();
-    }
+    const myWorks = Array.from({length: 10}, (_, i) => ({
+        titleIdx: i % 6, cat: "CGI Production", images: [`images/p${i+1}_1.jpg`, `images/p${i+1}_2.jpg`]
+    }));
 
     function updateUI() {
         const tr = translations[currentLang];
         document.querySelectorAll('[data-tr]').forEach(el => el.innerHTML = tr[el.getAttribute('data-tr')]);
         document.getElementById('skills-list').innerHTML = tr.skills.map(s => `<li>${s}</li>`).join('');
-        document.getElementById('help-list').innerHTML = tr.help.map(h => `<li>${h}</li>`).join('');
+        document.getElementById('help-list').innerHTML = tr.help.map(h => `<li>• ${h}</li>`).join('');
         renderGallery();
     }
 
-    function renderGallery() {
-        const grid = document.getElementById('portfolio-grid');
-        grid.innerHTML = '';
-        myWorks.forEach((work, i) => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            const isMobile = window.innerWidth < 768;
-            card.setAttribute('data-aos', isMobile ? 'fade-up' : (i % 2 === 0 ? 'fade-right' : 'fade-left'));
-            let s = ''; let d = '';
-            work.images.forEach((img, idx) => {
-                s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${img}"></div>`;
-                d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
-            });
-            card.innerHTML = `<div class="slider-viewport">${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${translations[currentLang].work_titles[work.titleIdx]}</h3><p style="margin:5px 0 0; font-size:12px; opacity:0.6">${work.cat}</p></div>`;
-            if(work.images.length > 1) addTouch(card);
-            grid.appendChild(card);
+    function createCard(work, i) {
+        const card = document.createElement('div');
+        card.className = 'card skeleton';
+        const isMobile = window.innerWidth < 768;
+        card.setAttribute('data-aos', isMobile ? 'fade-up' : (i % 2 === 0 ? 'fade-right' : 'fade-left'));
+        let s = ''; let d = '';
+        work.images.forEach((img, idx) => {
+            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${img}" class="p-img"></div>`;
+            d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
         });
+        card.innerHTML = `<div class="slider-viewport">${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${translations[currentLang].work_titles[work.titleIdx]}</h3><p style="margin:5px 0 0; font-size:12px; opacity:0.6">${work.cat}</p></div>`;
+        
+        const fImg = card.querySelector('.p-img');
+        const handleLoad = () => { card.classList.remove('skeleton'); fImg.classList.add('loaded'); };
+        if (fImg.complete) handleLoad(); else fImg.addEventListener('load', handleLoad);
+        if(work.images.length > 1) addTouch(card);
+        return card;
+    }
+
+    function renderGallery() {
+        const grid = document.getElementById('portfolio-grid'); grid.innerHTML = '';
+        myWorks.forEach((w, i) => grid.appendChild(createCard(w, i)));
         AOS.refresh();
     }
 
     function changeS(el, dir) {
-        const slides = el.querySelectorAll('.slide');
-        const dots = el.querySelectorAll('.dot');
+        const slides = el.querySelectorAll('.slide'); const dots = el.querySelectorAll('.dot');
         let i = Array.from(slides).findIndex(s => s.classList.contains('active'));
         slides[i].classList.remove('active'); dots[i].classList.remove('active');
         i = (i + dir + slides.length) % slides.length;
@@ -244,28 +241,15 @@
         el.addEventListener('touchstart', e => x = e.touches.clientX, {passive:true});
         el.addEventListener('touchend', e => {
             let dx = x - e.changedTouches.clientX;
-            if(Math.abs(dx) > 50) changeS(el, dx > 0 ? 1 : -1);
+            if(Math.abs(dx) > 50) changeS(el.querySelector('.slider-viewport'), dx > 0 ? 1 : -1);
         }, {passive:true});
     }
 
-    function openLB(workIdx, imgIdx) {
-        document.getElementById('lb-img').src = myWorks[workIdx].images[imgIdx];
-        document.getElementById('lightbox').style.display = 'flex';
-    }
-    function closeLB() { document.getElementById('lightbox').style.display = 'none'; }
-
-    function toggleTheme() {
-        const isDark = document.body.getAttribute('data-theme') === 'dark';
-        document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        document.getElementById('theme-btn').innerText = isDark ? 'DARK' : 'LIGHT';
-    }
-
-    window.onscroll = () => {
-        const scroll = document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        document.getElementById("progress-bar").style.width = (scroll / height) * 100 + "%";
-    };
-
+    function openLB(workIdx, imgIdx) { document.getElementById('lb-img').src = myWorks[workIdx].images[imgIdx]; document.getElementById('lightbox').style.display = 'flex'; }
+    function copyText(t) { navigator.clipboard.writeText(t); const toast = document.getElementById('copy-toast'); toast.style.opacity = '1'; setTimeout(() => toast.style.opacity = '0', 2000); }
+    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; document.getElementById('lang-btn').innerText = currentLang.toUpperCase(); updateUI(); }
+    function toggleTheme() { const isDark = document.body.getAttribute('data-theme') === 'dark'; document.body.setAttribute('data-theme', isDark ? 'light' : 'dark'); document.getElementById('theme-btn').innerText = isDark ? 'DARK' : 'LIGHT'; }
+    window.onscroll = () => { const s = document.documentElement.scrollTop; const h = document.documentElement.scrollHeight - document.documentElement.clientHeight; document.getElementById("progress-bar").style.width = (s / h) * 100 + "%"; };
     document.addEventListener('DOMContentLoaded', () => { updateUI(); AOS.init({ duration: 800, once: true }); });
 </script>
 </body>
