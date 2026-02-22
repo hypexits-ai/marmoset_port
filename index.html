@@ -17,7 +17,7 @@
             --glow: rgba(255, 255, 255, 0.6);
         }
 
-        html, body { max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; -webkit-overflow-scrolling: touch; }
+        html, body { max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background var(--transition), color var(--transition); }
         
         #gradient-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.8; }
@@ -25,9 +25,9 @@
 
         nav { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--gray-light); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 100; border-bottom: 1px solid var(--line); }
         .logo { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
-        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 8px 15px; border-radius: 20px; font-size: 10px; font-weight: 700; transition: 0.3s; text-decoration: none; }
+        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 8px 15px; border-radius: 20px; font-size: 10px; font-weight: 700; transition: 0.3s; }
 
-        .site-version { position: fixed; bottom: 15px; right: 15px; padding: 5px 12px; border-radius: 10px; font-size: 10px; font-weight: 800; letter-spacing: 1px; background: var(--gray-light); backdrop-filter: blur(10px); border: 1px solid var(--border-glass); color: var(--text); opacity: 0.6; z-index: 999; pointer-events: none; }
+        .site-version { position: fixed; bottom: 15px; right: 15px; padding: 5px 12px; border-radius: 10px; font-size: 10px; font-weight: 800; background: var(--gray-light); backdrop-filter: blur(10px); border: 1px solid var(--border-glass); opacity: 0.6; z-index: 999; }
 
         header { padding: 60px 20px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
         header h1 { font-size: 2.2rem; margin: 0; font-weight: 800; line-height: 1.2; }
@@ -38,15 +38,13 @@
             -webkit-backdrop-filter: blur(25px) saturate(160%);
             border: 1px solid var(--border-glass) !important;
             border-top: 1px solid rgba(255,255,255,0.4) !important;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
             border-radius: 30px;
-            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
         }
 
-        .card:hover { transform: translateY(-8px); border-color: var(--glow) !important; box-shadow: 0 0 20px var(--glow), 0 10px 40px rgba(0,0,0,0.1); }
+        .card:hover { transform: translateY(-8px); border-color: var(--glow) !important; }
 
         .about-section { padding: 40px; max-width: 1100px; margin: 20px auto; }
-        .about-intro { font-size: 1.15rem; opacity: 0.8; line-height: 1.6; margin-bottom: 40px; text-align: center; }
+        .about-intro { font-size: 1.15rem; opacity: 0.8; line-height: 1.6; margin-bottom: 40px; }
         .about-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
         
         @media (min-width: 768px) { 
@@ -58,12 +56,14 @@
         .gallery { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 20px; justify-items: center; width: 100%; box-sizing: border-box; }
         @media (min-width: 768px) { .gallery { grid-template-columns: repeat(2, 1fr); padding: 50px; gap: 60px; max-width: 1400px; margin: 0 auto; } }
 
-        .card { width: 100%; max-width: 550px; overflow: hidden; position: relative; touch-action: pan-y; margin: 0 auto; }
-        .slider-viewport { position: relative; height: 350px; width: 100%; overflow: hidden; cursor: zoom-in; }
+        .card { width: 100%; max-width: 550px; overflow: hidden; position: relative; margin: 0 auto; }
+        
+        /* ВАЖНО: touch-action разрешает скролл страницы по вертикали, но ловит свайпы */
+        .slider-viewport { position: relative; height: 350px; width: 100%; overflow: hidden; touch-action: pan-y; cursor: zoom-in; }
         @media (min-width: 768px) { .slider-viewport { height: 500px; } }
 
-        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; }
-        .slide.active { opacity: 1; z-index: 1; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+        .slide.active { opacity: 1; z-index: 1; pointer-events: auto; }
         .slide img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.8s ease; }
         .slide img.loaded { opacity: 1; }
 
@@ -82,9 +82,6 @@
         .contact-section { margin: 40px 20px; padding: 60px 20px; display: flex; flex-direction: column; gap: 40px; }
         @media (min-width: 768px) { .contact-section { flex-direction: row; padding: 80px 50px; margin: 40px auto; max-width: 1100px; justify-content: space-around; } }
         .copyable { cursor: copy; font-weight: 600; padding: 10px; border-radius: 10px; transition: 0.2s; display: inline-block; }
-        .copyable:hover { background: var(--line); }
-
-        footer { padding: 40px; text-align: center; color: #888; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -94,7 +91,7 @@
 <div id="copy-toast">Copied!</div>
 <div id="lightbox" onclick="this.style.display='none'"><img id="lb-img" src=""></div>
 
-<div class="site-version">v1.0.2</div>
+<div class="site-version">v1.0.3</div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
@@ -133,6 +130,7 @@
 
 <script src="https://unpkg.com"></script>
 <script>
+    // --- ЖИВОЙ ФОН ---
     const canvas = document.getElementById('gradient-canvas');
     const ctx = canvas.getContext('2d');
     let time = 0;
@@ -151,6 +149,7 @@
     }
     animate();
 
+    // --- ЛОГИКА КОНТЕНТА ---
     const translations = {
         ru: {
             nav_contact: "КОНТАКТЫ",
@@ -194,17 +193,20 @@
         card.className = 'card skeleton';
         const isMobile = window.innerWidth < 768;
         card.setAttribute('data-aos', isMobile ? 'fade-up' : (i % 2 === 0 ? 'fade-right' : 'fade-left'));
+        
         let s = ''; let d = '';
         work.images.forEach((img, idx) => {
             s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${img}" class="p-img"></div>`;
             d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
         });
+        
         card.innerHTML = `<div class="slider-viewport">${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${translations[currentLang].work_titles[work.titleIdx]}</h3><p style="margin:5px 0 0; font-size:12px; opacity:0.6">${work.cat}</p></div>`;
         
         const fImg = card.querySelector('.p-img');
         const handleLoad = () => { card.classList.remove('skeleton'); fImg.classList.add('loaded'); };
         if (fImg.complete) handleLoad(); else fImg.addEventListener('load', handleLoad);
-        if(work.images.length > 1) addTouch(card);
+        
+        if(work.images.length > 1) addSwipeSupport(card.querySelector('.slider-viewport'));
         return card;
     }
 
@@ -214,23 +216,21 @@
         AOS.refresh();
     }
 
-    function changeS(vp, dir) {
-        const slides = vp.querySelectorAll('.slide'); const dots = vp.querySelectorAll('.dot');
-        let i = Array.from(slides).findIndex(s => s.classList.contains('active'));
-        if (i === -1) return;
-        slides[i].classList.remove('active'); dots[i].classList.remove('active');
-        i = (i + dir + slides.length) % slides.length;
-        slides[i].classList.add('active'); dots[i].classList.add('active');
-    }
-
-    function addTouch(el) {
-        let x = 0;
-        const vp = el.querySelector('.slider-viewport');
-        el.addEventListener('touchstart', e => x = e.touches[0].clientX, {passive:true});
-        el.addEventListener('touchend', e => {
-            let dx = x - e.changedTouches[0].clientX;
-            if(Math.abs(dx) > 50) changeS(vp, dx > 0 ? 1 : -1);
-        }, {passive:true});
+    // --- НОВАЯ ЛОГИКА СВАЙПА (v1.0.3) ---
+    function addSwipeSupport(viewport) {
+        let startX = 0;
+        viewport.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive: true});
+        viewport.addEventListener('touchend', e => {
+            let diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 40) {
+                const slides = viewport.querySelectorAll('.slide');
+                const dots = viewport.querySelectorAll('.dot');
+                let i = Array.from(slides).findIndex(s => s.classList.contains('active'));
+                slides[i].classList.remove('active'); dots[i].classList.remove('active');
+                i = (i + (diff > 0 ? 1 : -1) + slides.length) % slides.length;
+                slides[i].classList.add('active'); dots[i].classList.add('active');
+            }
+        }, {passive: true});
     }
 
     function openLB(workIdx, imgIdx) { document.getElementById('lb-img').src = myWorks[workIdx].images[imgIdx]; document.getElementById('lightbox').style.display = 'flex'; }
