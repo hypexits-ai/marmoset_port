@@ -3,213 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Artist | Portfolio</title>
-    
-    <!-- 3D Viewer & Animations -->
-    <script type="module" src="https://ajax.googleapis.com"></script>
+    <title>Marm0SET_toolBAG | Portfolio</title>
     <link href="https://unpkg.com" rel="stylesheet">
-    
     <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-main: #1a1a1a;
-            --text-secondary: #777777;
-            --card-bg: #f8f8f8;
-        }
+        :root { --bg: #ffffff; --text: #1a1a1a; --gray-light: #f9f9f9; --accent: #000; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; margin: 0; scroll-behavior: smooth; }
+        nav { padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid #eee; }
+        .logo { font-weight: 800; letter-spacing: 1px; text-transform: uppercase; font-size: 1.1rem; }
+        header { padding: 100px 50px 60px; max-width: 1000px; }
+        header h1 { font-size: 3.5rem; margin: 0; font-weight: 800; line-height: 1.1; }
+        header p { font-size: 1.25rem; color: #555; margin-top: 25px; max-width: 700px; line-height: 1.6; }
+        
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); gap: 60px; padding: 0 50px 100px; }
+        .card { border-radius: 0; overflow: hidden; display: flex; flex-direction: column; }
+        .slider-viewport { position: relative; height: 600px; width: 100%; overflow: hidden; background: var(--gray-light); }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slide.active { opacity: 1; z-index: 1; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: white; border: none; width: 44px; height: 44px; cursor: pointer; z-index: 10; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .nav-btn:hover { background: #000; color: #fff; }
+        .prev { left: 20px; } .next { right: 20px; }
+        .dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
+        .dot { width: 6px; height: 6px; background: rgba(0,0,0,0.2); border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        .dot.active { background: #000; transform: scale(1.5); }
+        .info { padding: 25px 0; }
+        .info h3 { margin: 0; font-size: 1.6rem; font-weight: 700; }
+        .info p { color: #888; margin: 8px 0 0; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 2px; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-        }
+        .contact-section { background: var(--gray-light); padding: 100px 50px; display: flex; gap: 80px; flex-wrap: wrap; }
+        .contact-info { flex: 1; min-width: 300px; }
+        .contact-info h2 { font-size: 2.5rem; margin-bottom: 30px; }
+        .contact-info a { display: block; color: var(--text); text-decoration: none; font-size: 1.1rem; margin-bottom: 15px; transition: 0.3s; }
+        .contact-info a:hover { color: #555; padding-left: 5px; }
+        
+        .contact-form { flex: 1; min-width: 300px; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd; outline: none; font-family: inherit; box-sizing: border-box; }
+        .contact-form button { background: #000; color: #fff; padding: 15px 40px; border: none; cursor: pointer; font-weight: 600; transition: 0.3s; }
 
-        /* Навигация */
-        nav {
-            padding: 30px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-        }
-
-        .logo { font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
-
-        /* Заголовок */
-        header {
-            padding: 100px 50px;
-            max-width: 1200px;
-        }
-
-        header h1 {
-            font-size: 4rem;
-            margin: 0;
-            line-height: 1.1;
-            font-weight: 800;
-        }
-
-        header p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-top: 20px;
-        }
-
-        /* Сетка работ */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-            gap: 40px;
-            padding: 0 50px 100px 50px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 4px;
-            overflow: hidden;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            cursor: pointer;
-        }
-
-        .card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-        }
-
-        model-viewer, img {
-            width: 100%;
-            height: 550px; /* Большая высота для эффекта масштаба */
-            display: block;
-            background-color: #f0f0f0;
-            border: none;
-        }
-
-        .info {
-            padding: 25px 10px;
-            background: white;
-        }
-
-        .info h3 {
-            margin: 0;
-            font-size: 1.4rem;
-            font-weight: 600;
-        }
-
-        .info p {
-            margin: 5px 0 0;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-
-        footer {
-            padding: 100px 50px;
-            border-top: 1px solid #eee;
-            text-align: center;
-            color: var(--text-secondary);
-        }
-
-        /* Адаптивность для мобилок */
-        @media (max-width: 768px) {
-            header h1 { font-size: 2.5rem; }
-            .gallery { grid-template-columns: 1fr; padding: 20px; }
-            nav { padding: 20px; }
-        }
+        footer { padding: 60px 50px; text-align: center; border-top: 1px solid #eee; color: #999; font-size: 0.9rem; }
+        @media (max-width: 768px) { header h1 { font-size: 2.2rem; } .gallery { grid-template-columns: 1fr; padding: 20px; } .contact-section { padding: 50px 20px; gap: 40px; } .slider-viewport { height: 400px; } }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">Marm0SET_toolBAG</div>
-        <div>Work / About / Contact</div>
-    </nav>
+<nav>
+    <div class="logo">Marm0SET_toolBAG</div>
+    <div style="font-size: 0.8rem; letter-spacing: 1px; font-weight: 600;">
+        <a href="#contact" style="color: black; text-decoration: none;">CONTACT ME</a>
+    </div>
+</nav>
 
-    <header data-aos="fade-up">
-        <h1>Digital Artist & <br>3D Modeler.</h1>
-        <p>Ищете опытного 3D художника? Я предлагаю широкий спектр услуг, от визуализации до игровых ассетов и анимации.</p>
-    </header>
+<header data-aos="fade-up">
+    <h1>Ищете опытного 3D художника?</h1>
+    <p>Я предлагаю широкий спектр услуг, от визуализации до игровых ассетов и анимации. Мой подход сочетает техническую точность и художественное видение.</p>
+</header>
 
-    <main class="gallery" id="portfolio-grid">
-        <!-- Сюда JS загрузит работы -->
-    </main>
+<main class="gallery" id="portfolio-grid"></main>
 
-    <footer>
-        <p>© 2024 Marm0SET_toolBAG</p>
-    </footer>
+<section class="contact-section" id="contact" data-aos="fade-up">
+    <div class="contact-info">
+        <h2>Связаться со мной</h2>
+        <a href="mailto:hypexits@mail.ru">📧 hypexits@mail.ru</a>
+        <a href="mailto:hypexits@gmail.com">📧 hypexits@gmail.com</a>
+        <a href="https://t.me" target="_blank">✈️ @WINDUP_MARMOSET</a>
+        <a href="tel:+79251803895">📞 +7 (925) 180-38-95</a>
+    </div>
+    
+    <div class="contact-form">
+        <form action="https://formspree.io" method="POST">
+            <input type="text" name="name" placeholder="Ваше имя" required>
+            <input type="email" name="email" placeholder="Ваш Email" required>
+            <textarea name="message" rows="5" placeholder="Ваше сообщение" required></textarea>
+            <button type="submit">ОТПРАВИТЬ ЗАПРОС</button>
+        </form>
+    </div>
+</section>
 
-    <!-- Анимации при скролле -->
-    <script src="https://unpkg.com"></script>
-    <script>
-        // ДАННЫЕ ВАШИХ РАБОТ
-        const myWorks = [
-            {
-                title: "1",
-                type: "image",
-                file: "images/render1.jpg",
-                category: "Product visualisation"
-            },
-            {
-                title: "2",
-                type: "image",
-                file: "images/render2.jpg",
-                category: "Product visualisation"
-            },
-            {
-                title: "3",
-                type: "image",
-                file: "images/render3.jpg",
-                category: "Product visualisation"
-            },
-            {
-                title: "4",
-                type: "image",
-                file: "images/render4.jpg",
-                category: "Product visualisation"
-            },
-            // Добавляйте сколько угодно объектов ниже...
-        ];
+<footer>
+    <p>© 2024 Marm0SET_toolBAG</p>
+</footer>
 
-        function renderPortfolio() {
-            const grid = document.getElementById('portfolio-grid');
-            
-            myWorks.forEach((work, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                
-                // Эффект появления: каждый второй блок задерживается чуть дольше (каскад)
-                card.setAttribute('data-aos', 'fade-up');
-                card.setAttribute('data-aos-delay', (index % 3) * 100);
+<script src="https://unpkg.com"></script>
+<script>
+    const myWorks = [
+        { title: "Product Visualisation", category: "Commercial Art", images: ["images/p1_1.jpg", "images/p1_2.jpg", "images/p1_3.jpg"] },
+        { title: "Product Visualisation", category: "CGI Production", images: ["images/p2_1.jpg", "images/p2_2.jpg"] },
+        { title: "Product Visualisation", category: "Studio Lighting", images: ["images/p3_1.jpg", "images/p3_2.jpg"] },
+        { title: "Product Visualisation", category: "Materials & Shaders", images: ["images/p4_1.jpg", "images/p4_2.jpg"] },
+        { title: "Product Visualisation", category: "3D Rendering", images: ["images/p5_1.jpg", "images/p5_2.jpg"] }
+    ];
 
-                const media = work.type === '3d' 
-                    ? `<model-viewer src="${work.file}" camera-controls auto-rotate shadow-intensity="1" ar shadow-softness="1"></model-viewer>`
-                    : `<img src="${work.file}" loading="lazy">`;
+    function createCard(work) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.setAttribute('data-aos', 'fade-up');
+        let s = ''; let d = '';
+        work.images.forEach((img, i) => {
+            s += `<div class="slide ${i === 0 ? 'active' : ''}"><img src="${img}" loading="lazy"></div>`;
+            d += `<div class="dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(this, ${i})"></div>`;
+        });
+        const n = work.images.length > 1 ? `<button class="nav-btn prev" onclick="moveSlide(this, -1)">‹</button><button class="nav-btn next" onclick="moveSlide(this, 1)">›</button><div class="dots">${d}</div>` : '';
+        card.innerHTML = `<div class="slider-viewport">${s}${n}</div><div class="info"><h3>${work.title}</h3><p>${work.category}</p></div>`;
+        return card;
+    }
 
-                card.innerHTML = `
-                    ${media}
-                    <div class="info">
-                        <h3>${work.title}</h3>
-                        <p>${work.category}</p>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
+    window.moveSlide = (btn, step) => {
+        const vp = btn.parentElement;
+        const s = vp.querySelectorAll('.slide'); const d = vp.querySelectorAll('.dot');
+        let i = Array.from(s).findIndex(el => el.classList.contains('active'));
+        s[i].classList.remove('active'); d[i].classList.remove('active');
+        i = (i + step + s.length) % s.length;
+        s[i].classList.add('active'); d[i].classList.add('active');
+    };
 
-            // Инициализация анимаций
-            AOS.init({
-                duration: 1000,
-                once: true,
-                offset: 100
-            });
-        }
+    window.goToSlide = (dot, idx) => {
+        const vp = dot.parentElement.parentElement;
+        vp.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
+        vp.querySelectorAll('.slide')[idx].classList.add('active');
+        vp.querySelectorAll('.dot')[idx].classList.add('active');
+    };
 
-        window.addEventListener('DOMContentLoaded', renderPortfolio);
-    </script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const grid = document.getElementById('portfolio-grid');
+        myWorks.forEach(work => grid.appendChild(createCard(work)));
+        AOS.init({ duration: 1000, once: true });
+    });
+</script>
 </body>
 </html>
-
-
