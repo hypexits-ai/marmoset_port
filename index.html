@@ -3,105 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Artist Portfolio</title>
+    <title>3D Artist | Portfolio</title>
     
-    <!-- Подключение библиотеки для 3D -->
+    <!-- 3D Viewer & Animations -->
     <script type="module" src="https://ajax.googleapis.com"></script>
-
+    <link href="https://unpkg.com" rel="stylesheet">
+    
     <style>
-        /* Стили (бывший style.css) */
+        :root {
+            --bg-color: #ffffff;
+            --text-main: #1a1a1a;
+            --text-secondary: #777777;
+            --card-bg: #f8f8f8;
+        }
+
         body {
-            background-color: #0f0f0f;
-            color: #efefef;
-            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0;
+            overflow-x: hidden;
         }
+
+        /* Навигация */
+        nav {
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .logo { font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* Заголовок */
         header {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
+            padding: 100px 50px;
+            max-width: 1200px;
         }
+
+        header h1 {
+            font-size: 4rem;
+            margin: 0;
+            line-height: 1.1;
+            font-weight: 800;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 20px;
+        }
+
+        /* Сетка работ */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 40px;
+            padding: 0 50px 100px 50px;
         }
+
         .card {
-            background: #181818;
-            border-radius: 15px;
+            background: var(--card-bg);
+            border-radius: 4px;
             overflow: hidden;
-            border: 1px solid #333;
-            transition: 0.3s ease;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
         }
+
         .card:hover {
-            transform: translateY(-8px);
-            border-color: #555;
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
         }
+
         model-viewer, img {
             width: 100%;
-            height: 350px;
-            background-color: #252525;
+            height: 550px; /* Большая высота для эффекта масштаба */
             display: block;
+            background-color: #f0f0f0;
             border: none;
         }
-        .info { padding: 20px; }
-        .info h3 { margin: 0 0 8px 0; font-size: 1.1rem; color: #fff; }
-        .info p { color: #888; font-size: 0.85rem; margin: 0; }
+
+        .info {
+            padding: 25px 10px;
+            background: white;
+        }
+
+        .info h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .info p {
+            margin: 5px 0 0;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        footer {
+            padding: 100px 50px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* Адаптивность для мобилок */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.5rem; }
+            .gallery { grid-template-columns: 1fr; padding: 20px; }
+            nav { padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>MY 3D ART</h1>
-        <p>Interactive Portfolio</p>
+    <nav>
+        <div class="logo">ARTIST NAME</div>
+        <div>Work / About / Contact</div>
+    </nav>
+
+    <header data-aos="fade-up">
+        <h1>Digital Artist & <br>3D Modeler.</h1>
+        <p>Специализируюсь на создании персонажей и игровых окружений высокого качества.</p>
     </header>
 
-    <main class="gallery" id="portfolio-grid"></main>
+    <main class="gallery" id="portfolio-grid">
+        <!-- Сюда JS загрузит работы -->
+    </main>
 
+    <footer>
+        <p>© 2024 Your Name. Сделано с любовью к 3D.</p>
+    </footer>
+
+    <!-- Анимации при скролле -->
+    <script src="https://unpkg.com"></script>
     <script>
-        // Данные (бывший works.json) - ПРАВИТЬ ЗДЕСЬ
+        // ДАННЫЕ ВАШИХ РАБОТ
         const myWorks = [
             {
-                title: "Cyber Helmet",
+                title: "Cybernetic Vessel",
                 type: "3d",
-                file: "models/helmet.glb", // Путь к файлу в репозитории
-                desc: "ZBrush & Substance Painter"
+                file: "models/model1.glb",
+                category: "Character Design"
             },
             {
-                title: "Environment Render",
+                title: "Abandoned Station",
                 type: "image",
-                file: "images/forest.jpg", // Путь к картинке в репозитории
-                desc: "Unreal Engine 5"
+                file: "images/render1.jpg",
+                category: "Environment"
+            },
+            {
+                title: "Neon Katana",
+                type: "3d",
+                file: "models/model2.glb",
+                category: "Hard Surface"
+            },
+            {
+                title: "Ethereal Forest",
+                type: "image",
+                file: "images/render2.jpg",
+                category: "Concept Art"
             }
+            // Добавляйте сколько угодно объектов ниже...
         ];
 
-        // Логика подгрузки (бывший script.js)
         function renderPortfolio() {
             const grid = document.getElementById('portfolio-grid');
             
-            myWorks.forEach(work => {
+            myWorks.forEach((work, index) => {
                 const card = document.createElement('div');
                 card.className = 'card';
+                
+                // Эффект появления: каждый второй блок задерживается чуть дольше (каскад)
+                card.setAttribute('data-aos', 'fade-up');
+                card.setAttribute('data-aos-delay', (index % 3) * 100);
 
                 const media = work.type === '3d' 
-                    ? `<model-viewer src="${work.file}" camera-controls auto-rotate shadow-intensity="1" ar loading="lazy"></model-viewer>`
+                    ? `<model-viewer src="${work.file}" camera-controls auto-rotate shadow-intensity="1" ar shadow-softness="1"></model-viewer>`
                     : `<img src="${work.file}" loading="lazy">`;
 
                 card.innerHTML = `
                     ${media}
                     <div class="info">
                         <h3>${work.title}</h3>
-                        <p>${work.desc}</p>
+                        <p>${work.category}</p>
                     </div>
                 `;
                 grid.appendChild(card);
             });
+
+            // Инициализация анимаций
+            AOS.init({
+                duration: 1000,
+                once: true,
+                offset: 100
+            });
         }
 
-        // Запуск при загрузке страницы
         window.addEventListener('DOMContentLoaded', renderPortfolio);
     </script>
 </body>
