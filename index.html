@@ -7,45 +7,43 @@
     <link href="https://unpkg.com" rel="stylesheet">
     <style>
         :root { 
-            --bg: #ffffff; --text: #1a1a1a; --gray-light: rgba(249, 249, 249, 0.8); 
-            --accent: #000; --line: #eeeeee; --border-color: #000; --transition: 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            --grad-1: #f3f4f7; --grad-2: #e2e8f0; /* Светлые волны */
+            --bg: #ffffff; --text: #1a1a1a; --gray-light: rgba(255, 255, 255, 0.6); 
+            --accent: #000; --line: rgba(0,0,0,0.05); --border-color: #000; --transition: 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
         [data-theme="dark"] {
-            --bg: #0a0a0a; --text: #f5f5f5; --gray-light: rgba(21, 21, 21, 0.8); 
-            --line: #222; --accent: #fff; --border-color: #fff;
-            --grad-1: #1a1a2e; --grad-2: #16213e; /* Темно-синие/фиолетовые волны */
+            --bg: #0a0a0a; --text: #f5f5f5; --gray-light: rgba(20, 20, 25, 0.6); 
+            --line: rgba(255,255,255,0.1); --accent: #fff; --border-color: #fff;
         }
 
         html, body { max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; -webkit-overflow-scrolling: touch; }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background var(--transition), color var(--transition); }
         
         /* ЖИВОЙ ФОН */
-        #gradient-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; pointer-events: none; opacity: 0.6;
-        }
+        #gradient-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
         #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; z-index: 1000; }
 
-        nav { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: rgba(var(--bg), 0.7); backdrop-filter: blur(15px); z-index: 100; border-bottom: 1px solid var(--line); }
+        nav { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--gray-light); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 100; border-bottom: 1px solid var(--line); }
         .logo { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
         
-        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 8px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; transition: 0.3s; text-decoration: none; }
+        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 8px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; transition: 0.3s; text-decoration: none; display: inline-block; }
         .btn-ui:hover { background: var(--accent); color: var(--bg); }
 
         header { padding: 60px 20px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
         header h1 { font-size: 2.2rem; margin: 0; font-weight: 800; line-height: 1.2; }
 
-        .about-section { padding: 20px; max-width: 1100px; margin: 0 auto; background: var(--gray-light); border-radius: 30px; margin-top: 20px; border: 1px solid var(--line); }
-        .about-intro { font-size: 1.1rem; color: var(--text); opacity: 0.8; line-height: 1.5; margin-bottom: 30px; text-align: center; }
+        .about-section { padding: 30px; max-width: 1100px; margin: 20px auto; background: var(--gray-light); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 30px; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+        .about-intro { font-size: 1.1rem; opacity: 0.9; line-height: 1.5; margin-bottom: 30px; text-align: center; }
         .about-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
         .about-list { list-style: none; padding: 0; margin: 0; }
         .about-list li { margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; }
         .about-list li::before { content: "•"; position: absolute; left: 0; color: var(--accent); }
 
         .gallery { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 20px; width: 100%; justify-items: center; box-sizing: border-box; }
-        .card { width: 100%; max-width: 550px; border-radius: 20px; overflow: hidden; border: 2px solid var(--border-color); background: var(--bg); position: relative; touch-action: pan-y; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        
+        /* КАРТОЧКИ С ЭФФЕКТОМ СТЕКЛА */
+        .card { width: 100%; max-width: 550px; border-radius: 25px; overflow: hidden; border: 2px solid var(--border-color); background: var(--gray-light); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); position: relative; touch-action: pan-y; margin: 0 auto; transition: transform 0.3s ease; }
+        .card:hover { transform: translateY(-5px); }
         
         .slider-viewport { position: relative; height: 350px; width: 100%; overflow: hidden; cursor: zoom-in; }
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; }
@@ -57,21 +55,15 @@
         .dot.active { background: var(--accent); width: 15px; border-radius: 4px; }
 
         #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; }
-        #lightbox img { max-width: 90%; max-height: 80%; object-fit: contain; border: 2px solid #fff; border-radius: 10px; }
+        #lightbox img { max-width: 90%; max-height: 80%; object-fit: contain; border: 2px solid #fff; border-radius: 15px; }
 
-        /* УВЕДОМЛЕНИЕ О КОПИРОВАНИИ */
-        #copy-toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--accent); color: var(--bg); padding: 10px 20px;
-            border-radius: 30px; font-size: 12px; font-weight: 700;
-            opacity: 0; transition: 0.3s; z-index: 2001; pointer-events: none;
-        }
+        #copy-toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--accent); color: var(--bg); padding: 10px 25px; border-radius: 30px; font-size: 12px; font-weight: 700; opacity: 0; transition: 0.3s; z-index: 2001; pointer-events: none; }
 
-        .contact-section { background: var(--gray-light); padding: 60px 20px; display: flex; flex-direction: column; gap: 40px; border-top: 1px solid var(--line); }
-        .copyable { cursor: copy; transition: 0.2s; position: relative; }
-        .copyable:active { transform: scale(0.95); }
+        .contact-section { background: var(--gray-light); backdrop-filter: blur(15px); padding: 60px 20px; display: flex; flex-direction: column; gap: 40px; border-top: 1px solid var(--line); }
+        .copyable { cursor: copy; transition: 0.2s; font-weight: 600; padding: 10px; border-radius: 10px; display: inline-block; }
+        .copyable:hover { background: var(--line); }
 
-        footer { padding: 40px; text-align: center; color: #888; font-size: 12px; }
+        footer { padding: 40px; text-align: center; color: #888; font-size: 12px; opacity: 0.7; }
 
         @media (min-width: 768px) {
             header { padding: 80px 50px 20px; text-align: left; }
@@ -79,7 +71,7 @@
             .about-grid { grid-template-columns: 1.2fr 1fr; }
             .gallery { grid-template-columns: repeat(2, 1fr); padding: 50px; gap: 60px; max-width: 1400px; margin: 0 auto; }
             .slider-viewport { height: 500px; }
-            .contact-section { flex-direction: row; padding: 100px 50px; }
+            .contact-section { flex-direction: row; padding: 100px 50px; justify-content: space-around; }
         }
     </style>
 </head>
@@ -92,7 +84,7 @@
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
-    <div class="nav-controls">
+    <div style="display: flex; gap: 10px;">
         <button class="btn-ui" onclick="toggleLang()" id="lang-btn">EN</button>
         <button class="btn-ui" onclick="toggleTheme()" id="theme-btn">DARK</button>
         <a href="#contact" class="btn-ui" data-tr="nav_contact">КОНТАКТЫ</a>
@@ -114,12 +106,12 @@
 <main class="gallery" id="portfolio-grid"></main>
 
 <section class="contact-section" id="contact" data-aos="fade-up">
-    <div class="contact-info" style="flex:1">
+    <div class="contact-info">
         <h2 data-tr="contact_title">Контакты</h2>
         <a href="https://kwork.ru" target="_blank" style="display:block; color:var(--text); margin-bottom:15px; text-decoration:none; font-weight:600;">💼 Kwork Profile</a>
-        <div class="copyable" onclick="copyText('hypexits@mail.ru')" style="margin-bottom:15px; font-weight:600;">📧 hypexits@mail.ru</div>
-        <div class="copyable" onclick="copyText('@WINDUP_MARMOSET')" style="margin-bottom:15px; font-weight:600;">✈️ @WINDUP_MARMOSET</div>
-        <div class="copyable" onclick="copyText('+79251803895')" style="font-weight:600;">📞 +7 (925) 180-38-95</div>
+        <div class="copyable" onclick="copyText('hypexits@mail.ru')">📧 hypexits@mail.ru</div><br>
+        <div class="copyable" onclick="copyText('@WINDUP_MARMOSET')">✈️ @WINDUP_MARMOSET</div><br>
+        <div class="copyable" onclick="copyText('+79251803895')">📞 +7 (925) 180-38-95</div>
     </div>
 </section>
 
@@ -137,30 +129,34 @@
         canvas.height = window.innerHeight;
         const isDark = document.body.getAttribute('data-theme') === 'dark';
         
-        const c1 = isDark ? [26, 26, 46] : [243, 244, 247];
-        const c2 = isDark ? [22, 33, 62] : [226, 232, 240];
+        // Цвета: Темная тема (сине-фиолетовый), Светлая тема (бело-голубой)
+        const c1 = isDark ? {r: 8, g: 8, b: 18} : {r: 245, g: 247, b: 250};
+        const c2 = isDark ? {r: 25, g: 15, b: 45} : {r: 220, g: 228, b: 240};
 
-        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        gradient.addColorStop(0, `rgb(${c1[0]}, ${c1[1]}, ${c1[2]})`);
-        gradient.addColorStop(Math.sin(time) * 0.5 + 0.5, `rgb(${c2[0]}, ${c2[1]}, ${c2[2]})`);
-        gradient.addColorStop(1, `rgb(${c1[0]}, ${c1[1]}, ${c1[2]})`);
+        const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width);
+        const shift = Math.sin(time) * 0.5 + 0.5;
         
-        ctx.fillStyle = gradient;
+        grad.addColorStop(0, `rgb(${c1.r}, ${c1.g}, ${c1.b})`);
+        grad.addColorStop(shift, `rgb(${c2.r}, ${c2.g}, ${c2.b})`);
+        grad.addColorStop(1, `rgb(${c1.r}, ${c1.g}, ${c1.b})`);
+        
+        ctx.fillStyle = grad;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        time += 0.005;
+        time += 0.007;
         requestAnimationFrame(animate);
     }
     animate();
 
     // --- КОПИРОВАНИЕ ---
     function copyText(text) {
-        navigator.clipboard.writeText(text);
-        const toast = document.getElementById('copy-toast');
-        toast.style.opacity = '1';
-        setTimeout(() => toast.style.opacity = '0', 2000);
+        navigator.clipboard.writeText(text).then(() => {
+            const toast = document.getElementById('copy-toast');
+            toast.style.opacity = '1';
+            setTimeout(() => toast.style.opacity = '0', 2000);
+        });
     }
 
-    // --- ОСТАЛЬНАЯ ЛОГИКА ---
+    // --- ЛОГИКА КОНТЕНТА ---
     const translations = {
         ru: {
             nav_contact: "КОНТАКТЫ",
@@ -220,13 +216,14 @@
         myWorks.forEach((work, i) => {
             const card = document.createElement('div');
             card.className = 'card';
-            card.setAttribute('data-aos', window.innerWidth < 768 ? 'fade-up' : (i % 2 === 0 ? 'fade-right' : 'fade-left'));
+            const isMobile = window.innerWidth < 768;
+            card.setAttribute('data-aos', isMobile ? 'fade-up' : (i % 2 === 0 ? 'fade-right' : 'fade-left'));
             let s = ''; let d = '';
             work.images.forEach((img, idx) => {
                 s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${img}"></div>`;
                 d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
             });
-            card.innerHTML = `<div class="slider-viewport">${s}<div class="dots">${d}</div></div><div style="padding:15px"><h3>${translations[currentLang].work_titles[work.titleIdx]}</h3><p style="margin:5px 0 0; font-size:12px; opacity:0.6">${work.cat}</p></div>`;
+            card.innerHTML = `<div class="slider-viewport">${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${translations[currentLang].work_titles[work.titleIdx]}</h3><p style="margin:5px 0 0; font-size:12px; opacity:0.6">${work.cat}</p></div>`;
             if(work.images.length > 1) addTouch(card);
             grid.appendChild(card);
         });
