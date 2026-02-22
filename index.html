@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Marm0SET_toolBAG | Portfolio</title>
     <link href="https://unpkg.com" rel="stylesheet">
     <style>
@@ -14,95 +14,101 @@
             --bg: #0a0a0a; --text: #f5f5f5; --gray-light: #151515; --line: #222; --accent: #fff; --border-color: #fff;
         }
 
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; scroll-behavior: smooth; transition: background var(--transition), color var(--transition); overflow-x: hidden; }
-        #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; z-index: 1000; transition: width 0.1s; }
+        html, body { max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; -webkit-overflow-scrolling: touch; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background var(--transition), color var(--transition); }
+        
+        #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; z-index: 1000; }
 
-        nav { padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--bg); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid var(--line); }
-        .logo { font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
-        .theme-toggle { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 8px 15px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        nav { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--bg); z-index: 100; border-bottom: 1px solid var(--line); }
+        .logo { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
+        .nav-controls { display: flex; gap: 10px; align-items: center; }
+        
+        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 8px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; transition: 0.3s; text-decoration: none; }
+        .btn-ui:hover { background: var(--accent); color: var(--bg); }
 
-        header { padding: 80px 50px 20px; max-width: 1000px; }
-        header h1 { font-size: 3rem; margin: 0; font-weight: 800; line-height: 1.2; }
+        header { padding: 60px 20px 20px; max-width: 1000px; box-sizing: border-box; margin: 0 auto; text-align: center; }
+        header h1 { font-size: 2.2rem; margin: 0; font-weight: 800; line-height: 1.2; }
 
-        .about-section { padding: 20px 50px 80px; max-width: 1100px; }
-        .about-intro { font-size: 1.25rem; color: #555; line-height: 1.6; margin-bottom: 50px; }
-        .about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; }
+        .about-section { padding: 20px; max-width: 1100px; box-sizing: border-box; margin: 0 auto; }
+        .about-intro { font-size: 1.1rem; color: #666; line-height: 1.5; margin-bottom: 30px; text-align: center; }
+        .about-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
         .about-list { list-style: none; padding: 0; margin: 0; }
-        .about-list li { margin-bottom: 15px; padding-left: 25px; position: relative; }
+        .about-list li { margin-bottom: 12px; padding-left: 20px; position: relative; font-size: 0.95rem; }
         .about-list li::before { content: "•"; position: absolute; left: 0; color: var(--accent); }
 
-        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 60px; padding: 0 50px 100px; }
+        .gallery { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 20px; box-sizing: border-box; width: 100%; justify-items: center; }
+        .card { width: 100%; max-width: 550px; border-radius: 20px; overflow: hidden; border: 2px solid var(--border-color); background: var(--bg); position: relative; touch-action: pan-y; margin: 0 auto; }
         
-        /* СТИЛЬ КАРТОЧЕК С РАМКОЙ */
-        .card { border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; position: relative; border: 2px solid var(--border-color); background: var(--bg); }
-        .slider-viewport { position: relative; height: 550px; width: 100%; overflow: hidden; cursor: zoom-in; }
-        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease; }
+        .slider-viewport { position: relative; height: 350px; width: 100%; overflow: hidden; cursor: zoom-in; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; }
         .slide.active { opacity: 1; z-index: 1; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 
-        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: var(--bg); color: var(--text); border: 2px solid var(--border-color); width: 44px; height: 44px; cursor: pointer; z-index: 10; font-size: 20px; border-radius: 50%; }
-        .dots { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
-        .dot { width: 8px; height: 8px; background: rgba(128,128,128,0.5); border-radius: 50%; cursor: pointer; border: 1px solid var(--border-color); }
-        .dot.active { background: var(--accent); transform: scale(1.3); }
+        .nav-btn { display: none; } /* Скрыты на мобильных */
+        .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
+        .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-color); }
+        .dot.active { background: var(--accent); width: 15px; border-radius: 4px; }
 
-        /* ЛАЙТБОКС С НАВИГАЦИЕЙ */
-        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; }
-        #lightbox img { max-width: 85%; max-height: 85%; object-fit: contain; border: 3px solid #fff; border-radius: 10px; }
-        .lb-btn { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: 2px solid #fff; color: #fff; width: 60px; height: 60px; font-size: 30px; cursor: pointer; border-radius: 50%; transition: 0.3s; }
-        .lb-btn:hover { background: #fff; color: #000; }
-        .lb-prev { left: 30px; } .lb-next { right: 30px; }
-        .lb-close { position: absolute; top: 30px; right: 30px; font-size: 40px; color: #fff; cursor: pointer; }
+        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; touch-action: none; }
+        #lightbox img { max-width: 90%; max-height: 80%; object-fit: contain; border: 2px solid #fff; border-radius: 10px; }
+        .lb-controls { position: absolute; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; box-sizing: border-box; }
+        .lb-btn { background: none; border: 2px solid #fff; color: #fff; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; cursor: pointer; }
 
-        .contact-section { background: var(--gray-light); padding: 100px 50px; display: flex; gap: 80px; flex-wrap: wrap; }
-        .contact-form input, .contact-form textarea { width: 100%; padding: 18px; margin-bottom: 20px; border: 2px solid var(--border-color); background: var(--bg); color: var(--text); border-radius: 10px; }
-        .contact-form button { background: var(--accent); color: var(--bg); padding: 18px; border: none; cursor: pointer; font-weight: 800; width: 100%; border-radius: 10px; }
+        .contact-section { background: var(--gray-light); padding: 60px 20px; display: flex; flex-direction: column; gap: 40px; border-top: 1px solid var(--line); }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 2px solid var(--border-color); background: var(--bg); color: var(--text); border-radius: 12px; box-sizing: border-box; font-family: inherit; }
+        .contact-form button { background: var(--accent); color: var(--bg); padding: 18px; border: none; cursor: pointer; font-weight: 800; width: 100%; border-radius: 12px; }
 
-        footer { padding: 60px 50px; text-align: center; color: #999; }
-        @media (max-width: 768px) { .gallery { grid-template-columns: 1fr; padding: 20px; } .slider-viewport { height: 380px; } }
+        @media (min-width: 768px) {
+            header { padding: 80px 50px 20px; text-align: left; }
+            header h1 { font-size: 3.5rem; }
+            .about-section { padding: 20px 50px 80px; }
+            .about-intro { text-align: left; font-size: 1.25rem; }
+            .about-grid { grid-template-columns: 1.2fr 1fr; }
+            .gallery { grid-template-columns: repeat(2, 1fr); padding: 50px; gap: 60px; max-width: 1400px; margin: 0 auto; }
+            .card { max-width: 100%; }
+            .slider-viewport { height: 500px; }
+            .nav-btn { display: flex; position: absolute; top: 50%; transform: translateY(-50%); background: var(--bg); color: var(--text); border: 2px solid var(--border-color); width: 44px; height: 44px; cursor: pointer; z-index: 10; align-items: center; justify-content: center; border-radius: 50%; }
+            .prev { left: 15px; } .next { right: 15px; }
+            .contact-section { flex-direction: row; padding: 100px 50px; }
+        }
     </style>
 </head>
 <body>
 
 <div id="progress-bar"></div>
 
-<!-- Модифицированный Лайтбокс -->
 <div id="lightbox">
-    <span class="lb-close" onclick="closeLB()">&times;</span>
-    <button class="lb-btn lb-prev" onclick="moveLB(-1)">&#8249;</button>
-    <img id="lb-img" src="">
-    <button class="lb-btn lb-next" onclick="moveLB(1)">&#8250;</button>
+    <div class="lb-controls">
+        <button class="lb-btn" onclick="moveLB(-1)">&#8249;</button>
+        <button class="lb-btn" onclick="moveLB(1)">&#8250;</button>
+    </div>
+    <img id="lb-img" src="" onclick="closeLB()">
+    <div style="position:absolute; top:20px; right:20px; color:white; font-size:30px; cursor:pointer;" onclick="closeLB()">&times;</div>
 </div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
-    <div style="display: flex; align-items: center; gap: 20px;">
-        <button class="theme-toggle" onclick="toggleTheme()">DARK MODE</button>
-        <a href="https://kwork.ru" target="_blank" style="color:var(--text); text-decoration:none; font-weight:700; font-size: 11px;">KWORK</a>
-        <a href="#contact" style="color:var(--text); text-decoration:none; font-weight:700; font-size: 11px;">CONTACT</a>
+    <div class="nav-controls">
+        <button class="btn-ui" onclick="toggleLang()" id="lang-btn">EN</button>
+        <button class="btn-ui" onclick="toggleTheme()" id="theme-btn">DARK</button>
+        <a href="#contact" class="btn-ui" data-tr="nav_contact">CONTACT</a>
     </div>
 </nav>
 
 <header data-aos="fade-up">
-    <h1>3D Художник с Большим Опытом — Воплощаю Ваши Идеи в Реальность</h1>
+    <h1 data-tr="header_title">3D Художник с Большим Опытом</h1>
 </header>
 
 <section class="about-section" data-aos="fade-up">
-    <p class="about-intro">Ищете опытного 3D художника? Я предлагаю широкий спектр услуг, от визуализации до игровых ассетов и анимации.</p>
+    <p class="about-intro" data-tr="about_intro">Ищете опытного 3D художника? Я предлагаю широкий спектр услуг, от визуализации до игровых ассетов и анимации.</p>
     <div class="about-grid">
         <div class="about-col">
-            <ul class="about-list">
-                <li><b>3D Моделирование:</b> Детализированные модели.</li>
-                <li><b>Визуализация:</b> Фотореализм.</li>
-                <li><b>Оптимизация:</b> Игры/VR/AR.</li>
-                <li><b>Профессиональный Софт:</b> Blender, Substance Painter, Marmoset Toolbag, Unreal Engine, Unity.</li>
-            </ul>
+            <h3 data-tr="skills_title">Ключевые навыки</h3>
+            <ul class="about-list" id="skills-list"></ul>
         </div>
         <div class="about-col">
-            <ul class="about-list">
-                <li>Улучшить маркетинг.</li>
-                <li>Оживить игры.</li>
-                <li>Визуализировать архитектуру.</li>
-            </ul>
+            <h3 data-tr="help_title">Помогу вам</h3>
+            <ul class="about-list" id="help-list"></ul>
         </div>
     </div>
 </section>
@@ -110,104 +116,191 @@
 <main class="gallery" id="portfolio-grid"></main>
 
 <section class="contact-section" id="contact" data-aos="fade-up">
-    <div class="contact-info">
-        <h2>Контакты</h2>
-        <a href="mailto:hypexits@mail.ru" style="color:var(--text); text-decoration:none;">📧 hypexits@mail.ru</a><br><br>
-        <a href="https://t.me" style="color:var(--text); text-decoration:none;">✈️ @WINDUP_MARMOSET</a>
+    <div class="contact-info" style="flex:1">
+        <h2 data-tr="contact_title">Контакты</h2>
+        <a href="https://kwork.ru" target="_blank" style="display:block; color:var(--text); margin-bottom:15px; text-decoration:none; font-weight:600;">💼 Kwork Profile</a>
+        <a href="mailto:hypexits@mail.ru" style="display:block; color:var(--text); margin-bottom:15px; text-decoration:none; font-weight:600;">📧 hypexits@mail.ru</a>
+        <a href="https://t.me" target="_blank" style="display:block; color:var(--text); margin-bottom:15px; text-decoration:none; font-weight:600;">✈️ @WINDUP_MARMOSET</a>
+        <a href="tel:+79251803895" style="display:block; color:var(--text); text-decoration:none; font-weight:600;">📞 +7 (925) 180-38-95</a>
     </div>
     <div class="contact-form">
         <form action="https://formspree.io" method="POST">
-            <input type="text" name="name" placeholder="Имя" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <textarea name="message" rows="4" placeholder="Сообщение" required></textarea>
-            <button type="submit">ОТПРАВИТЬ</button>
+            <input type="text" name="name" id="form-name" required>
+            <input type="email" name="email" id="form-email" required>
+            <textarea name="message" id="form-msg" rows="4" required></textarea>
+            <button type="submit" id="form-btn">ОТПРАВИТЬ</button>
         </form>
     </div>
 </section>
 
-<footer><p>© 2024 Marm0SET_toolBAG</p></footer>
+<footer style="padding:40px; text-align:center; color:#888; font-size:12px;">© 2024 Marm0SET_toolBAG</footer>
 
 <script src="https://unpkg.com"></script>
 <script>
+    // --- ПЕРЕВОДЫ ---
+    const translations = {
+        ru: {
+            nav_contact: "КОНТАКТЫ",
+            header_title: "3D Художник — Воплощаю Идеи в Реальность",
+            about_intro: "Ищете опытного 3D художника? Я предлагаю широкий спектр услуг, от визуализации до игровых ассетов и анимации.",
+            skills_title: "Ключевые навыки",
+            help_title: "Помогу вам",
+            skills: [
+                "<b>3D Моделирование:</b> Детализированные модели.",
+                "<b>Визуализация:</b> Фотореализм.",
+                "<b>Оптимизация:</b> Игры/VR/AR.",
+                "<b>Анимация:</b> Оживление моделей.",
+                "<b>Софт:</b> Blender, Substance, Unreal, Unity."
+            ],
+            help: ["Маркетинг и рендеры.", "Игровые ассеты.", "Архитектура.", "Анимация."],
+            contact_title: "Связаться со мной",
+            form_name: "Ваше имя",
+            form_email: "Ваш Email",
+            form_msg: "Сообщение...",
+            form_btn: "ОТПРАВИТЬ",
+            work_titles: ["Visualisation", "Character", "Interior", "Exterior", "High-Poly", "Environment"]
+        },
+        en: {
+            nav_contact: "CONTACT",
+            header_title: "3D Artist — Bringing Ideas to Reality",
+            about_intro: "Looking for an experienced 3D artist? I offer a wide range of services, from visualization to game assets and animation.",
+            skills_title: "Key Skills",
+            help_title: "How I can help",
+            skills: [
+                "<b>3D Modeling:</b> Detailed models.",
+                "<b>Visualization:</b> Photorealism.",
+                "<b>Optimization:</b> Game/VR/AR ready.",
+                "<b>Animation:</b> Rigging & Motion.",
+                "<b>Software:</b> Blender, Substance, Unreal, Unity."
+            ],
+            help: ["Product Marketing.", "Game Assets.", "ArchViz.", "Storytelling."],
+            contact_title: "Get in Touch",
+            form_name: "Your Name",
+            form_email: "Your Email",
+            form_msg: "Message...",
+            form_btn: "SEND REQUEST",
+            work_titles: ["Visualisation", "Character", "Interior", "Exterior", "High-Poly", "Environment"]
+        }
+    };
+
+    let currentLang = 'ru';
+    let currentTheme = 'light';
+
+    // --- ДАННЫЕ РАБОТ ---
     const myWorks = [
-        { title: "product visualisation", category: "Commercial Art", images: ["images/p1_1.jpg", "images/p1_2.jpg"] },
-        { title: "product visualisation", category: "Studio Lighting", images: ["images/p2_1.jpg", "images/p2_2.jpg"] },
-        { title: "product visualisation", category: "Materials", images: ["images/p3_1.jpg", "images/p3_2.jpg"] },
-        { title: "product visualisation", category: "Production", images: ["images/p4_1.jpg", "images/p4_2.jpg"] },
-        { title: "product visualisation", category: "Rendering", images: ["images/p5_1.jpg", "images/p5_2.jpg"] },
-        { title: "interior visualisation", category: "ArchViz", images: ["images/p6_1.jpg", "images/p6_2.jpg"] },
-        { title: "character modeling", category: "Sculpting", images: ["images/p7_1.jpg", "images/p7_2.jpg"] },
-        { title: "exterior visualisation", category: "ArchViz", images: ["images/p8_1.jpg", "images/p8_2.jpg"] },
-        { title: "high-poly modeling", category: "Hard Surface", images: ["images/p9_1.jpg", "images/p9_2.jpg"] },
-        { title: "environment creation low-poly", category: "Game Assets", images: ["images/p10_1.jpg", "images/p10_2.jpg"] }
+        { titleIdx: 0, cat: "Commercial", images: ["images/p1_1.jpg", "images/p1_2.jpg"] },
+        { titleIdx: 0, cat: "Studio", images: ["images/p2_1.jpg", "images/p2_2.jpg"] },
+        { titleIdx: 0, cat: "Materials", images: ["images/p3_1.jpg", "images/p3_2.jpg"] },
+        { titleIdx: 0, cat: "Production", images: ["images/p4_1.jpg", "images/p4_2.jpg"] },
+        { titleIdx: 0, cat: "Rendering", images: ["images/p5_1.jpg", "images/p5_2.jpg"] },
+        { titleIdx: 2, cat: "ArchViz", images: ["images/p6_1.jpg", "images/p6_2.jpg"] },
+        { titleIdx: 1, cat: "Sculpting", images: ["images/p7_1.jpg", "images/p7_2.jpg"] },
+        { titleIdx: 3, cat: "Environment", images: ["images/p8_1.jpg", "images/p8_2.jpg"] },
+        { titleIdx: 4, cat: "Hard Surface", images: ["images/p9_1.jpg", "images/p9_2.jpg"] },
+        { titleIdx: 5, cat: "Low Poly", images: ["images/p10_1.jpg", "images/p10_2.jpg"] }
     ];
 
-    let currentLBImages = [];
-    let currentLBIndex = 0;
-
-    function openLB(imgArray, idx) {
-        currentLBImages = imgArray;
-        currentLBIndex = idx;
-        document.getElementById('lb-img').src = currentLBImages[currentLBIndex];
-        document.getElementById('lightbox').style.display = 'flex';
+    // --- ЛОГИКА ---
+    function toggleLang() {
+        currentLang = currentLang === 'ru' ? 'en' : 'ru';
+        document.getElementById('lang-btn').innerText = currentLang === 'ru' ? 'EN' : 'RU';
+        updateUI();
     }
 
-    function moveLB(step) {
-        currentLBIndex = (currentLBIndex + step + currentLBImages.length) % currentLBImages.length;
-        document.getElementById('lb-img').src = currentLBImages[currentLBIndex];
-    }
-
-    function closeLB() { document.getElementById('lightbox').style.display = 'none'; }
-
-    function createCard(work, cardIdx) {
-        const card = document.createElement('div');
-        card.className = 'card';
-        // ЧЕРЕДОВАНИЕ АНИМАЦИИ: лево / право
-        card.setAttribute('data-aos', cardIdx % 2 === 0 ? 'fade-right' : 'fade-left');
-        
-        let s = ''; let d = '';
-        work.images.forEach((img, i) => {
-            s += `<div class="slide ${i === 0 ? 'active' : ''}" onclick="openLB([${work.images.map(url => `'${url}'`)}], ${i})">
-                    <img src="${img}" loading="lazy">
-                  </div>`;
-            d += `<div class="dot ${i === 0 ? 'active' : ''}" onclick="event.stopPropagation(); goToSlide(this, ${i})"></div>`;
+    function updateUI() {
+        const tr = translations[currentLang];
+        document.querySelectorAll('[data-tr]').forEach(el => {
+            el.innerHTML = tr[el.getAttribute('data-tr')];
         });
         
-        const n = work.images.length > 1 ? `<button class="nav-btn prev" onclick="event.stopPropagation(); moveSlide(this, -1)">‹</button><button class="nav-btn next" onclick="event.stopPropagation(); moveSlide(this, 1)">›</button><div class="dots">${d}</div>` : '';
-        card.innerHTML = `<div class="slider-viewport">${s}${n}</div><div style="padding:20px"><h3>${work.title}</h3><p>${work.category}</p></div>`;
-        return card;
+        // Списки
+        document.getElementById('skills-list').innerHTML = tr.skills.map(s => `<li>${s}</li>`).join('');
+        document.getElementById('help-list').innerHTML = tr.help.map(h => `<li>${h}</li>`).join('');
+        
+        // Форма
+        document.getElementById('form-name').placeholder = tr.form_name;
+        document.getElementById('form-email').placeholder = tr.form_email;
+        document.getElementById('form-msg').placeholder = tr.form_msg;
+        document.getElementById('form-btn').innerText = tr.form_btn;
+
+        // Галерея (заголовки)
+        renderGallery();
     }
 
-    window.moveSlide = (btn, step) => {
-        const vp = btn.parentElement; const s = vp.querySelectorAll('.slide'); const d = vp.querySelectorAll('.dot');
-        let i = Array.from(s).findIndex(el => el.classList.contains('active'));
-        s[i].classList.remove('active'); d[i].classList.remove('active');
-        i = (i + step + s.length) % s.length; s[i].classList.add('active'); d[i].classList.add('active');
-    };
+    function renderGallery() {
+        const grid = document.getElementById('portfolio-grid');
+        grid.innerHTML = '';
+        myWorks.forEach((work, i) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const isMobile = window.innerWidth < 768;
+            card.setAttribute('data-aos', isMobile ? 'fade-up' : (i % 2 === 0 ? 'fade-right' : 'fade-left'));
+            
+            let s = ''; let d = '';
+            work.images.forEach((img, idx) => {
+                s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${img}"></div>`;
+                d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
+            });
+            
+            const n = work.images.length > 1 ? `<button class="nav-btn prev" onclick="event.stopPropagation(); changeS(this,-1)">‹</button><button class="nav-btn next" onclick="event.stopPropagation(); changeS(this,1)">›</button><div class="dots">${d}</div>` : '';
+            card.innerHTML = `<div class="slider-viewport">${s}${n}</div><div style="padding:15px"><h3 style="margin:0">${translations[currentLang].work_titles[work.titleIdx]}</h3><p style="margin:5px 0 0; font-size:12px; color:#888">${work.cat}</p></div>`;
+            
+            if(work.images.length > 1) addTouch(card);
+            grid.appendChild(card);
+        });
+        AOS.refresh();
+    }
 
-    window.goToSlide = (dot, idx) => {
-        const vp = dot.parentElement.parentElement;
-        vp.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
-        vp.querySelectorAll('.slide')[idx].classList.add('active'); vp.querySelectorAll('.dot')[idx].classList.add('active');
-    };
+    // --- СЛАЙДЕР И СВАЙПЫ ---
+    function changeS(btn, dir) {
+        const vp = btn.parentElement;
+        const slides = vp.querySelectorAll('.slide');
+        const dots = vp.querySelectorAll('.dot');
+        let i = Array.from(slides).findIndex(s => s.classList.contains('active'));
+        slides[i].classList.remove('active'); dots[i].classList.remove('active');
+        i = (i + dir + slides.length) % slides.length;
+        slides[i].classList.add('active'); dots[i].classList.add('active');
+    }
 
+    function addTouch(el) {
+        let x = 0;
+        el.addEventListener('touchstart', e => x = e.touches[0].clientX, {passive:true});
+        el.addEventListener('touchend', e => {
+            let dx = x - e.changedTouches[0].clientX;
+            if(Math.abs(dx) > 50) changeS(el.querySelector('.slider-viewport'), dx > 0 ? 1 : -1);
+        }, {passive:true});
+    }
+
+    // --- ЛАЙТБОКС ---
+    let lbData = { imgs: [], idx: 0 };
+    function openLB(workIdx, imgIdx) {
+        lbData.imgs = myWorks[workIdx].images;
+        lbData.idx = imgIdx;
+        document.getElementById('lb-img').src = lbData.imgs[lbData.idx];
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+    function moveLB(dir) {
+        lbData.idx = (lbData.idx + dir + lbData.imgs.length) % lbData.imgs.length;
+        document.getElementById('lb-img').src = lbData.imgs[lbData.idx];
+    }
+    function closeLB() { document.getElementById('lightbox').style.display = 'none'; }
+
+    // --- ТЕМА И СКРОЛЛ ---
     function toggleTheme() {
-        const body = document.body;
-        const isDark = body.getAttribute('data-theme') === 'dark';
-        body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        document.querySelector('.theme-toggle').innerText = isDark ? 'DARK MODE' : 'LIGHT MODE';
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        document.getElementById('theme-btn').innerText = isDark ? 'DARK' : 'LIGHT';
     }
 
     window.onscroll = () => {
-        const winScroll = document.documentElement.scrollTop;
+        const scroll = document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        document.getElementById("progress-bar").style.width = (winScroll / height) * 100 + "%";
+        document.getElementById("progress-bar").style.width = (scroll / height) * 100 + "%";
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-        const grid = document.getElementById('portfolio-grid');
-        myWorks.forEach((work, i) => grid.appendChild(createCard(work, i)));
-        AOS.init({ duration: 1000, once: true, offset: 100 });
+        updateUI();
+        AOS.init({ duration: 800, once: true });
     });
 </script>
 </body>
