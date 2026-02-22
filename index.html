@@ -8,13 +8,13 @@
     <style>
         :root { 
             --bg: #ffffff; --text: #1a1a1a; --gray-light: #f9f9f9; 
-            --accent: #000; --line: #eeeeee; --transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            --accent: #000; --line: #eeeeee; --border-color: #000; --transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
         [data-theme="dark"] {
-            --bg: #0a0a0a; --text: #f5f5f5; --gray-light: #151515; --line: #222; --accent: #fff;
+            --bg: #0a0a0a; --text: #f5f5f5; --gray-light: #151515; --line: #222; --accent: #fff; --border-color: #fff;
         }
 
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; scroll-behavior: smooth; transition: background var(--transition), color var(--transition); }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; scroll-behavior: smooth; transition: background var(--transition), color var(--transition); overflow-x: hidden; }
         #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; z-index: 1000; transition: width 0.1s; }
 
         nav { padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--bg); backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid var(--line); }
@@ -24,52 +24,54 @@
         header { padding: 80px 50px 20px; max-width: 1000px; }
         header h1 { font-size: 3rem; margin: 0; font-weight: 800; line-height: 1.2; }
 
-        /* БЛОК О СЕБЕ */
         .about-section { padding: 20px 50px 80px; max-width: 1100px; }
-        .about-intro { font-size: 1.25rem; color: #555; line-height: 1.6; margin-bottom: 50px; max-width: 800px; }
+        .about-intro { font-size: 1.25rem; color: #555; line-height: 1.6; margin-bottom: 50px; }
         .about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; }
-        .about-col h3 { font-size: 1.4rem; margin-bottom: 25px; font-weight: 700; border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; }
         .about-list { list-style: none; padding: 0; margin: 0; }
-        .about-list li { margin-bottom: 15px; line-height: 1.5; position: relative; padding-left: 25px; }
-        .about-list li::before { content: "•"; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
-        .about-list b { font-weight: 600; }
+        .about-list li { margin-bottom: 15px; padding-left: 25px; position: relative; }
+        .about-list li::before { content: "•"; position: absolute; left: 0; color: var(--accent); }
 
         .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 60px; padding: 0 50px 100px; }
-        .card { overflow: hidden; display: flex; flex-direction: column; position: relative; }
-        .slider-viewport { position: relative; height: 550px; width: 100%; overflow: hidden; background: var(--gray-light); cursor: zoom-in; }
+        
+        /* СТИЛЬ КАРТОЧЕК С РАМКОЙ */
+        .card { border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; position: relative; border: 2px solid var(--border-color); background: var(--bg); }
+        .slider-viewport { position: relative; height: 550px; width: 100%; overflow: hidden; cursor: zoom-in; }
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease; }
         .slide.active { opacity: 1; z-index: 1; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; filter: blur(10px); transition: filter 0.6s ease; }
-        .slide img.loaded { filter: blur(0); }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
 
-        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: var(--bg); color: var(--text); border: none; width: 44px; height: 44px; cursor: pointer; z-index: 10; font-size: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: var(--bg); color: var(--text); border: 2px solid var(--border-color); width: 44px; height: 44px; cursor: pointer; z-index: 10; font-size: 20px; border-radius: 50%; }
         .dots { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
-        .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.3); border-radius: 50%; cursor: pointer; }
-        .dot.active { background: var(--accent); transform: scale(1.4); }
+        .dot { width: 8px; height: 8px; background: rgba(128,128,128,0.5); border-radius: 50%; cursor: pointer; border: 1px solid var(--border-color); }
+        .dot.active { background: var(--accent); transform: scale(1.3); }
 
-        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; z-index: 2000; align-items: center; justify-content: center; cursor: zoom-out; }
-        #lightbox img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        /* ЛАЙТБОКС С НАВИГАЦИЕЙ */
+        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; }
+        #lightbox img { max-width: 85%; max-height: 85%; object-fit: contain; border: 3px solid #fff; border-radius: 10px; }
+        .lb-btn { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: 2px solid #fff; color: #fff; width: 60px; height: 60px; font-size: 30px; cursor: pointer; border-radius: 50%; transition: 0.3s; }
+        .lb-btn:hover { background: #fff; color: #000; }
+        .lb-prev { left: 30px; } .lb-next { right: 30px; }
+        .lb-close { position: absolute; top: 30px; right: 30px; font-size: 40px; color: #fff; cursor: pointer; }
 
-        .contact-section { background: var(--gray-light); padding: 100px 50px; display: flex; gap: 80px; flex-wrap: wrap; border-top: 1px solid var(--line); }
-        .contact-info a { display: block; color: var(--text); text-decoration: none; font-size: 1.1rem; margin-bottom: 15px; font-weight: 500; }
-        .contact-form { flex: 1; min-width: 300px; }
-        .contact-form input, .contact-form textarea { width: 100%; padding: 18px; margin-bottom: 20px; border: 1px solid var(--line); background: var(--bg); color: var(--text); outline: none; box-sizing: border-box; }
-        .contact-form button { background: var(--accent); color: var(--bg); padding: 18px; border: none; cursor: pointer; font-weight: 800; width: 100%; }
+        .contact-section { background: var(--gray-light); padding: 100px 50px; display: flex; gap: 80px; flex-wrap: wrap; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 18px; margin-bottom: 20px; border: 2px solid var(--border-color); background: var(--bg); color: var(--text); border-radius: 10px; }
+        .contact-form button { background: var(--accent); color: var(--bg); padding: 18px; border: none; cursor: pointer; font-weight: 800; width: 100%; border-radius: 10px; }
 
-        footer { padding: 60px 50px; text-align: center; border-top: 1px solid var(--line); color: #999; font-size: 0.8rem; }
-        @media (max-width: 768px) { 
-            header h1 { font-size: 2.2rem; } 
-            .about-grid { grid-template-columns: 1fr; }
-            .gallery { grid-template-columns: 1fr; padding: 20px; } 
-            .slider-viewport { height: 380px; } 
-            nav { padding: 20px; }
-        }
+        footer { padding: 60px 50px; text-align: center; color: #999; }
+        @media (max-width: 768px) { .gallery { grid-template-columns: 1fr; padding: 20px; } .slider-viewport { height: 380px; } }
     </style>
 </head>
 <body>
 
 <div id="progress-bar"></div>
-<div id="lightbox" onclick="this.style.display='none'"><img src=""></div>
+
+<!-- Модифицированный Лайтбокс -->
+<div id="lightbox">
+    <span class="lb-close" onclick="closeLB()">&times;</span>
+    <button class="lb-btn lb-prev" onclick="moveLB(-1)">&#8249;</button>
+    <img id="lb-img" src="">
+    <button class="lb-btn lb-next" onclick="moveLB(1)">&#8250;</button>
+</div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
@@ -86,27 +88,20 @@
 
 <section class="about-section" data-aos="fade-up">
     <p class="about-intro">Ищете опытного 3D художника? Я предлагаю широкий спектр услуг, от визуализации до игровых ассетов и анимации.</p>
-    
     <div class="about-grid">
         <div class="about-col">
-            <h3>Ключевые навыки</h3>
             <ul class="about-list">
-                <li><b>3D Моделирование:</b> Детализированные и реалистичные модели.</li>
-                <li><b>Фотореалистичная Визуализация:</b> Превращение моделей в захватывающие изображения.</li>
-                <li><b>Оптимизация для Игр/VR/AR:</b> Ассеты, оптимизированные для производительности.</li>
-                <li><b>3D Анимация:</b> Оживление ваших моделей.</li>
-                <li><b>Различные Стили:</b> Адаптация к вашим требованиям.</li>
+                <li><b>3D Моделирование:</b> Детализированные модели.</li>
+                <li><b>Визуализация:</b> Фотореализм.</li>
+                <li><b>Оптимизация:</b> Игры/VR/AR.</li>
                 <li><b>Профессиональный Софт:</b> Blender, Substance Painter, Marmoset Toolbag, Unreal Engine, Unity.</li>
-                <li><b>Внимание к Деталям и Креативность.</b></li>
             </ul>
         </div>
         <div class="about-col">
-            <h3>Помогу вам</h3>
             <ul class="about-list">
-                <li>Улучшить маркетинг (визуализации продуктов).</li>
-                <li>Оживить игры (3D ассеты).</li>
+                <li>Улучшить маркетинг.</li>
+                <li>Оживить игры.</li>
                 <li>Визуализировать архитектуру.</li>
-                <li>Рассказать истории через анимацию.</li>
             </ul>
         </div>
     </div>
@@ -117,10 +112,8 @@
 <section class="contact-section" id="contact" data-aos="fade-up">
     <div class="contact-info">
         <h2>Контакты</h2>
-        <a href="https://kwork.ru" target="_blank">💼 Kwork Profile</a>
-        <a href="mailto:hypexits@mail.ru">📧 hypexits@mail.ru</a>
-        <a href="https://t.me" target="_blank">✈️ @WINDUP_MARMOSET</a>
-        <a href="tel:+79251803895">📞 +7 (925) 180-38-95</a>
+        <a href="mailto:hypexits@mail.ru" style="color:var(--text); text-decoration:none;">📧 hypexits@mail.ru</a><br><br>
+        <a href="https://t.me" style="color:var(--text); text-decoration:none;">✈️ @WINDUP_MARMOSET</a>
     </div>
     <div class="contact-form">
         <form action="https://formspree.io" method="POST">
@@ -149,24 +142,39 @@
         { title: "environment creation low-poly", category: "Game Assets", images: ["images/p10_1.jpg", "images/p10_2.jpg"] }
     ];
 
-    function openLightbox(src) {
-        const lb = document.getElementById('lightbox');
-        lb.querySelector('img').src = src;
-        lb.style.display = 'flex';
+    let currentLBImages = [];
+    let currentLBIndex = 0;
+
+    function openLB(imgArray, idx) {
+        currentLBImages = imgArray;
+        currentLBIndex = idx;
+        document.getElementById('lb-img').src = currentLBImages[currentLBIndex];
+        document.getElementById('lightbox').style.display = 'flex';
     }
 
-    function createCard(work) {
+    function moveLB(step) {
+        currentLBIndex = (currentLBIndex + step + currentLBImages.length) % currentLBImages.length;
+        document.getElementById('lb-img').src = currentLBImages[currentLBIndex];
+    }
+
+    function closeLB() { document.getElementById('lightbox').style.display = 'none'; }
+
+    function createCard(work, cardIdx) {
         const card = document.createElement('div');
-        card.className = 'card'; card.setAttribute('data-aos', 'fade-up');
+        card.className = 'card';
+        // ЧЕРЕДОВАНИЕ АНИМАЦИИ: лево / право
+        card.setAttribute('data-aos', cardIdx % 2 === 0 ? 'fade-right' : 'fade-left');
+        
         let s = ''; let d = '';
         work.images.forEach((img, i) => {
-            s += `<div class="slide ${i === 0 ? 'active' : ''}" onclick="openLightbox('${img}')">
-                    <img src="${img}" onload="this.classList.add('loaded')" loading="lazy">
+            s += `<div class="slide ${i === 0 ? 'active' : ''}" onclick="openLB([${work.images.map(url => `'${url}'`)}], ${i})">
+                    <img src="${img}" loading="lazy">
                   </div>`;
             d += `<div class="dot ${i === 0 ? 'active' : ''}" onclick="event.stopPropagation(); goToSlide(this, ${i})"></div>`;
         });
+        
         const n = work.images.length > 1 ? `<button class="nav-btn prev" onclick="event.stopPropagation(); moveSlide(this, -1)">‹</button><button class="nav-btn next" onclick="event.stopPropagation(); moveSlide(this, 1)">›</button><div class="dots">${d}</div>` : '';
-        card.innerHTML = `<div class="slider-viewport">${s}${n}</div><div class="info"><h3>${work.title}</h3><p>${work.category}</p></div>`;
+        card.innerHTML = `<div class="slider-viewport">${s}${n}</div><div style="padding:20px"><h3>${work.title}</h3><p>${work.category}</p></div>`;
         return card;
     }
 
@@ -198,8 +206,8 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const grid = document.getElementById('portfolio-grid');
-        myWorks.forEach(work => grid.appendChild(createCard(work)));
-        AOS.init({ duration: 1000, once: true });
+        myWorks.forEach((work, i) => grid.appendChild(createCard(work, i)));
+        AOS.init({ duration: 1000, once: true, offset: 100 });
     });
 </script>
 </body>
