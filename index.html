@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Marm0SET_toolBAG | Portfolio</title>
-    <link href="https://unpkg.com" rel="stylesheet">
     <style>
         :root { 
             --bg: #0a0a0a; --text: #f5f5f5; --gray-light: rgba(20, 20, 25, 0.6); 
@@ -17,7 +16,7 @@
             --glow: rgba(0, 0, 0, 0.2);
         }
 
-        html, body { max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; }
+        html, body { max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; scroll-behavior: smooth; }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background 0.5s; user-select: none; -webkit-user-select: none; }
         
         #gradient-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
@@ -26,7 +25,8 @@
         nav { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--gray-light); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 100; border-bottom: 1px solid var(--line); box-sizing: border-box; }
         .logo { font-weight: 800; font-size: 0.75rem; text-transform: uppercase; }
         .nav-controls { display: flex; gap: 6px; align-items: center; }
-        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 6px 10px; border-radius: 20px; font-size: 9px; font-weight: 700; text-decoration: none; border-style: solid; }
+        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 6px 10px; border-radius: 20px; font-size: 9px; font-weight: 700; text-decoration: none; border-style: solid; transition: 0.3s; }
+        .btn-ui:hover { background: var(--accent); color: var(--bg); }
 
         .site-version { position: fixed; bottom: 15px; right: 15px; padding: 5px 12px; border-radius: 10px; font-size: 10px; font-weight: 800; background: var(--gray-light); backdrop-filter: blur(10px); border: 1px solid var(--border-glass); opacity: 0.6; z-index: 999; }
 
@@ -54,19 +54,36 @@
             .gallery { grid-template-columns: repeat(2, 1fr); padding: 50px; gap: 60px; max-width: 1400px; margin: 0 auto; }
         }
 
-        .slider-viewport { position: relative; height: 350px; width: 100%; overflow: hidden; touch-action: pan-y; cursor: zoom-in; }
-        @media (min-width: 768px) { .slider-viewport { height: 500px; } }
+        /* ИСПРАВЛЕНИЕ ОБРЕЗКИ ФОТО */
+        .slider-viewport { 
+            position: relative; 
+            width: 100%; 
+            aspect-ratio: 1 / 1; /* Квадратный контейнер на мобилках */
+            overflow: hidden; 
+            touch-action: pan-y; 
+            cursor: zoom-in; 
+            background: rgba(0,0,0,0.1);
+        }
+        @media (min-width: 768px) { .slider-viewport { aspect-ratio: 16 / 10; } }
 
-        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; pointer-events: none; display: flex; align-items: center; justify-content: center; }
         .slide.active { opacity: 1; z-index: 5; pointer-events: auto; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; display: block; -webkit-user-drag: none; }
+        .slide img { 
+            max-width: 100%; 
+            max-height: 100%; 
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Картинка НЕ обрезается, а вписывается целиком */
+            display: block; 
+            -webkit-user-drag: none; 
+        }
 
         .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
-        .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-glass); }
+        .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-glass); cursor: pointer; transition: 0.3s; }
         .dot.active { background: var(--accent); width: 15px; border-radius: 4px; }
 
-        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; }
-        #lightbox img { max-width: 90%; max-height: 85%; object-fit: contain; border: 2px solid #fff; border-radius: 15px; }
+        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        #lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; }
 
         footer { padding: 40px; text-align: center; color: #888; font-size: 12px; }
     </style>
@@ -76,7 +93,7 @@
 <canvas id="gradient-canvas"></canvas>
 <div id="progress-bar"></div>
 <div id="lightbox" onclick="this.style.display='none'"><img id="lb-img" src=""></div>
-<div class="site-version">v1.0.9</div>
+<div class="site-version">v1.1.1</div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
@@ -87,30 +104,100 @@
     </div>
 </nav>
 
-<header data-aos="fade-up">
+<header>
     <h1 data-tr="header_title">Бескомпромиссный фотореализм</h1>
 </header>
 
-<section class="about-section" data-aos="fade-up" style="padding: 30px; max-width: 1100px; margin: 20px auto; width: 90%; box-sizing: border-box;">
+<section class="about-section" style="padding: 30px; max-width: 1100px; margin: 20px auto; width: 90%; box-sizing: border-box;">
     <p id="about-text" style="font-size: 1rem; opacity: 0.8; line-height: 1.6; margin: 0;"></p>
 </section>
 
 <main class="gallery" id="portfolio-grid"></main>
 
-<section class="contact-section" id="contact" data-aos="fade-up" style="margin: 40px auto; padding: 50px 20px; max-width: 1100px; text-align: center; width: 90%; box-sizing: border-box;">
+<section class="contact-section" id="contact" style="margin: 40px auto; padding: 50px 20px; max-width: 1100px; text-align: center; width: 90%; box-sizing: border-box;">
     <h2 data-tr="contact_title" style="margin-top: 0;">Связаться со мной</h2>
     <div style="font-weight: 600; line-height: 2.8; font-size: 0.95rem;">
-        <a href="https://kwork.ru" target="_blank" style="color:var(--text); text-decoration:none;">💼 Kwork Profile</a><br>
-        <span onclick="copyToClipboard('hypexits@mail.ru')" style="cursor:pointer;">📧 hypexits@mail.ru</span><br>
-        <span onclick="copyToClipboard('@WINDUP_MARMOSET')" style="cursor:pointer;">✈️ @WINDUP_MARMOSET</span><br>
-        <span onclick="copyToClipboard('+79251803895')" style="cursor:pointer;">📞 +7 (925) 180-38-95</span>
+        <a href="#" target="_blank" style="color:var(--text); text-decoration:none; display: block; border-bottom: 1px solid var(--line);">💼 Kwork Profile</a>
+        <span onclick="copyToClipboard('hypexits@mail.ru')" style="cursor:pointer; display: block; border-bottom: 1px solid var(--line);">📧 hypexits@mail.ru</span>
+        <span onclick="copyToClipboard('@WINDUP_MARMOSET')" style="cursor:pointer; display: block; border-bottom: 1px solid var(--line);">✈️ @WINDUP_MARMOSET</span>
+        <span onclick="copyToClipboard('+79251803895')" style="cursor:pointer; display: block;">📞 +7 (925) 180-38-95</span>
     </div>
 </section>
 
 <footer style="margin-bottom: 40px;">© 2024 Marm0SET_toolBAG</footer>
 
-<script src="https://unpkg.com"></script>
 <script>
+    const projects = [
+        { title: "Product Visualization", images: ["https://picsum.photos", "https://picsum.photos"] },
+        { title: "Game Asset Design", images: ["https://picsum.photos", "https://picsum.photos"] }
+    ];
+
+    const translations = {
+        ru: {
+            nav_contact: "КОНТАКТЫ",
+            header_title: "Бескомпромиссный фотореализм",
+            about_text: "Ищете опытного 3D художника? Я предлагаю визуализацию товаров, игровых ассетов и анимацию. Владею Blender, Substance, UE5.",
+            contact_title: "Связаться со мной"
+        },
+        en: {
+            nav_contact: "CONTACT",
+            header_title: "Uncompromising Photorealism",
+            about_text: "Looking for an experienced 3D artist? I offer product visualization, game assets and animation. Skilled in Blender, Substance, UE5.",
+            contact_title: "Get in Touch"
+        }
+    };
+
+    let curLang = 'ru';
+
+    function renderPortfolio() {
+        const grid = document.getElementById('portfolio-grid');
+        grid.innerHTML = projects.map((p, pIdx) => `
+            <div class="card">
+                <div class="slider-viewport" id="vp-${pIdx}">
+                    ${p.images.map((img, i) => `
+                        <div class="slide ${i === 0 ? 'active' : ''}" data-idx="${i}">
+                            <img src="${img}" onclick="openLightbox('${img}')">
+                        </div>
+                    `).join('')}
+                    <div class="dots">
+                        ${p.images.map((_, i) => `<div class="dot ${i === 0 ? 'active' : ''}" onclick="setSlide(${pIdx}, ${i})"></div>`).join('')}
+                    </div>
+                </div>
+                <div style="padding: 20px; font-weight: 700; font-size: 13px; text-transform: uppercase;">${p.title}</div>
+            </div>
+        `).join('');
+    }
+
+    function setSlide(pIdx, sIdx) {
+        const vp = document.getElementById(`vp-${pIdx}`);
+        vp.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('active', i === sIdx));
+        vp.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === sIdx));
+    }
+
+    function toggleLang() {
+        curLang = curLang === 'ru' ? 'en' : 'ru';
+        document.getElementById('lang-btn').innerText = curLang.toUpperCase();
+        document.querySelectorAll('[data-tr]').forEach(el => el.innerText = translations[curLang][el.getAttribute('data-tr')]);
+        document.getElementById('about-text').innerText = translations[curLang].about_text;
+    }
+
+    function toggleTheme() {
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        document.getElementById('theme-btn').innerText = isDark ? 'DARK' : 'LIGHT';
+    }
+
+    function openLightbox(src) {
+        document.getElementById('lb-img').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text);
+        alert('Copied: ' + text);
+    }
+
+    // Background Animation
     const canvas = document.getElementById('gradient-canvas');
     const ctx = canvas.getContext('2d');
     let time = 0;
@@ -127,98 +214,15 @@
         ctx.fillStyle = grad; ctx.fillRect(0,0,canvas.width,canvas.height);
         time += 0.007; requestAnimationFrame(animate);
     }
+
+    window.addEventListener('scroll', () => {
+        const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+        document.getElementById("progress-bar").style.width = scrolled + "%";
+    });
+
+    renderPortfolio();
+    toggleLang();
     animate();
-
-    const translations = {
-        ru: {
-            nav_contact: "КОНТАКТЫ",
-            header_title: "Бескомпромиссный фотореализм",
-            about_text: "Ищете опытного 3D художника? Я предлагаю визуализацию, игровые ассетов и анимацию. Владею Blender, Substance, UE5.",
-            contact_title: "Связаться со мной",
-            works: ["product visualisation", "character modeling", "interior visualisation", "exterior visualisation", "high-poly modeling", "environment creation low-poly"]
-        },
-        en: {
-            nav_contact: "CONTACT",
-            header_title: "Uncompromising Photorealism",
-            about_text: "Looking for an experienced 3D artist? I offer visualization, game assets and animation. Skilled in Blender, Substance, UE5.",
-            contact_title: "Get in Touch",
-            works: ["product visualisation", "character modeling", "interior visualisation", "exterior visualisation", "high-poly modeling", "environment creation low-poly"]
-        }
-    };
-
-    let currentLang = 'ru';
-    // Названия в массиве для корректного отображения по индексу
-    const workNames = [
-        "product visualisation", "product visualisation", "product visualisation", "product visualisation", "product visualisation",
-        "interior visualisation", "character modeling", "exterior visualisation", "high-poly modeling", "environment creation low-poly"
-    ];
-
-    const myWorks = Array.from({length: 10}, (_, i) => ({
-        id: i,
-        images: [`images/p${i+1}_1.jpg`, `images/p${i+1}_2.jpg`]
-    }));
-
-    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
-    function updateUI() {
-        const tr = translations[currentLang];
-        document.querySelectorAll('[data-tr]').forEach(el => el.innerHTML = tr[el.getAttribute('data-tr')]);
-        document.getElementById('about-text').innerText = tr.about_text;
-        document.getElementById('lang-btn').innerText = currentLang.toUpperCase();
-        renderGallery();
-    }
-
-    function createCard(work, i) {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.setAttribute('data-aos', window.innerWidth < 768 ? 'fade-up' : (i % 2 === 0 ? 'fade-right' : 'fade-left'));
-        
-        let s = ''; let d = '';
-        work.images.forEach((img, idx) => {
-            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${img}"></div>`;
-            d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
-        });
-        
-        card.innerHTML = `<div class="slider-viewport">${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${workNames[i]}</h3><p style="font-size:12px;opacity:0.6">CGI Production</p></div>`;
-        
-        // Прямая привязка событий свайпа к вьюпорту
-        const vp = card.querySelector('.slider-viewport');
-        if (work.images.length > 1) {
-            let startX = 0;
-            vp.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, {passive: true});
-            vp.addEventListener('touchend', (e) => {
-                let diff = startX - e.changedTouches[0].clientX;
-                if (Math.abs(diff) > 50) {
-                    const slides = vp.querySelectorAll('.slide');
-                    const dots = vp.querySelectorAll('.dot');
-                    let curr = Array.from(slides).findIndex(el => el.classList.contains('active'));
-                    slides[curr].classList.remove('active'); dots[curr].classList.remove('active');
-                    curr = (curr + (diff > 0 ? 1 : -1) + slides.length) % slides.length;
-                    slides[curr].classList.add('active'); dots[curr].classList.add('active');
-                }
-            }, {passive: true});
-        }
-        return card;
-    }
-
-    function renderGallery() {
-        const grid = document.getElementById('portfolio-grid'); grid.innerHTML = '';
-        myWorks.forEach((w, i) => grid.appendChild(createCard(w, i)));
-        AOS.refresh();
-    }
-
-    function openLB(w, i) { document.getElementById('lb-img').src = myWorks[w].images[i]; document.getElementById('lightbox').style.display = 'flex'; }
-    function toggleTheme() { 
-        const isDark = document.body.getAttribute('data-theme') === 'dark';
-        document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        document.getElementById('theme-btn').innerText = isDark ? 'DARK' : 'LIGHT';
-    }
-    function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied'); }
-    
-    window.onscroll = () => { 
-        const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        if (h > 0) document.getElementById("progress-bar").style.width = (window.scrollY / h) * 100 + "%"; 
-    };
-    document.addEventListener('DOMContentLoaded', () => { updateUI(); AOS.init({ duration: 800, once: true }); });
 </script>
 </body>
 </html>
