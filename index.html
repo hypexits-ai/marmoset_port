@@ -60,6 +60,7 @@
             100% { background-color: var(--gray-light); }
         }
 
+        /* touch-action: pan-y позволяет скроллить страницу, но ловить горизонтальные жесты */
         .slider-viewport { position: relative; height: 350px; width: 100%; overflow: hidden; touch-action: pan-y; cursor: zoom-in; background: var(--bg); }
         @media (min-width: 768px) { .slider-viewport { height: 500px; } }
 
@@ -70,11 +71,10 @@
         .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); display: block; -webkit-user-drag: none; opacity: 0; transition: opacity 0.5s ease; }
         .slide img.loaded { opacity: 1; }
 
-        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 20; opacity: 0; transition: opacity 0.3s, background 0.3s; display: none; backdrop-filter: blur(5px); }
+        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 50; opacity: 0; transition: opacity 0.3s, background 0.3s; display: none; backdrop-filter: blur(5px); }
         @media (hover: hover) { 
-            .slider-viewport:hover .nav-arrow { opacity: 1; } 
+            .slider-viewport:hover .nav-arrow, #lightbox:hover .nav-arrow { opacity: 1; } 
             .nav-arrow { display: flex; align-items: center; justify-content: center; font-size: 18px; }
-            .nav-arrow:hover { background: rgba(0,0,0,0.8); }
         }
         .arrow-left { left: 15px; }
         .arrow-right { right: 15px; }
@@ -84,7 +84,7 @@
         .dot.active { background: var(--accent); width: 12px; border-radius: 3px; }
 
         #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; touch-action: none; }
-        #lightbox img { max-width: 95%; max-height: 92%; object-fit: contain; border: 1px solid var(--border-glass); border-radius: 12px; transition: opacity 0.3s ease; opacity: 0; }
+        #lightbox img { max-width: 95%; max-height: 92%; object-fit: contain; border: 1px solid var(--border-glass); border-radius: 12px; transition: opacity 0.3s ease; opacity: 0; z-index: 10; cursor: default; }
 
         footer { padding: 60px 40px; text-align: center; color: #888; font-size: 11px; letter-spacing: 1px; }
     </style>
@@ -93,8 +93,12 @@
 
 <canvas id="gradient-canvas"></canvas>
 <div id="progress-bar"></div>
-<div id="lightbox" onclick="closeLB(event)"><img id="lb-img" src=""></div>
-<div class="site-version">v1.6.1</div>
+<div id="lightbox" onclick="closeLB(event)">
+    <button class="nav-arrow arrow-left" onclick="changeLBImg(-1, event)">❮</button>
+    <button class="nav-arrow arrow-right" onclick="changeLBImg(1, event)">❯</button>
+    <img id="lb-img" src="" onclick="event.stopPropagation()">
+</div>
+<div class="site-version">v1.6.3</div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
@@ -215,14 +219,25 @@
         
         const vp = card.querySelector('.slider-viewport');
         if (work.images.length > 1) {
-            let startX = 0;
-            vp.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, {passive: true});
-            vp.addEventListener('touchend', (e) => {
-                let diff = startX - e.changedTouches[0].clientX;
-                if (Math.abs(diff) > 40) manualChange(vp, diff > 0 ? 1 : -1);
-            }, {passive: true});
+            setupSwipe(vp, (dir) => manualChange(vp, dir));
         }
         return card;
+    }
+
+    // НОВАЯ ЛОГИКА СВАЙПА v1.6.3 (PointerEvents)
+    function setupSwipe(el, callback) {
+        let startX = 0, startY = 0;
+        el.addEventListener('pointerdown', e => {
+            startX = e.clientX; startY = e.clientY;
+            el.setPointerCapture(e.pointerId);
+        });
+        el.addEventListener('pointerup', e => {
+            let diffX = startX - e.clientX;
+            let diffY = startY - e.clientY;
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+                callback(diffX > 0 ? 1 : -1);
+            }
+        });
     }
 
     function manualChange(vp, dir) {
@@ -247,7 +262,6 @@
     let currentWorkIdx = 0; let currentImgIdx = 0;
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lb-img');
-    let lbStartX = 0, lbStartY = 0;
 
     function openLB(wIdx, iIdx) {
         currentWorkIdx = wIdx; currentImgIdx = iIdx;
@@ -263,29 +277,37 @@
         temp.onload = () => { lbImg.src = targetSrc; lbImg.style.opacity = '1'; };
     }
 
-    function closeLB(e) { if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.style.display = 'none'; }
+    function changeLBImg(dir, e) {
+        if(e) e.stopPropagation();
+        const imgs = myWorks[currentWorkIdx].images;
+        currentImgIdx = (currentImgIdx + dir + imgs.length) % imgs.length;
+        updateLBImage();
+    }
 
-    lb.addEventListener('touchstart', (e) => { lbStartX = e.touches[0].clientX; lbStartY = e.touches[0].clientY; }, {passive: true});
-    lb.addEventListener('touchend', (e) => {
-        let diffX = lbStartX - e.changedTouches[0].clientX;
-        let diffY = lbStartY - e.changedTouches[0].clientY;
-        const threshold = 50;
-        if (Math.abs(diffX) > Math.abs(diffY)) {
-            if (Math.abs(diffX) > threshold) {
-                const imgs = myWorks[currentWorkIdx].images;
-                currentImgIdx = (currentImgIdx + (diffX > 0 ? 1 : -1) + imgs.length) % imgs.length;
-                updateLBImage();
-            }
+    function closeLB(e) { lb.style.display = 'none'; }
+
+    // СВАЙПЫ ДЛЯ LIGHTBOX v1.6.3
+    let lbStartX = 0, lbStartY = 0;
+    lb.addEventListener('pointerdown', e => {
+        lbStartX = e.clientX; lbStartY = e.clientY;
+        lb.setPointerCapture(e.pointerId);
+    });
+    lb.addEventListener('pointerup', e => {
+        let dX = lbStartX - e.clientX;
+        let dY = lbStartY - e.clientY;
+        const T = 50;
+        if (Math.abs(dX) > Math.abs(dY)) {
+            if (Math.abs(dX) > T) changeLBImg(dX > 0 ? 1 : -1);
         } else {
-            if (diffY > threshold) {
+            if (dY > T) { // Up
                 currentWorkIdx = (currentWorkIdx + 1) % myWorks.length;
                 currentImgIdx = 0; updateLBImage();
-            } else if (diffY < -threshold) {
+            } else if (dY < -T) { // Down
                 currentWorkIdx = (currentWorkIdx - 1 + myWorks.length) % myWorks.length;
                 currentImgIdx = 0; updateLBImage();
             }
         }
-    }, {passive: true});
+    });
 
     function toggleTheme() { 
         const isDark = document.body.getAttribute('data-theme') === 'dark';
