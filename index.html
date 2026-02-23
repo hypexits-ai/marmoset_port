@@ -17,7 +17,7 @@
             --glow: rgba(0, 0, 0, 0.2);
         }
 
-        html, body { max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; }
+        html, body { max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; scroll-behavior: smooth; }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background 0.5s; user-select: none; -webkit-user-select: none; }
         
         #gradient-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
@@ -42,49 +42,34 @@
             border-radius: 30px;
         }
 
+        .about-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-top: 20px; text-align: left; }
+        @media (min-width: 768px) { .about-grid { grid-template-columns: 1.2fr 1fr; } }
+        .about-list { list-style: none; padding: 0; margin: 0; font-size: 0.9rem; line-height: 1.8; opacity: 0.9; }
+        .about-list li::before { content: "• "; color: var(--accent); font-weight: bold; }
+
         .card { width: 100%; max-width: 550px; overflow: hidden; position: relative; margin: 0 auto; transition: border-color 0.3s, box-shadow 0.3s; }
         .card:hover { border-color: var(--glow) !important; box-shadow: 0 0 25px var(--glow); }
 
         .gallery { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 20px; justify-items: center; width: 100%; box-sizing: border-box; }
-        
-        @media (min-width: 768px) { 
-            nav { padding: 15px 50px; }
-            .logo { font-size: 0.9rem; }
-            header h1 { font-size: 3.5rem; text-align: left; } 
-            .gallery { grid-template-columns: repeat(2, 1fr); padding: 50px; gap: 60px; max-width: 1400px; margin: 0 auto; }
-        }
+        @media (min-width: 768px) { .gallery { grid-template-columns: repeat(2, 1fr); padding: 50px; gap: 60px; max-width: 1400px; margin: 0 auto; } }
 
-        @keyframes skeleton-pulse {
-            0% { background-color: var(--gray-light); }
-            50% { background-color: var(--line); }
-            100% { background-color: var(--gray-light); }
-        }
-
-        /* touch-action: pan-y позволяет скроллить страницу, но ловить горизонтальные жесты */
         .slider-viewport { position: relative; height: 350px; width: 100%; overflow: hidden; touch-action: pan-y; cursor: zoom-in; background: var(--bg); }
         @media (min-width: 768px) { .slider-viewport { height: 500px; } }
 
         .slide { position: absolute; inset: 0; opacity: 0; transform: scale(1.02); transition: opacity 0.6s ease, transform 0.6s ease; pointer-events: none; }
-        .slide::before { content: ""; position: absolute; inset: 0; animation: skeleton-pulse 1.8s infinite; z-index: -1; }
         .slide.active { opacity: 1; transform: scale(1); z-index: 5; pointer-events: auto; }
-        
-        .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); display: block; -webkit-user-drag: none; opacity: 0; transition: opacity 0.5s ease; }
-        .slide img.loaded { opacity: 1; }
+        .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); display: block; -webkit-user-drag: none; }
 
-        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 50; opacity: 0; transition: opacity 0.3s, background 0.3s; display: none; backdrop-filter: blur(5px); }
-        @media (hover: hover) { 
-            .slider-viewport:hover .nav-arrow, #lightbox:hover .nav-arrow { opacity: 1; } 
-            .nav-arrow { display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        }
-        .arrow-left { left: 15px; }
-        .arrow-right { right: 15px; }
+        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 50; opacity: 0; transition: opacity 0.3s; display: none; backdrop-filter: blur(5px); }
+        @media (hover: hover) { .slider-viewport:hover .nav-arrow, #lightbox:hover .nav-arrow { opacity: 1; } .nav-arrow { display: flex; align-items: center; justify-content: center; font-size: 18px; } }
+        .arrow-left { left: 15px; } .arrow-right { right: 15px; }
 
         .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 10; flex-wrap: wrap; justify-content: center; width: 80%; pointer-events: none; }
         .dot { width: 5px; height: 5px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-glass); transition: 0.3s; }
         .dot.active { background: var(--accent); width: 12px; border-radius: 3px; }
 
         #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; touch-action: none; }
-        #lightbox img { max-width: 95%; max-height: 92%; object-fit: contain; border: 1px solid var(--border-glass); border-radius: 12px; transition: opacity 0.3s ease; opacity: 0; z-index: 10; cursor: default; }
+        #lightbox img { max-width: 95%; max-height: 92%; object-fit: contain; border: 1px solid var(--border-glass); border-radius: 12px; transition: opacity 0.3s ease; }
 
         footer { padding: 60px 40px; text-align: center; color: #888; font-size: 11px; letter-spacing: 1px; }
     </style>
@@ -96,9 +81,9 @@
 <div id="lightbox" onclick="closeLB(event)">
     <button class="nav-arrow arrow-left" onclick="changeLBImg(-1, event)">❮</button>
     <button class="nav-arrow arrow-right" onclick="changeLBImg(1, event)">❯</button>
-    <img id="lb-img" src="" onclick="event.stopPropagation()">
+    <img id="lb-img" src="">
 </div>
-<div class="site-version">v1.6.3</div>
+<div class="site-version">v1.6.5</div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
@@ -113,8 +98,17 @@
     <h1 data-tr="header_title">Бескомпромиссный фотореализм</h1>
 </header>
 
-<section class="about-section" data-aos="fade-up" style="padding: 30px; max-width: 1100px; margin: 20px auto; width: 90%; box-sizing: border-box;">
-    <p id="about-text" style="font-size: 1rem; opacity: 0.8; line-height: 1.6; margin: 0;"></p>
+<section class="about-section" data-aos="fade-up" style="padding: 40px; max-width: 1100px; margin: 20px auto; width: 90%; box-sizing: border-box;">
+    <div class="about-grid">
+        <div>
+            <h3 data-tr="skills_title" style="margin-top:0">Ключевые навыки</h3>
+            <ul class="about-list" id="skills-list"></ul>
+        </div>
+        <div>
+            <h3 data-tr="help_title" style="margin-top:0">Помогу вам</h3>
+            <ul class="about-list" id="help-list"></ul>
+        </div>
+    </div>
 </section>
 
 <main class="gallery" id="portfolio-grid"></main>
@@ -152,97 +146,82 @@
     animate();
 
     const translations = {
-        ru: { nav_contact: "КОНТАКТЫ", header_title: "Бескомпромиссный фотореализм", about_text: "Ищете опытного 3D художника? Я предлагаю визуализацию, игровые ассетов и анимацию. Владею Blender, Substance, UE5.", contact_title: "Связаться со мной" },
-        en: { nav_contact: "CONTACT", header_title: "Uncompromising Photorealism", about_text: "Looking for an experienced 3D artist? I offer visualization, game assets and animation. Skilled in Blender, Substance, UE5.", contact_title: "Get in Touch" }
+        ru: {
+            nav_contact: "КОНТАКТЫ", header_title: "Бескомпромиссный фотореализм", contact_title: "Связаться со мной",
+            skills_title: "Ключевые навыки", help_title: "Помогу вам",
+            skills: ["3D Моделирование: Детализированные и реалистичные модели", "Фотореалистичная Визуализация: Превращение моделей в захватывающие изображения", "Оптимизация для Игр/VR/AR: Ассеты для производительности", "3D Анимация: Оживление ваших моделей", "Различные Стили: Адаптация к вашим требованиям", "Профессиональный Софт: Blender, Substance, UE5, Unity", "Внимание к деталям и креативность"],
+            help: ["Улучшить маркетинг (визуализация продуктов)", "Оживить игры (3D ассеты)", "Визуализировать архитектуру", "Рассказать истории через анимацию"]
+        },
+        en: {
+            nav_contact: "CONTACT", header_title: "Uncompromising Photorealism", contact_title: "Get in Touch",
+            skills_title: "Key Skills", help_title: "How I Can Help",
+            skills: ["3D Modeling: High-detail and realistic models", "Photorealistic Visualization: Stunning renders", "Game/VR/AR Optimization: Performance-ready assets", "3D Animation: Bringing models to life", "Versatile Styles: Adaptable to your needs", "Software: Blender, Substance, UE5, Unity", "Attention to Detail & Creativity"],
+            help: ["Boost marketing (product visualization)", "Level up games (3D assets)", "Visualize architecture", "Tell stories through animation"]
+        }
     };
 
     let currentLang = 'ru';
     let myWorks = [];
 
     async function discoverWorks() {
-        let pId = 1;
-        let pFound = true;
-        while(pFound && pId < 50) {
+        myWorks = []; let pId = 1;
+        while(pId < 50) {
             const firstImg = `images/p${pId}_1.webp`;
-            try {
-                const res = await fetch(firstImg, { method: 'HEAD' });
-                if (res.ok) {
-                    let images = [];
-                    let imgId = 1;
-                    let imgFound = true;
-                    while(imgFound && imgId < 20) {
-                        const path = `images/p${pId}_${imgId}.webp`;
-                        const imgRes = await fetch(path, { method: 'HEAD' });
-                        if(imgRes.ok) { images.push(path); imgId++; } else { imgFound = false; }
-                    }
-                    myWorks.push({ id: pId, images: images });
-                    pId++;
-                } else { pFound = false; }
-            } catch (e) { pFound = false; }
+            const check = await fetch(firstImg, { method: 'HEAD' });
+            if (check.ok) {
+                let projectImages = [];
+                for(let i=1; i<=10; i++) {
+                    const path = `images/p${pId}_${i}.webp`;
+                    const imgCheck = await fetch(path, { method: 'HEAD' });
+                    if(imgCheck.ok) projectImages.push(path); else break;
+                }
+                myWorks.push({ id: pId, images: projectImages }); pId++;
+            } else break;
         }
         updateUI();
     }
 
-    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
     function updateUI() {
         const tr = translations[currentLang];
-        document.querySelectorAll('[data-tr]').forEach(el => {
-            if(tr[el.getAttribute('data-tr')]) el.innerHTML = tr[el.getAttribute('data-tr')];
-        });
-        document.getElementById('about-text').innerText = tr.about_text;
+        document.querySelectorAll('[data-tr]').forEach(el => { if(tr[el.getAttribute('data-tr')]) el.innerHTML = tr[el.getAttribute('data-tr')]; });
+        
+        const sl = document.getElementById('skills-list'); sl.innerHTML = '';
+        tr.skills.forEach(s => { const li = document.createElement('li'); li.innerText = s; sl.appendChild(li); });
+        
+        const hl = document.getElementById('help-list'); hl.innerHTML = '';
+        tr.help.forEach(h => { const li = document.createElement('li'); li.innerText = h; hl.appendChild(li); });
+
         document.getElementById('lang-btn').innerText = currentLang.toUpperCase();
         renderGallery();
     }
+
+    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
 
     function createCard(work, i) {
         const card = document.createElement('div');
         card.className = 'card';
         card.setAttribute('data-aos', window.innerWidth < 768 ? 'fade-up' : (i % 2 === 0 ? 'fade-right' : 'fade-left'));
-        
         let s = ''; let d = '';
         work.images.forEach((imgUrl, idx) => {
-            const loading = (i < 2 && idx === 0) ? 'eager' : 'lazy';
-            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})">
-                    <img src="${imgUrl}" loading="${loading}" onload="this.classList.add('loaded')">
-                  </div>`;
+            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${imgUrl}" loading="lazy"></div>`;
             d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
         });
-        
         const title = (work.id === 11) ? "Cinematic" : "CGI Project #" + work.id;
-        card.innerHTML = `
-            <div class="slider-viewport">
-                <button class="nav-arrow arrow-left" onclick="changeSlide(this, -1, event)">❮</button>
-                <button class="nav-arrow arrow-right" onclick="changeSlide(this, 1, event)">❯</button>
-                ${s}<div class="dots">${d}</div>
-            </div>
-            <div style="padding:20px"><h3>${title}</h3><p style="font-size:11px;opacity:0.5;text-transform:uppercase;letter-spacing:1px">Production</p></div>`;
-        
+        card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow arrow-left" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow arrow-right" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${title}</h3><p style="font-size:11px;opacity:0.5;text-transform:uppercase;letter-spacing:1px">Production</p></div>`;
         const vp = card.querySelector('.slider-viewport');
         if (work.images.length > 1) {
-            setupSwipe(vp, (dir) => manualChange(vp, dir));
+            let startX = 0;
+            vp.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, {passive: true});
+            vp.addEventListener('touchend', (e) => {
+                let diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 40) manualChange(vp, diff > 0 ? 1 : -1);
+            }, {passive: true});
         }
         return card;
     }
 
-    // НОВАЯ ЛОГИКА СВАЙПА v1.6.3 (PointerEvents)
-    function setupSwipe(el, callback) {
-        let startX = 0, startY = 0;
-        el.addEventListener('pointerdown', e => {
-            startX = e.clientX; startY = e.clientY;
-            el.setPointerCapture(e.pointerId);
-        });
-        el.addEventListener('pointerup', e => {
-            let diffX = startX - e.clientX;
-            let diffY = startY - e.clientY;
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
-                callback(diffX > 0 ? 1 : -1);
-            }
-        });
-    }
-
     function manualChange(vp, dir) {
-        const slides = vp.querySelectorAll('.slide');
-        const dots = vp.querySelectorAll('.dot');
+        const slides = vp.querySelectorAll('.slide'), dots = vp.querySelectorAll('.dot');
         let curr = Array.from(slides).findIndex(el => el.classList.contains('active'));
         if (curr === -1) return;
         slides[curr].classList.remove('active'); dots[curr].classList.remove('active');
@@ -250,72 +229,51 @@
         slides[curr].classList.add('active'); dots[curr].classList.add('active');
     }
 
-    function changeSlide(btn, dir, event) { event.stopPropagation(); manualChange(btn.parentElement, dir); }
+    function changeSlide(btn, dir, e) { e.stopPropagation(); manualChange(btn.parentElement, dir); }
 
     function renderGallery() {
-        const grid = document.getElementById('portfolio-grid'); 
-        grid.innerHTML = '';
+        const grid = document.getElementById('portfolio-grid'); grid.innerHTML = '';
         myWorks.forEach((w, i) => grid.appendChild(createCard(w, i)));
         if(typeof AOS !== 'undefined') AOS.refresh();
     }
 
-    let currentWorkIdx = 0; let currentImgIdx = 0;
-    const lb = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lb-img');
+    let currentWorkIdx = 0, currentImgIdx = 0;
+    const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
 
     function openLB(wIdx, iIdx) {
         currentWorkIdx = wIdx; currentImgIdx = iIdx;
-        updateLBImage();
-        lb.style.display = 'flex';
-    }
-
-    function updateLBImage() {
-        lbImg.style.opacity = '0';
-        const targetSrc = myWorks[currentWorkIdx].images[currentImgIdx];
-        const temp = new Image();
-        temp.src = targetSrc;
-        temp.onload = () => { lbImg.src = targetSrc; lbImg.style.opacity = '1'; };
+        lbImg.style.opacity = '0'; lbImg.src = myWorks[currentWorkIdx].images[currentImgIdx];
+        lb.style.display = 'flex'; setTimeout(() => lbImg.style.opacity = '1', 50);
     }
 
     function changeLBImg(dir, e) {
         if(e) e.stopPropagation();
         const imgs = myWorks[currentWorkIdx].images;
         currentImgIdx = (currentImgIdx + dir + imgs.length) % imgs.length;
-        updateLBImage();
+        lbImg.style.opacity = '0';
+        setTimeout(() => { lbImg.src = myWorks[currentWorkIdx].images[currentImgIdx]; lbImg.style.opacity = '1'; }, 150);
     }
 
-    function closeLB(e) { lb.style.display = 'none'; }
+    function closeLB(e) { if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.style.display = 'none'; }
 
-    // СВАЙПЫ ДЛЯ LIGHTBOX v1.6.3
-    let lbStartX = 0, lbStartY = 0;
-    lb.addEventListener('pointerdown', e => {
-        lbStartX = e.clientX; lbStartY = e.clientY;
-        lb.setPointerCapture(e.pointerId);
-    });
-    lb.addEventListener('pointerup', e => {
-        let dX = lbStartX - e.clientX;
-        let dY = lbStartY - e.clientY;
-        const T = 50;
-        if (Math.abs(dX) > Math.abs(dY)) {
-            if (Math.abs(dX) > T) changeLBImg(dX > 0 ? 1 : -1);
-        } else {
-            if (dY > T) { // Up
-                currentWorkIdx = (currentWorkIdx + 1) % myWorks.length;
-                currentImgIdx = 0; updateLBImage();
-            } else if (dY < -T) { // Down
-                currentWorkIdx = (currentWorkIdx - 1 + myWorks.length) % myWorks.length;
-                currentImgIdx = 0; updateLBImage();
-            }
+    let lbSX = 0, lbSY = 0;
+    lb.addEventListener('touchstart', e => { lbSX = e.touches[0].clientX; lbSY = e.touches[0].clientY; }, {passive: true});
+    lb.addEventListener('touchend', e => {
+        let dX = lbSX - e.changedTouches[0].clientX, dY = lbSY - e.changedTouches[0].clientY;
+        if (Math.abs(dX) > Math.abs(dY)) { if (Math.abs(dX) > 50) changeLBImg(dX > 0 ? 1 : -1); }
+        else if (Math.abs(dY) > 50) {
+            currentWorkIdx = (currentWorkIdx + (dY > 0 ? 1 : -1) + myWorks.length) % myWorks.length;
+            currentImgIdx = 0; changeLBImg(0);
         }
-    });
+    }, {passive: true});
 
+    function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
     function toggleTheme() { 
         const isDark = document.body.getAttribute('data-theme') === 'dark';
         document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
         document.getElementById('theme-btn').innerText = isDark ? 'DARK' : 'LIGHT';
     }
-
-    function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
+    
     window.onscroll = () => { 
         const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         if (h > 0) document.getElementById("progress-bar").style.width = (window.scrollY / h) * 100 + "%"; 
