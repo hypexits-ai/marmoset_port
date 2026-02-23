@@ -47,7 +47,7 @@
         .about-list { list-style: none; padding: 0; margin: 0; font-size: 0.9rem; line-height: 1.8; opacity: 0.9; }
         .about-list li::before { content: "• "; color: var(--accent); font-weight: bold; }
 
-        .card { width: 100%; max-width: 550px; overflow: hidden; position: relative; margin: 0 auto; transition: border-color 0.3s, box-shadow 0.3s; }
+        .card { width: 100%; max-width: 550px; overflow: hidden; position: relative; margin: 0 auto; transition: border-color 0.3s, box-shadow 0.3s; min-height: 200px; }
         .card:hover { border-color: var(--glow) !important; box-shadow: 0 0 25px var(--glow); }
 
         .gallery { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 20px; justify-items: center; width: 100%; box-sizing: border-box; }
@@ -83,7 +83,7 @@
     <button class="nav-arrow arrow-right" onclick="changeLBImg(1, event)">❯</button>
     <img id="lb-img" src="">
 </div>
-<div class="site-version">v1.6.5</div>
+<div class="site-version">v1.6.6</div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
@@ -163,24 +163,43 @@
     let currentLang = 'ru';
     let myWorks = [];
 
+    // ПРАВКА v1.6.6: Ускоренная загрузка. Сначала текст, потом обложки, потом доп. фото.
     async function discoverWorks() {
-        myWorks = []; let pId = 1;
+        myWorks = []; 
+        updateUI(); // Сначала рисуем текст "О себе"
+        
+        let pId = 1;
         while(pId < 50) {
             const firstImg = `images/p${pId}_1.webp`;
             const check = await fetch(firstImg, { method: 'HEAD' });
             if (check.ok) {
-                let projectImages = [];
-                for(let i=1; i<=10; i++) {
-                    const path = `images/p${pId}_${i}.webp`;
-                    const imgCheck = await fetch(path, { method: 'HEAD' });
-                    if(imgCheck.ok) projectImages.push(path); else break;
-                }
-                myWorks.push({ id: pId, images: projectImages }); pId++;
+                // Создаем проект только с одной картинкой для быстрой отрисовки
+                const work = { id: pId, images: [firstImg] };
+                myWorks.push(work);
+                renderGallery(); // Сразу добавляем карточку на экран
+                
+                // В фоне ищем остальные фото для этого проекта
+                loadExtraImages(pId);
+                pId++;
             } else break;
         }
-        updateUI();
     }
 
+    async function loadExtraImages(pId) {
+        let work = myWorks.find(w => w.id === pId);
+        for(let i=2; i<=10; i++) {
+            const path = `images/p${pId}_${i}.webp`;
+            const check = await fetch(path, { method: 'HEAD' });
+            if(check.ok) {
+                work.images.push(path);
+                // Обновляем только конкретную карточку, чтобы не перерисовывать всё
+                updateCardImages(pId);
+            } else break;
+        }
+    }
+
+    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
+    
     function updateUI() {
         const tr = translations[currentLang];
         document.querySelectorAll('[data-tr]').forEach(el => { if(tr[el.getAttribute('data-tr')]) el.innerHTML = tr[el.getAttribute('data-tr')]; });
@@ -195,12 +214,17 @@
         renderGallery();
     }
 
-    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
-
     function createCard(work, i) {
         const card = document.createElement('div');
+        card.id = `card-p${work.id}`;
         card.className = 'card';
         card.setAttribute('data-aos', window.innerWidth < 768 ? 'fade-up' : (i % 2 === 0 ? 'fade-right' : 'fade-left'));
+        
+        updateCardContent(card, work, i);
+        return card;
+    }
+
+    function updateCardContent(card, work, i) {
         let s = ''; let d = '';
         work.images.forEach((imgUrl, idx) => {
             s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${imgUrl}" loading="lazy"></div>`;
@@ -208,6 +232,7 @@
         });
         const title = (work.id === 11) ? "Cinematic" : "CGI Project #" + work.id;
         card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow arrow-left" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow arrow-right" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${title}</h3><p style="font-size:11px;opacity:0.5;text-transform:uppercase;letter-spacing:1px">Production</p></div>`;
+        
         const vp = card.querySelector('.slider-viewport');
         if (work.images.length > 1) {
             let startX = 0;
@@ -217,7 +242,12 @@
                 if (Math.abs(diff) > 40) manualChange(vp, diff > 0 ? 1 : -1);
             }, {passive: true});
         }
-        return card;
+    }
+
+    function updateCardImages(pId) {
+        const card = document.getElementById(`card-p${pId}`);
+        const workIdx = myWorks.findIndex(w => w.id === pId);
+        if (card && workIdx !== -1) updateCardContent(card, myWorks[workIdx], workIdx);
     }
 
     function manualChange(vp, dir) {
@@ -279,7 +309,10 @@
         if (h > 0) document.getElementById("progress-bar").style.width = (window.scrollY / h) * 100 + "%"; 
     };
 
-    document.addEventListener('DOMContentLoaded', () => { discoverWorks(); if(typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true }); });
+    document.addEventListener('DOMContentLoaded', () => { 
+        discoverWorks(); 
+        if(typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true }); 
+    });
 </script>
 </body>
 </html>
