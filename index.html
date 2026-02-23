@@ -79,9 +79,9 @@
         .arrow-left { left: 15px; }
         .arrow-right { right: 15px; }
 
-        .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
-        .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-glass); transition: 0.3s; }
-        .dot.active { background: var(--accent); width: 16px; border-radius: 4px; }
+        .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 10; flex-wrap: wrap; justify-content: center; width: 80%; pointer-events: none; }
+        .dot { width: 5px; height: 5px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-glass); transition: 0.3s; }
+        .dot.active { background: var(--accent); width: 12px; border-radius: 3px; }
 
         #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; touch-action: none; }
         #lightbox img { max-width: 95%; max-height: 92%; object-fit: contain; border: 1px solid var(--border-glass); border-radius: 12px; transition: opacity 0.3s ease; opacity: 0; }
@@ -94,7 +94,7 @@
 <canvas id="gradient-canvas"></canvas>
 <div id="progress-bar"></div>
 <div id="lightbox" onclick="closeLB(event)"><img id="lb-img" src=""></div>
-<div class="site-version">v1.5.1</div>
+<div class="site-version">v1.6.1</div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
@@ -156,23 +156,30 @@
     let myWorks = [];
 
     async function discoverWorks() {
-        let id = 1;
-        let foundAll = false;
-        while(!foundAll && id < 50) {
-            const imgPath = `images/p${id}_1.webp`;
+        let pId = 1;
+        let pFound = true;
+        while(pFound && pId < 50) {
+            const firstImg = `images/p${pId}_1.webp`;
             try {
-                const response = await fetch(imgPath, { method: 'HEAD' });
-                if (response.ok) {
-                    myWorks.push({ id: id, images: [`images/p${id}_1.webp`, `images/p${id}_2.webp`] });
-                    id++;
-                } else { foundAll = true; }
-            } catch (e) { foundAll = true; }
+                const res = await fetch(firstImg, { method: 'HEAD' });
+                if (res.ok) {
+                    let images = [];
+                    let imgId = 1;
+                    let imgFound = true;
+                    while(imgFound && imgId < 20) {
+                        const path = `images/p${pId}_${imgId}.webp`;
+                        const imgRes = await fetch(path, { method: 'HEAD' });
+                        if(imgRes.ok) { images.push(path); imgId++; } else { imgFound = false; }
+                    }
+                    myWorks.push({ id: pId, images: images });
+                    pId++;
+                } else { pFound = false; }
+            } catch (e) { pFound = false; }
         }
         updateUI();
     }
 
     function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
-    
     function updateUI() {
         const tr = translations[currentLang];
         document.querySelectorAll('[data-tr]').forEach(el => {
@@ -191,16 +198,13 @@
         let s = ''; let d = '';
         work.images.forEach((imgUrl, idx) => {
             const loading = (i < 2 && idx === 0) ? 'eager' : 'lazy';
-            s += `
-            <div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})">
-                <img src="${imgUrl}" loading="${loading}" onload="this.classList.add('loaded')" onerror="this.parentElement.style.display='none'">
-            </div>`;
+            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})">
+                    <img src="${imgUrl}" loading="${loading}" onload="this.classList.add('loaded')">
+                  </div>`;
             d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
         });
         
-        // ПРАВКА v1.5.1: Название для 11-го проекта
         const title = (work.id === 11) ? "Cinematic" : "CGI Project #" + work.id;
-        
         card.innerHTML = `
             <div class="slider-viewport">
                 <button class="nav-arrow arrow-left" onclick="changeSlide(this, -1, event)">❮</button>
@@ -212,10 +216,10 @@
         const vp = card.querySelector('.slider-viewport');
         if (work.images.length > 1) {
             let startX = 0;
-            vp.addEventListener('touchstart', (e) => { startX = e.touches.clientX; }, {passive: true});
+            vp.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, {passive: true});
             vp.addEventListener('touchend', (e) => {
-                let diff = startX - e.changedTouches.clientX;
-                if (Math.abs(diff) > 50) manualChange(vp, diff > 0 ? 1 : -1);
+                let diff = startX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 40) manualChange(vp, diff > 0 ? 1 : -1);
             }, {passive: true});
         }
         return card;
@@ -231,10 +235,7 @@
         slides[curr].classList.add('active'); dots[curr].classList.add('active');
     }
 
-    function changeSlide(btn, dir, event) {
-        event.stopPropagation();
-        manualChange(btn.parentElement, dir);
-    }
+    function changeSlide(btn, dir, event) { event.stopPropagation(); manualChange(btn.parentElement, dir); }
 
     function renderGallery() {
         const grid = document.getElementById('portfolio-grid'); 
@@ -243,8 +244,7 @@
         if(typeof AOS !== 'undefined') AOS.refresh();
     }
 
-    let currentWorkIdx = 0;
-    let currentImgIdx = 0;
+    let currentWorkIdx = 0; let currentImgIdx = 0;
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lb-img');
     let lbStartX = 0, lbStartY = 0;
@@ -265,11 +265,11 @@
 
     function closeLB(e) { if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.style.display = 'none'; }
 
-    lb.addEventListener('touchstart', (e) => { lbStartX = e.touches.clientX; lbStartY = e.touches.clientY; }, {passive: true});
+    lb.addEventListener('touchstart', (e) => { lbStartX = e.touches[0].clientX; lbStartY = e.touches[0].clientY; }, {passive: true});
     lb.addEventListener('touchend', (e) => {
-        let diffX = lbStartX - e.changedTouches.clientX;
-        let diffY = lbStartY - e.changedTouches.clientY;
-        const threshold = 60;
+        let diffX = lbStartX - e.changedTouches[0].clientX;
+        let diffY = lbStartY - e.changedTouches[0].clientY;
+        const threshold = 50;
         if (Math.abs(diffX) > Math.abs(diffY)) {
             if (Math.abs(diffX) > threshold) {
                 const imgs = myWorks[currentWorkIdx].images;
@@ -299,10 +299,7 @@
         if (h > 0) document.getElementById("progress-bar").style.width = (window.scrollY / h) * 100 + "%"; 
     };
 
-    document.addEventListener('DOMContentLoaded', () => { 
-        discoverWorks();
-        if(typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true }); 
-    });
+    document.addEventListener('DOMContentLoaded', () => { discoverWorks(); if(typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true }); });
 </script>
 </body>
 </html>
