@@ -18,15 +18,17 @@
         }
 
         html, body { max-width: 100%; overflow-x: hidden; margin: 0; padding: 0; scroll-behavior: smooth; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; transition: background 0.5s; user-select: none; -webkit-user-select: none; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background 0.5s; user-select: none; -webkit-user-select: none; }
         
         #gradient-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
         #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; z-index: 1000; }
 
         nav { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--gray-light); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 100; border-bottom: 1px solid var(--line); box-sizing: border-box; }
         .logo { font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 7px 14px; border-radius: 20px; font-size: 10px; font-weight: 700; text-decoration: none; transition: 0.2s; }
-        .btn-ui:hover { background: var(--accent); color: var(--bg); }
+        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 7px 14px; border-radius: 20px; font-size: 10px; font-weight: 700; text-decoration: none; transition: 0.2s; border-style: solid; }
+
+        /* ВЕРНУЛ ОТОБРАЖЕНИЕ ВЕРСИИ v1.7.3 */
+        .site-version { position: fixed; bottom: 15px; right: 15px; padding: 5px 12px; border-radius: 10px; font-size: 10px; font-weight: 800; background: var(--gray-light); backdrop-filter: blur(10px); border: 1px solid var(--border-glass); opacity: 0.6; z-index: 999; }
 
         header { padding: 60px 20px 30px; max-width: 1000px; margin: 0 auto; text-align: center; }
         header h1 { font-size: 2.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; margin: 0; }
@@ -41,11 +43,9 @@
         .about-grid { display: grid; grid-template-columns: 1fr; gap: 20px; text-align: left; padding: 25px; }
         @media (min-width: 768px) { .about-grid { grid-template-columns: 1fr 1fr; padding: 40px; } }
         .about-list { list-style: none; padding: 0; margin: 0; font-size: 0.95rem; line-height: 1.7; }
-        .about-list li { margin-bottom: 10px; }
         .about-list li::before { content: "• "; color: var(--accent); font-weight: bold; }
 
         .card { width: 100%; max-width: 550px; overflow: hidden; position: relative; margin: 0 auto; transition: 0.3s; border: 1px solid var(--line); }
-        /* ПОДСВЕТКА v1.7.1 */
         @media (hover: hover) {
             .card:hover { border-color: var(--glow) !important; box-shadow: 0 0 25px var(--glow); transform: translateY(-5px); }
         }
@@ -55,24 +55,24 @@
         .gallery { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 20px; width: 100%; box-sizing: border-box; }
         @media (min-width: 768px) { .gallery { grid-template-columns: repeat(2, 1fr); padding: 50px; max-width: 1400px; margin: 0 auto; gap: 50px; } }
 
-        .slider-viewport { position: relative; height: 350px; overflow: hidden; background: var(--bg); touch-action: none; }
+        /* ВАЖНО: touch-action: pan-y разрешает скролл страницы по вертикали */
+        .slider-viewport { position: relative; height: 350px; overflow: hidden; background: var(--bg); touch-action: pan-y; }
         @media (min-width: 768px) { .slider-viewport { height: 500px; } }
 
         .slide { position: absolute; inset: 0; opacity: 0; transition: 0.5s; pointer-events: none; }
         .slide.active { opacity: 1; pointer-events: auto; }
-        .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); }
+        .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); pointer-events: none; }
 
+        /* СТРЕЛКИ v1.7.3: Скрыты на мобилке (в медиа-запросе) */
         .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--accent); color: var(--bg); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 100; display: none; font-weight: bold; }
-        @media (hover: hover) { 
-            .slider-viewport:hover .nav-arrow, #lightbox:hover .nav-arrow { display: flex; align-items: center; justify-content: center; } 
-        }
+        @media (min-width: 768px) { .slider-viewport:hover .nav-arrow, #lightbox:hover .nav-arrow { display: flex; align-items: center; justify-content: center; } }
         
-        .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 20; }
+        .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 20; pointer-events: none; }
         .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; }
         .dot.active { background: var(--accent); width: 15px; border-radius: 4px; }
 
         #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.96); display: none; z-index: 2000; align-items: center; justify-content: center; touch-action: none; }
-        #lightbox img { max-width: 92%; max-height: 85%; object-fit: contain; border-radius: 15px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        #lightbox img { max-width: 92%; max-height: 85%; object-fit: contain; border-radius: 15px; pointer-events: none; }
 
         footer { padding: 50px 20px; text-align: center; opacity: 0.4; font-size: 11px; letter-spacing: 1px; }
     </style>
@@ -82,11 +82,11 @@
 <canvas id="gradient-canvas"></canvas>
 <div id="progress-bar"></div>
 <div id="lightbox" onclick="closeLB(event)">
-    <button class="nav-arrow" style="left:20px; display: flex;" onclick="changeLBImg(-1, event)">❮</button>
-    <button class="nav-arrow" style="right:20px; display: flex;" onclick="changeLBImg(1, event)">❯</button>
+    <button class="nav-arrow" style="left:20px" onclick="changeLBImg(-1, event)">❮</button>
+    <button class="nav-arrow" style="right:20px" onclick="changeLBImg(1, event)">❯</button>
     <img id="lb-img" src="">
 </div>
-<div class="site-version">v1.7.1</div>
+<div class="site-version">v1.7.3</div>
 
 <nav>
     <div class="logo">MARMOSET</div>
@@ -103,14 +103,8 @@
 
 <section class="about-section" data-aos="fade-up" style="max-width: 1100px; margin: 20px auto; width: 92%;">
     <div class="about-grid">
-        <div>
-            <h3 data-tr="skills_title" style="margin-top:0">Ключевые навыки</h3>
-            <ul class="about-list" id="skills-list"></ul>
-        </div>
-        <div>
-            <h3 data-tr="help_title" style="margin-top:0">Помогу вам</h3>
-            <ul class="about-list" id="help-list"></ul>
-        </div>
+        <div><h3 data-tr="skills_title" style="margin-top:0">Ключевые навыки</h3><ul class="about-list" id="skills-list"></ul></div>
+        <div><h3 data-tr="help_title" style="margin-top:0">Помогу вам</h3><ul class="about-list" id="help-list"></ul></div>
     </div>
 </section>
 
@@ -126,7 +120,7 @@
     </div>
 </section>
 
-<footer>© 2024 MARMOSET_TOOLBAG • 3D ARTIST</footer>
+<footer>© 2024 MARMOSET_TOOLBAG</footer>
 
 <script src="https://unpkg.com"></script>
 <script>
@@ -154,34 +148,14 @@
             skills_title: "Ключевые навыки", help_title: "Помогу вам",
             skills: ["3D Моделирование", "Фотореалистичная Визуализация", "Оптимизация для Игр/VR/AR", "3D Анимация", "Различные Стили", "Софт: Blender, Substance, UE5, Unity"],
             help: ["Маркетинг продуктов", "3D ассеты для игр", "Архитектурная визуализация", "Анимация"],
-            p1_n: "Marshall Headphones", p1_t: "Product Visualisation",
-            p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation",
-            p3_n: "Apple Vision Pro", p3_t: "Product Visualisation",
-            p4_n: "AirPods 5", p4_t: "Product Visualisation",
-            p5_n: "Apple Watch", p5_t: "Product Visualisation",
-            p6_n: "Интерьерная визуализация", p6_t: "Архивиз",
-            p7_n: "Создание персонажей", p7_t: "Low-poly",
-            p8_n: "Экстерьерная визуализация", p8_t: "Архивиз",
-            p9_n: "Военная техника", p9_t: "High-poly",
-            p10_n: "Игровое окружение", p10_t: "Game-ready",
-            p11_n: "Cinematics", p11_t: "Photorealistic renders"
+            p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Интерьер", p6_t: "Архивиз", p7_n: "Персонажи", p7_t: "Low-poly", p8_n: "Экстерьер", p8_t: "Архивиз", p9_n: "Техника", p9_t: "High-poly", p10_n: "Окружение", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders"
         },
         en: {
             nav_contact: "CONTACT", header_title: "Uncompromising Photorealism", contact_title: "Get in Touch",
             skills_title: "Key Skills", help_title: "How I Can Help",
             skills: ["3D Modeling", "Photorealistic Renders", "Game Assets Optimization", "3D Animation", "Styles Adaptation", "Software: Blender, UE5"],
             help: ["Product Marketing", "Game Assets", "Architecture", "Animation"],
-            p1_n: "Marshall Headphones", p1_t: "Product Visualisation",
-            p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation",
-            p3_n: "Apple Vision Pro", p3_t: "Product Visualisation",
-            p4_n: "AirPods 5", p4_t: "Product Visualisation",
-            p5_n: "Apple Watch", p5_t: "Product Visualisation",
-            p6_n: "Interior Visuals", p6_t: "Archviz",
-            p7_n: "Characters", p7_t: "Low-poly",
-            p8_n: "Exterior Visuals", p8_t: "Archviz",
-            p9_n: "Military Gear", p9_t: "High-poly",
-            p10_n: "Environment", p10_t: "Game-ready",
-            p11_n: "Cinematics", p11_t: "Photorealistic renders"
+            p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Interior", p6_t: "Archviz", p7_n: "Characters", p7_t: "Low-poly", p8_n: "Exterior", p8_t: "Archviz", p9_n: "Military", p9_t: "High-poly", p10_n: "Environment", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders"
         }
     };
 
@@ -189,13 +163,13 @@
 
     async function discoverWorks() {
         myWorks = [];
-        for(let pId=1; pId<=12; pId++) {
+        for(let pId=1; pId<=15; pId++) {
             const firstImg = `images/p${pId}_1.webp`;
             try {
                 const check = await fetch(firstImg, { method: 'HEAD' });
                 if (check.ok) {
                     let images = [firstImg];
-                    for(let i=2; i<=8; i++) {
+                    for(let i=2; i<=10; i++) {
                         const path = `images/p${pId}_${i}.webp`;
                         const imgCheck = await fetch(path, { method: 'HEAD' });
                         if(imgCheck.ok) images.push(path); else break;
@@ -238,19 +212,16 @@
         return card;
     }
 
-    // ФИКС СВАЙПОВ v1.7.1
     function setupSwipe(el, callback) {
-        let sX = 0, sY = 0;
-        el.addEventListener('touchstart', e => { sX = e.touches[0].clientX; sY = e.touches[0].clientY; }, {passive: true});
+        let sX = 0, sY = 0, isH = false, isV = false;
+        el.addEventListener('touchstart', e => { sX = e.touches[0].clientX; sY = e.touches[0].clientY; isH = false; isV = false; }, {passive: true});
         el.addEventListener('touchmove', e => {
-            let dX = sX - e.touches[0].clientX;
-            let dY = sY - e.touches[0].clientY;
-            if (Math.abs(dX) > Math.abs(dY)) e.preventDefault(); // Блокируем скролл при горизонтальном свайпе
+            if (isV) return;
+            let dX = Math.abs(sX - e.touches[0].clientX), dY = Math.abs(sY - e.touches[0].clientY);
+            if (!isH && !isV) { if (dX > dY && dX > 10) isH = true; else if (dY > dX && dY > 10) isV = true; }
+            if (isH && e.cancelable) e.preventDefault();
         }, {passive: false});
-        el.addEventListener('touchend', e => {
-            let dX = sX - e.changedTouches[0].clientX;
-            if (Math.abs(dX) > 50) callback(dX > 0 ? 1 : -1);
-        }, {passive: true});
+        el.addEventListener('touchend', e => { if (isH) { let dX = sX - e.changedTouches[0].clientX; if (Math.abs(dX) > 50) callback(dX > 0 ? 1 : -1); } }, {passive: true});
     }
 
     function manualChange(vp, dir) {
@@ -270,12 +241,17 @@
 
     let cW = 0, cI = 0;
     const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
-
     function openLB(wIdx, iIdx) { cW = wIdx; cI = iIdx; lbImg.src = myWorks[cW].images[cI]; lb.style.display = 'flex'; }
     function changeLBImg(dir, e) { if(e) e.stopPropagation(); const imgs = myWorks[cW].images; cI = (cI + dir + imgs.length) % imgs.length; lbImg.src = myWorks[cW].images[cI]; }
     function closeLB(e) { if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.style.display = 'none'; }
 
-    setupSwipe(lb, (dir) => changeLBImg(dir));
+    let lSX = 0, lSY = 0;
+    lb.addEventListener('touchstart', e => { lSX = e.touches[0].clientX; lSY = e.touches[0].clientY; }, {passive: true});
+    lb.addEventListener('touchend', e => {
+        let dX = lSX - e.changedTouches[0].clientX, dY = lSY - e.changedTouches[0].clientY;
+        if (Math.abs(dX) > Math.abs(dY)) { if (Math.abs(dX) > 50) changeLBImg(dX > 0 ? 1 : -1); }
+        else if (Math.abs(dY) > 60) { cW = (cW + (dY > 0 ? 1 : -1) + myWorks.length) % myWorks.length; cI = 0; lbImg.src = myWorks[cW].images[cI]; }
+    }, {passive: true});
 
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); updateUI(); }
     function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
