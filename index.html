@@ -7,13 +7,13 @@
     <link href="https://unpkg.com" rel="stylesheet">
     <style>
         :root { 
-            --bg: #0a0a0a; --text: #f5f5f5; --gray-light: rgba(20, 20, 25, 0.6); 
-            --line: rgba(255,255,255,0.05); --accent: #fff; --border-glass: rgba(255, 255, 255, 0.3);
+            --bg: #0a0a0a; --text: #f5f5f5; --gray-light: rgba(25, 25, 30, 0.6); 
+            --line: rgba(255,255,255,0.08); --accent: #fff; --border-glass: rgba(255, 255, 255, 0.3);
             --glow: rgba(255, 255, 255, 0.5); --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         [data-theme="light"] {
-            --bg: #ffffff; --text: #1a1a1a; --gray-light: rgba(255, 255, 255, 0.4); 
-            --accent: #000; --line: rgba(0,0,0,0.05); --border-glass: rgba(0, 0, 0, 0.1); 
+            --bg: #ffffff; --text: #000; --gray-light: rgba(240, 240, 245, 0.5); 
+            --accent: #000; --line: rgba(0,0,0,0.1); --border-glass: rgba(0, 0, 0, 0.15); 
             --glow: rgba(0, 0, 0, 0.2);
         }
 
@@ -21,57 +21,49 @@
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background 0.5s; user-select: none; -webkit-user-select: none; }
         
         #gradient-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; z-index: 1000; }
+        #progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0%; z-index: 1000; }
 
-        nav { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--gray-light); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 100; border-bottom: 1px solid var(--line); box-sizing: border-box; }
-        .logo { font-weight: 800; font-size: 0.75rem; text-transform: uppercase; }
-        .nav-controls { display: flex; gap: 6px; align-items: center; }
-        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 6px 10px; border-radius: 20px; font-size: 9px; font-weight: 700; text-decoration: none; border-style: solid; }
+        nav { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--gray-light); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; border-bottom: 1px solid var(--line); box-sizing: border-box; }
+        .logo { font-weight: 900; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 8px 16px; border-radius: 25px; font-size: 11px; font-weight: 800; text-decoration: none; transition: 0.3s; }
+        .btn-ui:hover { background: var(--accent); color: var(--bg); }
 
-        .site-version { position: fixed; bottom: 15px; right: 15px; padding: 5px 12px; border-radius: 10px; font-size: 10px; font-weight: 800; background: var(--gray-light); backdrop-filter: blur(10px); border: 1px solid var(--border-glass); opacity: 0.6; z-index: 999; }
+        header { padding: 80px 25px 40px; max-width: 1200px; margin: 0 auto; }
+        header h1 { font-size: 2.8rem; margin: 0; font-weight: 900; line-height: 1.1; text-transform: uppercase; letter-spacing: -2px; }
+        @media (min-width: 768px) { header h1 { font-size: 5rem; } }
 
-        header { padding: 50px 20px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
-        header h1 { font-size: 2rem; margin: 0; font-weight: 800; line-height: 1.2; text-transform: uppercase; letter-spacing: -1px; }
+        .about-section { padding: 50px; max-width: 1200px; margin: 30px auto; width: 92%; box-sizing: border-box; }
+        .about-grid h3 { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; letter-spacing: -0.5px; }
+        .about-list { list-style: none; padding: 0; margin: 0; font-size: 1.1rem; line-height: 1.7; font-weight: 500; }
+        .about-list li { margin-bottom: 12px; opacity: 0.85; }
+        .about-list li::before { content: "— "; color: var(--accent); font-weight: 900; }
 
-        .about-section, .contact-section, .card {
-            background: var(--gray-light) !important;
-            backdrop-filter: blur(25px) saturate(160%);
-            -webkit-backdrop-filter: blur(25px) saturate(160%);
-            border: 1px solid var(--border-glass) !important;
-            border-top: 1px solid rgba(255,255,255,0.2) !important;
-            border-radius: 30px;
-        }
+        .card { width: 100%; max-width: 600px; overflow: hidden; position: relative; margin: 0 auto; transition: transform 0.4s, border-color 0.3s; border-radius: 40px; }
+        .card:hover { transform: translateY(-5px); border-color: var(--glow) !important; }
+        .card h3 { font-size: 1.6rem; font-weight: 900; margin: 0 0 8px 0; letter-spacing: -0.5px; }
+        .card p { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6; margin: 0; color: var(--accent); }
 
-        .about-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-top: 20px; text-align: left; }
-        @media (min-width: 768px) { .about-grid { grid-template-columns: 1.2fr 1fr; } }
-        .about-list { list-style: none; padding: 0; margin: 0; font-size: 0.9rem; line-height: 1.8; opacity: 0.9; }
-        .about-list li::before { content: "• "; color: var(--accent); font-weight: bold; }
+        .gallery { display: grid; grid-template-columns: 1fr; gap: 40px; padding: 25px; width: 100%; box-sizing: border-box; }
+        @media (min-width: 768px) { .gallery { grid-template-columns: repeat(2, 1fr); padding: 60px; gap: 80px; max-width: 1600px; margin: 0 auto; } }
 
-        .card { width: 100%; max-width: 550px; overflow: hidden; position: relative; margin: 0 auto; transition: border-color 0.3s, box-shadow 0.3s; min-height: 200px; }
-        .card:hover { border-color: var(--glow) !important; box-shadow: 0 0 25px var(--glow); }
+        .slider-viewport { position: relative; height: 400px; width: 100%; overflow: hidden; touch-action: pan-y; background: var(--bg); }
+        @media (min-width: 768px) { .slider-viewport { height: 550px; } }
 
-        .gallery { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 20px; justify-items: center; width: 100%; box-sizing: border-box; }
-        @media (min-width: 768px) { .gallery { grid-template-columns: repeat(2, 1fr); padding: 50px; gap: 60px; max-width: 1400px; margin: 0 auto; } }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease; }
+        .slide.active { opacity: 1; z-index: 5; }
+        .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); }
 
-        .slider-viewport { position: relative; height: 350px; width: 100%; overflow: hidden; touch-action: pan-y; cursor: zoom-in; background: var(--bg); }
-        @media (min-width: 768px) { .slider-viewport { height: 500px; } }
+        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--accent); color: var(--bg); border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; z-index: 50; opacity: 0; transition: 0.3s; display: none; font-weight: 900; }
+        @media (hover: hover) { .slider-viewport:hover .nav-arrow { opacity: 1; } .nav-arrow { display: flex; align-items: center; justify-content: center; } }
 
-        .slide { position: absolute; inset: 0; opacity: 0; transform: scale(1.02); transition: opacity 0.6s ease, transform 0.6s ease; pointer-events: none; }
-        .slide.active { opacity: 1; transform: scale(1); z-index: 5; pointer-events: auto; }
-        .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); display: block; -webkit-user-drag: none; }
+        .dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
+        .dot { width: 8px; height: 8px; background: rgba(128,128,128,0.4); border-radius: 50%; transition: 0.3s; }
+        .dot.active { background: var(--accent); width: 24px; border-radius: 4px; }
 
-        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 50; opacity: 0; transition: opacity 0.3s; display: none; backdrop-filter: blur(5px); }
-        @media (hover: hover) { .slider-viewport:hover .nav-arrow, #lightbox:hover .nav-arrow { opacity: 1; } .nav-arrow { display: flex; align-items: center; justify-content: center; font-size: 18px; } }
-        .arrow-left { left: 15px; } .arrow-right { right: 15px; }
+        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; }
+        #lightbox img { max-width: 95%; max-height: 90%; object-fit: contain; }
 
-        .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 10; flex-wrap: wrap; justify-content: center; width: 80%; pointer-events: none; }
-        .dot { width: 5px; height: 5px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-glass); transition: 0.3s; }
-        .dot.active { background: var(--accent); width: 12px; border-radius: 3px; }
-
-        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; touch-action: none; }
-        #lightbox img { max-width: 95%; max-height: 92%; object-fit: contain; border: 1px solid var(--border-glass); border-radius: 12px; transition: opacity 0.3s ease; }
-
-        footer { padding: 60px 40px; text-align: center; color: #888; font-size: 11px; letter-spacing: 1px; }
+        footer { padding: 80px 40px; text-align: center; font-weight: 800; font-size: 12px; letter-spacing: 2px; opacity: 0.5; }
     </style>
 </head>
 <body data-theme="dark">
@@ -79,14 +71,14 @@
 <canvas id="gradient-canvas"></canvas>
 <div id="progress-bar"></div>
 <div id="lightbox" onclick="closeLB(event)">
-    <button class="nav-arrow arrow-left" onclick="changeLBImg(-1, event)">❮</button>
-    <button class="nav-arrow arrow-right" onclick="changeLBImg(1, event)">❯</button>
+    <button class="nav-arrow arrow-left" style="left:20px" onclick="changeLBImg(-1, event)">❮</button>
+    <button class="nav-arrow arrow-right" style="right:20px" onclick="changeLBImg(1, event)">❯</button>
     <img id="lb-img" src="">
 </div>
-<div class="site-version">v1.6.7</div>
+<div class="site-version">v1.6.8</div>
 
 <nav>
-    <div class="logo">Marm0SET_toolBAG</div>
+    <div class="logo">MARM0SET</div>
     <div class="nav-controls">
         <button class="btn-ui" onclick="toggleLang()" id="lang-btn">EN</button>
         <button class="btn-ui" onclick="toggleTheme()" id="theme-btn">LIGHT</button>
@@ -98,14 +90,14 @@
     <h1 data-tr="header_title">Бескомпромиссный фотореализм</h1>
 </header>
 
-<section class="about-section" data-aos="fade-up" style="padding: 40px; max-width: 1100px; margin: 20px auto; width: 90%; box-sizing: border-box;">
+<section class="about-section" data-aos="fade-up">
     <div class="about-grid">
-        <div>
-            <h3 data-tr="skills_title" style="margin-top:0">Ключевые навыки</h3>
+        <div style="margin-bottom: 40px;">
+            <h3 data-tr="skills_title">Ключевые навыки</h3>
             <ul class="about-list" id="skills-list"></ul>
         </div>
         <div>
-            <h3 data-tr="help_title" style="margin-top:0">Помогу вам</h3>
+            <h3 data-tr="help_title">Помогу вам</h3>
             <ul class="about-list" id="help-list"></ul>
         </div>
     </div>
@@ -113,17 +105,17 @@
 
 <main class="gallery" id="portfolio-grid"></main>
 
-<section class="contact-section" id="contact" data-aos="fade-up" style="margin: 40px auto; padding: 50px 20px; max-width: 1100px; text-align: center; width: 90%; box-sizing: border-box;">
-    <h2 data-tr="contact_title" style="margin-top: 0;">Связаться со мной</h2>
-    <div style="font-weight: 600; line-height: 2.8; font-size: 0.95rem;">
-        <a href="https://kwork.ru" target="_blank" style="color:var(--text); text-decoration:none;">💼 Kwork Profile</a><br>
+<section class="contact-section" id="contact" data-aos="fade-up" style="margin: 60px auto; padding: 80px 25px; max-width: 1200px; text-align: center; width: 92%;">
+    <h2 data-tr="contact_title" style="font-size: 2.5rem; font-weight: 900; margin-bottom: 40px; text-transform: uppercase;">Связаться со мной</h2>
+    <div style="font-weight: 800; line-height: 2.5; font-size: 1.2rem;">
+        <a href="https://kwork.ru" target="_blank" style="color:var(--text); text-decoration:none; border-bottom: 2px solid var(--accent);">💼 Kwork Profile</a><br>
         <span onclick="copyToClipboard('hypexits@mail.ru')" style="cursor:pointer;">📧 hypexits@mail.ru</span><br>
         <span onclick="copyToClipboard('@WINDUP_MARMOSET')" style="cursor:pointer;">✈️ @WINDUP_MARMOSET</span><br>
         <span onclick="copyToClipboard('+79251803895')" style="cursor:pointer;">📞 +7 (925) 180-38-95</span>
     </div>
 </section>
 
-<footer>© 2024 MARMOSET_TOOLBAG • 3D ARTIST PORTFOLIO</footer>
+<footer>© 2024 MARMOSET_TOOLBAG • 3D VISUALIZATION STUDIO</footer>
 
 <script src="https://unpkg.com"></script>
 <script>
@@ -133,15 +125,15 @@
     function animate() {
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const isLight = document.body.getAttribute('data-theme') === 'light';
-        const c1 = isLight ? {r:240,g:245,b:255} : {r:15,g:10,b:35};
-        const c2 = isLight ? {r:225,g:230,b:245} : {r:40,g:20,b:80};
+        const c1 = isLight ? {r:245,g:245,b:250} : {r:10,g:10,b:20};
+        const c2 = isLight ? {r:220,g:225,b:240} : {r:30,g:15,b:50};
         const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width);
         const shift = Math.sin(time) * 0.5 + 0.5;
         grad.addColorStop(0, `rgb(${c1.r},${c1.g},${c1.b})`);
         grad.addColorStop(shift, `rgb(${c2.r},${c2.g},${c2.b})`);
         grad.addColorStop(1, `rgb(${c1.r},${c1.g},${c1.b})`);
         ctx.fillStyle = grad; ctx.fillRect(0,0,canvas.width,canvas.height);
-        time += 0.007; requestAnimationFrame(animate);
+        time += 0.005; requestAnimationFrame(animate);
     }
     animate();
 
@@ -149,9 +141,8 @@
         ru: {
             nav_contact: "КОНТАКТЫ", header_title: "Бескомпромиссный фотореализм", contact_title: "Связаться со мной",
             skills_title: "Ключевые навыки", help_title: "Помогу вам",
-            skills: ["3D Моделирование: Детализированные и реалистичные модели", "Фотореалистичная Визуализация: Превращение моделей в захватывающие изображения", "Оптимизация для Игр/VR/AR: Ассеты для производительности", "3D Анимация: Оживление ваших моделей", "Различные Стили: Адаптация к вашим требованиям", "Профессиональный Софт: Blender, Substance, UE5, Unity", "Внимание к деталям и креативность"],
-            help: ["Улучшить маркетинг (визуализация продуктов)", "Оживить игры (3D ассеты)", "Визуализировать архитектуру", "Рассказать истории через анимацию"],
-            // ПРАВКА v1.6.7: Названия и разделы проектов
+            skills: ["3D Моделирование: Детализированные модели", "Фотореалистичная Визуализация: Превращение в изображения", "Оптимизация для Игр/VR/AR: Ассеты для производительности", "3D Анимация: Оживление моделей", "Различные Стили: Адаптация к требованиям", "Софт: Blender, Substance, UE5, Unity", "Внимание к деталям и креативность"],
+            help: ["Улучшить маркетинг", "Оживить игры", "Визуализировать архитектуру", "Рассказать истории через анимацию"],
             p1_n: "Marshall Headphones", p1_t: "Product Visualisation",
             p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation",
             p3_n: "Apple Vision Pro", p3_t: "Product Visualisation",
@@ -162,13 +153,13 @@
             p8_n: "Экстерьерная визуализация", p8_t: "Архивиз",
             p9_n: "Военная техника", p9_t: "High-poly",
             p10_n: "Игровое окружение", p10_t: "Game-ready environment",
-            p11_n: "Cinematics", p11_t: "AI and Photorealistic Visualization"
+            p11_n: "Cinematics", p11_t: "AI and photorealistic renders"
         },
         en: {
             nav_contact: "CONTACT", header_title: "Uncompromising Photorealism", contact_title: "Get in Touch",
             skills_title: "Key Skills", help_title: "How I Can Help",
-            skills: ["3D Modeling: High-detail and realistic models", "Photorealistic Visualization: Stunning renders", "Game/VR/AR Optimization: Performance-ready assets", "3D Animation: Bringing models to life", "Versatile Styles: Adaptable to your needs", "Software: Blender, Substance, UE5, Unity", "Attention to Detail & Creativity"],
-            help: ["Boost marketing (product visualization)", "Level up games (3D assets)", "Visualize architecture", "Tell stories through animation"],
+            skills: ["3D Modeling: High-detail models", "Photorealistic Visualization: Stunning renders", "Optimization: Performance-ready assets", "3D Animation: Bringing models to life", "Versatile Styles: Adaptable needs", "Software: Blender, Substance, UE5, Unity", "Attention to Detail"],
+            help: ["Boost marketing", "Level up games", "Visualize architecture", "Tell stories through animation"],
             p1_n: "Marshall Headphones", p1_t: "Product Visualisation",
             p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation",
             p3_n: "Apple Vision Pro", p3_t: "Product Visualisation",
@@ -179,7 +170,7 @@
             p8_n: "Exterior Visualization", p8_t: "Archviz",
             p9_n: "Military Vehicles", p9_t: "High-poly",
             p10_n: "Game Environment", p10_t: "Game-ready environment",
-            p11_n: "Cinematics", p11_t: "AI and Photorealistic Visualization"
+            p11_n: "Cinematics", p11_t: "AI and photorealistic renders"
         }
     };
 
@@ -187,32 +178,24 @@
     let myWorks = [];
 
     async function discoverWorks() {
-        myWorks = []; updateUI(); 
-        let pId = 1;
-        while(pId < 50) {
+        myWorks = []; updateUI();
+        for(let pId=1; pId<50; pId++) {
             const firstImg = `images/p${pId}_1.webp`;
             const check = await fetch(firstImg, { method: 'HEAD' });
             if (check.ok) {
-                const work = { id: pId, images: [firstImg] };
-                myWorks.push(work);
+                let images = [firstImg];
+                myWorks.push({ id: pId, images: images });
                 renderGallery();
-                loadExtraImages(pId);
-                pId++;
+                // Ищем остальные фото в фоне
+                for(let i=2; i<=10; i++) {
+                    const next = `images/p${pId}_${i}.webp`;
+                    const nextCheck = await fetch(next, { method: 'HEAD' });
+                    if(nextCheck.ok) { images.push(next); updateCard(pId); } else break;
+                }
             } else break;
         }
     }
 
-    async function loadExtraImages(pId) {
-        let work = myWorks.find(w => w.id === pId);
-        for(let i=2; i<=10; i++) {
-            const path = `images/p${pId}_${i}.webp`;
-            const check = await fetch(path, { method: 'HEAD' });
-            if(check.ok) { work.images.push(path); updateCardImages(pId); } else break;
-        }
-    }
-
-    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
-    
     function updateUI() {
         const tr = translations[currentLang];
         document.querySelectorAll('[data-tr]').forEach(el => { if(tr[el.getAttribute('data-tr')]) el.innerHTML = tr[el.getAttribute('data-tr')]; });
@@ -224,28 +207,27 @@
         renderGallery();
     }
 
+    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
+
     function createCard(work, i) {
         const card = document.createElement('div');
         card.id = `card-p${work.id}`;
         card.className = 'card';
-        card.setAttribute('data-aos', window.innerWidth < 768 ? 'fade-up' : (i % 2 === 0 ? 'fade-right' : 'fade-left'));
-        updateCardContent(card, work, i);
+        card.setAttribute('data-aos', 'fade-up');
+        updateCardHTML(card, work);
         return card;
     }
 
-    function updateCardContent(card, work, i) {
-        let s = ''; let d = '';
-        work.images.forEach((imgUrl, idx) => {
-            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${imgUrl}" loading="lazy"></div>`;
+    function updateCardHTML(card, work) {
+        const tr = translations[currentLang];
+        let s = '', d = '';
+        work.images.forEach((img, idx) => {
+            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${myWorks.indexOf(work)}, ${idx})"><img src="${img}" loading="lazy"></div>`;
             d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
         });
-
-        // ДИНАМИЧЕСКИЕ НАЗВАНИЯ v1.6.7
-        const tr = translations[currentLang];
-        const title = tr[`p${work.id}_n`] || "CGI Project #" + work.id;
-        const category = tr[`p${work.id}_t`] || "Production";
-
-        card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow arrow-left" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow arrow-right" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${title}</h3><p style="font-size:11px;opacity:0.5;text-transform:uppercase;letter-spacing:1px">${category}</p></div>`;
+        const n = tr[`p${work.id}_n`] || "Project #" + work.id;
+        const t = tr[`p${work.id}_t`] || "3D Visualisation";
+        card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow arrow-left" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow arrow-right" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:30px"><h3>${n}</h3><p>${t}</p></div>`;
         
         const vp = card.querySelector('.slider-viewport');
         if (work.images.length > 1) {
@@ -258,10 +240,10 @@
         }
     }
 
-    function updateCardImages(pId) {
-        const card = document.getElementById(`card-p${pId}`);
-        const workIdx = myWorks.findIndex(w => w.id === pId);
-        if (card && workIdx !== -1) updateCardContent(card, myWorks[workIdx], workIdx);
+    function updateCard(id) {
+        const card = document.getElementById(`card-p${id}`);
+        const work = myWorks.find(w => w.id === id);
+        if (card && work) updateCardHTML(card, work);
     }
 
     function manualChange(vp, dir) {
@@ -278,7 +260,6 @@
     function renderGallery() {
         const grid = document.getElementById('portfolio-grid'); grid.innerHTML = '';
         myWorks.forEach((w, i) => grid.appendChild(createCard(w, i)));
-        if(typeof AOS !== 'undefined') AOS.refresh();
     }
 
     let currentWorkIdx = 0, currentImgIdx = 0;
@@ -286,16 +267,15 @@
 
     function openLB(wIdx, iIdx) {
         currentWorkIdx = wIdx; currentImgIdx = iIdx;
-        lbImg.style.opacity = '0'; lbImg.src = myWorks[currentWorkIdx].images[currentImgIdx];
-        lb.style.display = 'flex'; setTimeout(() => lbImg.style.opacity = '1', 50);
+        lbImg.src = myWorks[currentWorkIdx].images[currentImgIdx];
+        lb.style.display = 'flex';
     }
 
     function changeLBImg(dir, e) {
         if(e) e.stopPropagation();
         const imgs = myWorks[currentWorkIdx].images;
         currentImgIdx = (currentImgIdx + dir + imgs.length) % imgs.length;
-        lbImg.style.opacity = '0';
-        setTimeout(() => { lbImg.src = myWorks[currentWorkIdx].images[currentImgIdx]; lbImg.style.opacity = '1'; }, 150);
+        lbImg.src = myWorks[currentWorkIdx].images[currentImgIdx];
     }
 
     function closeLB(e) { if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.style.display = 'none'; }
@@ -307,23 +287,17 @@
         if (Math.abs(dX) > Math.abs(dY)) { if (Math.abs(dX) > 50) changeLBImg(dX > 0 ? 1 : -1); }
         else if (Math.abs(dY) > 50) {
             currentWorkIdx = (currentWorkIdx + (dY > 0 ? 1 : -1) + myWorks.length) % myWorks.length;
-            currentImgIdx = 0; changeLBImg(0);
+            currentImgIdx = 0; lbImg.src = myWorks[currentWorkIdx].images[currentImgIdx];
         }
     }, {passive: true});
 
-    function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
     function toggleTheme() { 
-        const isDark = document.body.getAttribute('data-theme') === 'dark';
-        document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        document.getElementById('theme-btn').innerText = isDark ? 'DARK' : 'LIGHT';
+        document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        updateUI();
     }
-    
-    window.onscroll = () => { 
-        const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        if (h > 0) document.getElementById("progress-bar").style.width = (window.scrollY / h) * 100 + "%"; 
-    };
-
-    document.addEventListener('DOMContentLoaded', () => { discoverWorks(); if(typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true }); });
+    function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
+    window.onscroll = () => { document.getElementById("progress-bar").style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + "%"; };
+    document.addEventListener('DOMContentLoaded', () => { discoverWorks(); AOS.init({ duration: 800, once: true }); });
 </script>
 </body>
 </html>
