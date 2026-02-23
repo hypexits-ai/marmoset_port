@@ -7,13 +7,13 @@
     <link href="https://unpkg.com" rel="stylesheet">
     <style>
         :root { 
-            --bg: #0a0a0a; --text: #f5f5f5; --gray-light: rgba(25, 25, 30, 0.6); 
-            --line: rgba(255,255,255,0.08); --accent: #fff; --border-glass: rgba(255, 255, 255, 0.3);
-            --glow: rgba(255, 255, 255, 0.5); --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg: #0a0a0a; --text: #f5f5f5; --gray-light: rgba(20, 20, 25, 0.6); 
+            --line: rgba(255,255,255,0.05); --accent: #fff; --border-glass: rgba(255, 255, 255, 0.3);
+            --glow: rgba(255, 255, 255, 0.5); --transition: 0.4s ease;
         }
         [data-theme="light"] {
-            --bg: #ffffff; --text: #000; --gray-light: rgba(240, 240, 245, 0.5); 
-            --accent: #000; --line: rgba(0,0,0,0.1); --border-glass: rgba(0, 0, 0, 0.15); 
+            --bg: #ffffff; --text: #1a1a1a; --gray-light: rgba(255, 255, 255, 0.4); 
+            --accent: #000; --line: rgba(0,0,0,0.05); --border-glass: rgba(0, 0, 0, 0.1); 
             --glow: rgba(0, 0, 0, 0.2);
         }
 
@@ -21,50 +21,51 @@
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background 0.5s; user-select: none; -webkit-user-select: none; }
         
         #gradient-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        #progress-bar { position: fixed; top: 0; left: 0; height: 5px; background: var(--accent); width: 0%; z-index: 1000; }
+        #progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; z-index: 1000; }
 
-        nav { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--gray-light); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; border-bottom: 1px solid var(--line); box-sizing: border-box; }
-        .logo { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 10px 18px; border-radius: 25px; font-size: 11px; font-weight: 900; text-decoration: none; transition: 0.3s; }
-        .btn-ui:hover { background: var(--accent); color: var(--bg); }
+        nav { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--gray-light); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 100; border-bottom: 1px solid var(--line); box-sizing: border-box; }
+        .logo { font-weight: 800; font-size: 0.8rem; text-transform: uppercase; }
+        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 6px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; text-decoration: none; transition: 0.3s; }
 
-        header { padding: 80px 25px 40px; max-width: 1200px; margin: 0 auto; }
-        header h1 { font-size: 3rem; margin: 0; font-weight: 900; line-height: 1.1; text-transform: uppercase; letter-spacing: -2px; }
-        @media (min-width: 768px) { header h1 { font-size: 5.5rem; } }
+        header { padding: 50px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
+        header h1 { font-size: 2.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: -1px; }
 
-        .about-section { padding: 50px; max-width: 1200px; margin: 30px auto; width: 92%; box-sizing: border-box; }
-        .about-grid h3 { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; margin-bottom: 25px; letter-spacing: -1px; }
-        .about-list { list-style: none; padding: 0; margin: 0; font-size: 1.2rem; line-height: 1.8; font-weight: 600; }
-        .about-list li { margin-bottom: 15px; opacity: 0.9; }
-        .about-list li::before { content: "— "; color: var(--accent); font-weight: 900; }
+        .about-section, .contact-section, .card {
+            background: var(--gray-light) !important;
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border-glass) !important;
+            border-radius: 30px;
+        }
 
-        .card { width: 100%; max-width: 600px; overflow: hidden; position: relative; margin: 0 auto; transition: transform 0.4s, border-color 0.3s; border-radius: 40px; min-height: 300px; }
-        .card:hover { transform: translateY(-8px); border-color: var(--glow) !important; }
-        .card h3 { font-size: 1.8rem; font-weight: 900; margin: 0 0 10px 0; letter-spacing: -0.5px; }
-        .card p { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; opacity: 0.7; margin: 0; color: var(--accent); }
+        .about-grid { display: grid; grid-template-columns: 1fr; gap: 20px; text-align: left; padding: 30px; }
+        @media (min-width: 768px) { .about-grid { grid-template-columns: 1fr 1fr; } }
+        .about-list { list-style: none; padding: 0; font-size: 0.9rem; line-height: 1.6; }
+        .about-list li::before { content: "• "; color: var(--accent); }
 
-        .gallery { display: grid; grid-template-columns: 1fr; gap: 40px; padding: 25px; width: 100%; box-sizing: border-box; }
-        @media (min-width: 768px) { .gallery { grid-template-columns: repeat(2, 1fr); padding: 60px; gap: 80px; max-width: 1600px; margin: 0 auto; } }
+        .card { width: 100%; max-width: 550px; overflow: hidden; position: relative; margin: 0 auto; transition: 0.3s; }
+        .card:hover { border-color: var(--glow) !important; box-shadow: 0 0 20px var(--glow); }
 
-        .slider-viewport { position: relative; height: 400px; width: 100%; overflow: hidden; touch-action: pan-y; background: var(--bg); }
-        @media (min-width: 768px) { .slider-viewport { height: 600px; } }
+        .gallery { display: grid; grid-template-columns: 1fr; gap: 30px; padding: 20px; width: 100%; box-sizing: border-box; }
+        @media (min-width: 768px) { .gallery { grid-template-columns: repeat(2, 1fr); padding: 50px; max-width: 1400px; margin: 0 auto; } }
 
-        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease; }
-        .slide.active { opacity: 1; z-index: 5; }
-        .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); }
+        .slider-viewport { position: relative; height: 350px; overflow: hidden; background: var(--bg); touch-action: pan-y; }
+        @media (min-width: 768px) { .slider-viewport { height: 500px; } }
 
-        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--accent); color: var(--bg); border: none; width: 55px; height: 55px; border-radius: 50%; cursor: pointer; z-index: 50; opacity: 0; transition: 0.3s; display: none; font-weight: 900; }
-        @media (hover: hover) { .slider-viewport:hover .nav-arrow { opacity: 1; } .nav-arrow { display: flex; align-items: center; justify-content: center; } }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: 0.5s; pointer-events: none; }
+        .slide.active { opacity: 1; pointer-events: auto; }
+        .slide img { width: 100%; height: 100%; object-fit: contain; }
 
-        .dots { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
-        .dot { width: 10px; height: 10px; background: rgba(128,128,128,0.4); border-radius: 50%; transition: 0.3s; }
-        .dot.active { background: var(--accent); width: 28px; border-radius: 5px; }
+        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 100; display: none; }
+        @media (hover: hover) { .slider-viewport:hover .nav-arrow, #lightbox:hover .nav-arrow { display: flex; align-items: center; justify-content: center; } }
+        
+        .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; }
+        .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 50%; }
+        .dot.active { background: var(--accent); width: 15px; border-radius: 4px; }
 
-        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; }
-        #lightbox img { max-width: 95%; max-height: 90%; object-fit: contain; border-radius: 20px; }
+        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; z-index: 2000; align-items: center; justify-content: center; }
+        #lightbox img { max-width: 90%; max-height: 85%; object-fit: contain; border-radius: 10px; }
 
-        .site-version { position: fixed; bottom: 20px; right: 20px; padding: 8px 15px; border-radius: 12px; font-size: 11px; font-weight: 900; background: var(--gray-light); backdrop-filter: blur(10px); border: 1px solid var(--border-glass); z-index: 999; }
-        footer { padding: 100px 40px; text-align: center; font-weight: 900; font-size: 13px; letter-spacing: 3px; opacity: 0.6; }
+        footer { padding: 40px; text-align: center; opacity: 0.5; font-size: 10px; }
     </style>
 </head>
 <body data-theme="dark">
@@ -72,11 +73,11 @@
 <canvas id="gradient-canvas"></canvas>
 <div id="progress-bar"></div>
 <div id="lightbox" onclick="closeLB(event)">
-    <button class="nav-arrow arrow-left" style="left:30px" onclick="changeLBImg(-1, event)">❮</button>
-    <button class="nav-arrow arrow-right" style="right:30px" onclick="changeLBImg(1, event)">❯</button>
+    <button class="nav-arrow" style="left:20px" onclick="changeLBImg(-1, event)">❮</button>
+    <button class="nav-arrow" style="right:20px" onclick="changeLBImg(1, event)">❯</button>
     <img id="lb-img" src="">
 </div>
-<div class="site-version">v1.6.9</div>
+<div class="site-version">v1.7.0</div>
 
 <nav>
     <div class="logo">MARM0SET</div>
@@ -91,9 +92,9 @@
     <h1 data-tr="header_title">Бескомпромиссный фотореализм</h1>
 </header>
 
-<section class="about-section" data-aos="fade-up">
+<section class="about-section" data-aos="fade-up" style="max-width: 1100px; margin: 20px auto; width: 90%;">
     <div class="about-grid">
-        <div style="margin-bottom: 50px;">
+        <div>
             <h3 data-tr="skills_title">Ключевые навыки</h3>
             <ul class="about-list" id="skills-list"></ul>
         </div>
@@ -106,17 +107,17 @@
 
 <main class="gallery" id="portfolio-grid"></main>
 
-<section class="contact-section" id="contact" data-aos="fade-up" style="margin: 60px auto; padding: 100px 25px; max-width: 1200px; text-align: center; width: 92%;">
-    <h2 data-tr="contact_title" style="font-size: 3rem; font-weight: 900; margin-bottom: 50px; text-transform: uppercase; letter-spacing: -1px;">Связаться со мной</h2>
-    <div style="font-weight: 900; line-height: 2.8; font-size: 1.4rem;">
-        <a href="https://kwork.ru" target="_blank" style="color:var(--text); text-decoration:none; border-bottom: 3px solid var(--accent);">💼 Kwork Profile</a><br>
+<section class="contact-section" id="contact" data-aos="fade-up" style="margin: 40px auto; padding: 40px 20px; max-width: 1100px; text-align: center; width: 90%;">
+    <h2 data-tr="contact_title">Связаться со мной</h2>
+    <div style="font-weight: 600; line-height: 2.5;">
+        <a href="https://kwork.ru" target="_blank" style="color:var(--text); text-decoration:none;">💼 Kwork Profile</a><br>
         <span onclick="copyToClipboard('hypexits@mail.ru')" style="cursor:pointer;">📧 hypexits@mail.ru</span><br>
         <span onclick="copyToClipboard('@WINDUP_MARMOSET')" style="cursor:pointer;">✈️ @WINDUP_MARMOSET</span><br>
         <span onclick="copyToClipboard('+79251803895')" style="cursor:pointer;">📞 +7 (925) 180-38-95</span>
     </div>
 </section>
 
-<footer>© 2024 MARMOSET_TOOLBAG • PREVIEW EDITION</footer>
+<footer>© 2024 MARMOSET_TOOLBAG</footer>
 
 <script src="https://unpkg.com"></script>
 <script>
@@ -126,15 +127,15 @@
     function animate() {
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const isLight = document.body.getAttribute('data-theme') === 'light';
-        const c1 = isLight ? {r:245,g:245,b:250} : {r:10,g:10,b:20};
-        const c2 = isLight ? {r:220,g:225,b:240} : {r:30,g:15,b:50};
+        const c1 = isLight ? {r:240,g:245,b:255} : {r:15,g:10,b:35};
+        const c2 = isLight ? {r:225,g:230,b:245} : {r:40,g:20,b:80};
         const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width);
         const shift = Math.sin(time) * 0.5 + 0.5;
         grad.addColorStop(0, `rgb(${c1.r},${c1.g},${c1.b})`);
         grad.addColorStop(shift, `rgb(${c2.r},${c2.g},${c2.b})`);
         grad.addColorStop(1, `rgb(${c1.r},${c1.g},${c1.b})`);
         ctx.fillStyle = grad; ctx.fillRect(0,0,canvas.width,canvas.height);
-        time += 0.005; requestAnimationFrame(animate);
+        time += 0.007; requestAnimationFrame(animate);
     }
     animate();
 
@@ -142,36 +143,36 @@
         ru: {
             nav_contact: "КОНТАКТЫ", header_title: "Бескомпромиссный фотореализм", contact_title: "Связаться со мной",
             skills_title: "Ключевые навыки", help_title: "Помогу вам",
-            skills: ["3D Моделирование: Детализированные модели", "Фотореалистичная Визуализация: Превращение в изображения", "Оптимизация для Игр/VR/AR: Ассеты для производительности", "3D Анимация: Оживление моделей", "Различные Стили: Адаптация к требованиям", "Софт: Blender, Substance, UE5, Unity", "Внимание к деталям и креативность"],
-            help: ["Улучшить маркетинг", "Оживить игры", "Визуализировать архитектуру", "Рассказать истории через анимацию"],
+            skills: ["3D Моделирование", "Фотореалистичная Визуализация", "Оптимизация для Игр/VR/AR", "3D Анимация", "Различные Стили", "Софт: Blender, Substance, UE5, Unity"],
+            help: ["Маркетинг продуктов", "3D ассеты для игр", "Архитектурная визуализация", "Анимация"],
             p1_n: "Marshall Headphones", p1_t: "Product Visualisation",
             p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation",
             p3_n: "Apple Vision Pro", p3_t: "Product Visualisation",
             p4_n: "AirPods 5", p4_t: "Product Visualisation",
             p5_n: "Apple Watch", p5_t: "Product Visualisation",
-            p6_n: "Интерьерная визуализация", p6_t: "Архивиз",
-            p7_n: "Создание персонажей", p7_t: "Low-poly",
-            p8_n: "Экстерьерная визуализация", p8_t: "Архивиз",
-            p9_n: "Военная техника", p9_t: "High-poly",
-            p10_n: "Игровое окружение", p10_t: "Game-ready environment",
-            p11_n: "Cinematics", p11_t: "AI and photorealistic renders"
+            p6_n: "Интерьер", p6_t: "Архивиз",
+            p7_n: "Персонажи", p7_t: "Low-poly",
+            p8_n: "Экстерьер", p8_t: "Архивиз",
+            p9_n: "Техника", p9_t: "High-poly",
+            p10_n: "Окружение", p10_t: "Game-ready",
+            p11_n: "Cinematics", p11_t: "Photorealistic renders"
         },
         en: {
             nav_contact: "CONTACT", header_title: "Uncompromising Photorealism", contact_title: "Get in Touch",
             skills_title: "Key Skills", help_title: "How I Can Help",
-            skills: ["3D Modeling: High-detail models", "Photorealistic Visualization: Stunning renders", "Optimization: Performance-ready assets", "3D Animation: Bringing models to life", "Versatile Styles: Adaptable needs", "Software: Blender, Substance, UE5, Unity", "Attention to Detail"],
-            help: ["Boost marketing", "Level up games", "Visualize architecture", "Tell stories through animation"],
+            skills: ["3D Modeling", "Photorealistic Visualization", "Game Optimization", "3D Animation", "Software: Blender, UE5"],
+            help: ["Product marketing", "Game assets", "Architecture", "Animation"],
             p1_n: "Marshall Headphones", p1_t: "Product Visualisation",
             p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation",
             p3_n: "Apple Vision Pro", p3_t: "Product Visualisation",
             p4_n: "AirPods 5", p4_t: "Product Visualisation",
             p5_n: "Apple Watch", p5_t: "Product Visualisation",
-            p6_n: "Interior Visualization", p6_t: "Archviz",
-            p7_n: "Character Creation", p7_t: "Low-poly",
-            p8_n: "Exterior Visualization", p8_t: "Archviz",
-            p9_n: "Military Vehicles", p9_t: "High-poly",
-            p10_n: "Game Environment", p10_t: "Game-ready environment",
-            p11_n: "Cinematics", p11_t: "AI and photorealistic renders"
+            p6_n: "Interior", p6_t: "Archviz",
+            p7_n: "Characters", p7_t: "Low-poly",
+            p8_n: "Exterior", p8_t: "Archviz",
+            p9_n: "Military", p9_t: "High-poly",
+            p10_n: "Environment", p10_t: "Game-ready",
+            p11_n: "Cinematics", p11_t: "Photorealistic renders"
         }
     };
 
@@ -179,86 +180,73 @@
     let myWorks = [];
 
     async function discoverWorks() {
-        myWorks = []; updateUI();
+        myWorks = []; 
         for(let pId=1; pId<50; pId++) {
             const firstImg = `images/p${pId}_1.webp`;
-            const check = await fetch(firstImg, { method: 'HEAD' });
-            if (check.ok) {
-                const work = { id: pId, images: [firstImg] };
-                myWorks.push(work);
-                renderGallery();
-                loadExtraImages(pId);
-            } else break;
+            try {
+                const check = await fetch(firstImg, { method: 'HEAD' });
+                if (check.ok) {
+                    let images = [firstImg];
+                    for(let i=2; i<=10; i++) {
+                        const path = `images/p${pId}_${i}.webp`;
+                        const imgCheck = await fetch(path, { method: 'HEAD' });
+                        if(imgCheck.ok) images.push(path); else break;
+                    }
+                    myWorks.push({ id: pId, images: images });
+                } else break;
+            } catch(e) { break; }
         }
+        updateUI();
     }
 
-    async function loadExtraImages(pId) {
-        let work = myWorks.find(w => w.id === pId);
-        for(let i=2; i<=10; i++) {
-            const path = `images/p${pId}_${i}.webp`;
-            const check = await fetch(path, { method: 'HEAD' });
-            if(check.ok) { 
-                work.images.push(path); 
-                updateCardHTML(pId); 
-            } else break;
-        }
-    }
-
-    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
-    
     function updateUI() {
         const tr = translations[currentLang];
         document.querySelectorAll('[data-tr]').forEach(el => { if(tr[el.getAttribute('data-tr')]) el.innerHTML = tr[el.getAttribute('data-tr')]; });
+        
         const sl = document.getElementById('skills-list'); sl.innerHTML = '';
         tr.skills.forEach(s => { const li = document.createElement('li'); li.innerText = s; sl.appendChild(li); });
+        
         const hl = document.getElementById('help-list'); hl.innerHTML = '';
         tr.help.forEach(h => { const li = document.createElement('li'); li.innerText = h; hl.appendChild(li); });
+
         document.getElementById('lang-btn').innerText = currentLang.toUpperCase();
         renderGallery();
     }
 
+    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
+
     function createCard(work, i) {
         const card = document.createElement('div');
-        card.id = `card-p${work.id}`;
         card.className = 'card';
         card.setAttribute('data-aos', 'fade-up');
-        updateCardContent(card, work);
-        return card;
-    }
-
-    function updateCardContent(card, work) {
-        const tr = translations[currentLang];
+        
         let s = '', d = '';
         work.images.forEach((img, idx) => {
-            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${myWorks.indexOf(work)}, ${idx})"><img src="${img}" loading="lazy"></div>`;
+            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${img}"></div>`;
             d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
         });
-        const n = tr[`p${work.id}_n`] || "Project #" + work.id;
-        const t = tr[`p${work.id}_t`] || "3D Visualisation";
         
-        card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow arrow-left" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow arrow-right" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:30px"><h3>${n}</h3><p>${t}</p></div>`;
+        const tr = translations[currentLang];
+        const n = tr[`p${work.id}_n`] || "Project " + work.id;
+        const t = tr[`p${work.id}_t`] || "3D Art";
+        
+        card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow" style="left:10px" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow" style="right:10px" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${n}</h3><p style="font-size:11px;opacity:0.5;text-transform:uppercase;">${t}</p></div>`;
         
         const vp = card.querySelector('.slider-viewport');
         if (work.images.length > 1) {
-            let startX = 0;
-            vp.addEventListener('touchstart', (e) => { startX = e.touches.clientX; }, {passive: true});
-            vp.addEventListener('touchend', (e) => {
-                let diff = startX - e.changedTouches.clientX;
-                if (Math.abs(diff) > 40) manualChange(vp, diff > 0 ? 1 : -1);
+            let sX = 0;
+            vp.addEventListener('touchstart', e => { sX = e.touches[0].clientX; }, {passive: true});
+            vp.addEventListener('touchend', e => {
+                let dX = sX - e.changedTouches[0].clientX;
+                if (Math.abs(dX) > 50) manualChange(vp, dX > 0 ? 1 : -1);
             }, {passive: true});
         }
-    }
-
-    function updateCardHTML(id) {
-        const card = document.getElementById(`card-p${id}`);
-        const work = myWorks.find(w => w.id === id);
-        if (card && work) updateCardContent(card, work);
+        return card;
     }
 
     function manualChange(vp, dir) {
         const slides = vp.querySelectorAll('.slide'), dots = vp.querySelectorAll('.dot');
         let curr = Array.from(slides).findIndex(el => el.classList.contains('active'));
-        if (curr === -1) return;
         slides[curr].classList.remove('active'); dots[curr].classList.remove('active');
         curr = (curr + dir + slides.length) % slides.length;
         slides[curr].classList.add('active'); dots[curr].classList.add('active');
@@ -268,43 +256,25 @@
 
     function renderGallery() {
         const grid = document.getElementById('portfolio-grid'); grid.innerHTML = '';
-        myWorks.forEach((w) => grid.appendChild(createCard(w)));
+        myWorks.forEach((w, i) => grid.appendChild(createCard(w, i)));
     }
 
-    let currentWorkIdx = 0, currentImgIdx = 0;
+    let cW = 0, cI = 0;
     const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
 
-    function openLB(wIdx, iIdx) {
-        currentWorkIdx = wIdx; currentImgIdx = iIdx;
-        lbImg.src = myWorks[currentWorkIdx].images[currentImgIdx];
-        lb.style.display = 'flex';
-    }
-
-    function changeLBImg(dir, e) {
-        if(e) e.stopPropagation();
-        const imgs = myWorks[currentWorkIdx].images;
-        currentImgIdx = (currentImgIdx + dir + imgs.length) % imgs.length;
-        lbImg.src = myWorks[currentWorkIdx].images[currentImgIdx];
-    }
-
+    function openLB(wIdx, iIdx) { cW = wIdx; cI = iIdx; lbImg.src = myWorks[cW].images[cI]; lb.style.display = 'flex'; }
+    function changeLBImg(dir, e) { e.stopPropagation(); const imgs = myWorks[cW].images; cI = (cI + dir + imgs.length) % imgs.length; lbImg.src = myWorks[cW].images[cI]; }
     function closeLB(e) { if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.style.display = 'none'; }
 
-    let lbSX = 0, lbSY = 0;
-    lb.addEventListener('touchstart', e => { lbSX = e.touches.clientX; lbSY = e.touches.clientY; }, {passive: true});
+    let lSX = 0;
+    lb.addEventListener('touchstart', e => { lSX = e.touches[0].clientX; }, {passive: true});
     lb.addEventListener('touchend', e => {
-        let dX = lbSX - e.changedTouches.clientX, dY = lbSY - e.changedTouches.clientY;
-        if (Math.abs(dX) > Math.abs(dY)) { if (Math.abs(dX) > 50) changeLBImg(dX > 0 ? 1 : -1); }
-        else if (Math.abs(dY) > 50) {
-            currentWorkIdx = (currentWorkIdx + (dY > 0 ? 1 : -1) + myWorks.length) % myWorks.length;
-            currentImgIdx = 0; lbImg.src = myWorks[currentWorkIdx].images[currentImgIdx];
-        }
+        let dX = lSX - e.changedTouches[0].clientX;
+        if (Math.abs(dX) > 50) changeLBImg(dX > 0 ? 1 : -1);
     }, {passive: true});
 
-    function toggleTheme() { 
-        document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-        updateUI();
-    }
-    function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
+    function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); updateUI(); }
+    function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied'); }
     window.onscroll = () => { document.getElementById("progress-bar").style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + "%"; };
     document.addEventListener('DOMContentLoaded', () => { discoverWorks(); AOS.init({ duration: 800, once: true }); });
 </script>
