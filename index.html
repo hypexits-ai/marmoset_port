@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Marm0SET_toolBAG | Portfolio</title>
     
-    <!-- ИСПРАВЛЕНИЕ: Подключаем шрифты и стили для анимаций -->
+    <!-- Надежные ссылки на шрифты и анимации -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
 
     <style>
         :root { 
@@ -35,10 +35,10 @@
 
         header { padding: 60px 20px 30px; max-width: 1000px; margin: 0 auto; text-align: center; }
         
-        /* ИСПРАВЛЕНИЕ: Используем clamp() чтобы на мобильных шрифт автоматически уменьшался */
+        /* Адаптивный размер шрифта для всех устройств */
         header h1 { font-size: clamp(1.4rem, 6vw, 2.5rem); font-weight: 800; text-transform: uppercase; letter-spacing: -1px; margin: 0; line-height: 1.2; word-wrap: break-word; }
         
-        /* НОВОЕ: Стили для подписи под заголовком */
+        /* Стили для подписи */
         .signature { display: block; font-size: clamp(0.9rem, 4vw, 1.2rem); font-style: italic; opacity: 0.7; margin-top: 15px; font-weight: 400; text-align: right; max-width: 80%; margin-left: auto; }
 
         .about-section, .contact-section, .card {
@@ -92,8 +92,9 @@
     <button class="nav-arrow" style="right:20px" onclick="changeLBImg(1, event)">❯</button>
     <img id="lb-img" src="">
 </div>
-<!-- ОБНОВЛЕНИЕ ВЕРСИИ -->
-<div class="site-version">v1.7.4</div>
+
+<!-- Обновляем до v1.7.5 -->
+<div class="site-version">v1.7.5</div>
 
 <nav>
     <div class="logo">MARMOSET</div>
@@ -106,7 +107,6 @@
 
 <header data-aos="fade-up">
     <h1 data-tr="header_title">Бескомпромиссный фотореализм</h1>
-    <!-- НОВОЕ: Подпись с именем -->
     <span class="signature" data-tr="header_name">— Сальников Алексей</span>
 </header>
 
@@ -131,8 +131,7 @@
 
 <footer>© 2024 MARMOSET_TOOLBAG</footer>
 
-<!-- ИСПРАВЛЕНИЕ: Рабочий скрипт для анимаций -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
     const canvas = document.getElementById('gradient-canvas');
     const ctx = canvas.getContext('2d');
@@ -154,16 +153,14 @@
 
     const translations = {
         ru: {
-            nav_contact: "КОНТАКТЫ", header_title: "Бескомпромиссный фотореализм", 
-            header_name: "— Сальников Алексей", /* Добавлено имя */
+            nav_contact: "КОНТАКТЫ", header_title: "Бескомпромиссный фотореализм", header_name: "— Сальников Алексей",
             contact_title: "Связаться со мной", skills_title: "Ключевые навыки", help_title: "Помогу вам",
             skills: ["3D Моделирование", "Фотореалистичная Визуализация", "Оптимизация для Игр/VR/AR", "3D Анимация", "Различные Стили", "Софт: Blender, Substance, UE5, Unity"],
             help: ["Маркетинг продуктов", "3D ассеты для игр", "Архитектурная визуализация", "Анимация"],
             p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Интерьер", p6_t: "Архивиз", p7_n: "Персонажи", p7_t: "Low-poly", p8_n: "Экстерьер", p8_t: "Архивиз", p9_n: "Техника", p9_t: "High-poly", p10_n: "Окружение", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders"
         },
         en: {
-            nav_contact: "CONTACT", header_title: "Uncompromising Photorealism", 
-            header_name: "— Alexey Salnikov", /* Добавлено имя на английском */
+            nav_contact: "CONTACT", header_title: "Uncompromising Photorealism", header_name: "— Alexey Salnikov",
             contact_title: "Get in Touch", skills_title: "Key Skills", help_title: "How I Can Help",
             skills: ["3D Modeling", "Photorealistic Renders", "Game Assets Optimization", "3D Animation", "Styles Adaptation", "Software: Blender, UE5"],
             help: ["Product Marketing", "Game Assets", "Architecture", "Animation"],
@@ -171,25 +168,23 @@
         }
     };
 
-    /* ИСПРАВЛЕНИЕ: Настройка картинок. Это решает проблему 404 ошибок */
-    /* id: номер проекта (p1, p2 и т.д.), imgCount: сколько картинок у этого проекта */
+    /* НАСТРОЙКА КАРТИНОК: Обязательно укажи реальное количество фото для каждого проекта */
     const portfolioConfig = [
-        { id: 1, imgCount: 3 }, // Поменяй цифру 3 на реальное количество картинок у проекта 1
-        { id: 2, imgCount: 2 }, // Поменяй 2 на реальное количество для p2
-        { id: 3, imgCount: 1 },
-        { id: 4, imgCount: 1 },
-        { id: 5, imgCount: 1 },
-        { id: 6, imgCount: 1 },
-        { id: 7, imgCount: 1 },
-        { id: 8, imgCount: 1 },
-        { id: 9, imgCount: 1 },
-        { id: 10, imgCount: 1 },
-        { id: 11, imgCount: 1 }
+        { id: 1, imgCount: 2 }, 
+        { id: 2, imgCount: 2 },
+        { id: 3, imgCount: 2 },
+        { id: 4, imgCount: 2 },
+        { id: 5, imgCount: 2 },
+        { id: 6, imgCount: 14 },
+        { id: 7, imgCount: 4 },
+        { id: 8, imgCount: 4 },
+        { id: 9, imgCount: 9 },
+        { id: 10, imgCount: 7 },
+        { id: 11, imgCount: 5 }
     ];
 
     let currentLang = 'ru', myWorks = [];
 
-    // ИСПРАВЛЕНИЕ: Быстрая загрузка без слепых запросов к серверу
     function discoverWorks() {
         myWorks = portfolioConfig.map(p => {
             let images = [];
@@ -219,4 +214,69 @@
         card.className = 'card'; card.setAttribute('data-aos', 'fade-up');
         let s = '', d = '';
         work.images.forEach((img, idx) => {
-            s += `<div class="slide
+            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${img}"></div>`;
+            d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
+        });
+        const tr = translations[currentLang];
+        const n = tr[`p${work.id}_n`] || "Project " + work.id;
+        const t = tr[`p${work.id}_t`] || "3D Visualization";
+        card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow" style="left:10px" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow" style="right:10px" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${n}</h3><p>${t}</p></div>`;
+        
+        const vp = card.querySelector('.slider-viewport');
+        if (work.images.length > 1) setupSwipe(vp, (dir) => manualChange(vp, dir));
+        return card;
+    }
+
+    function setupSwipe(el, callback) {
+        let sX = 0, sY = 0, isH = false, isV = false;
+        el.addEventListener('touchstart', e => { sX = e.touches[0].clientX; sY = e.touches[0].clientY; isH = false; isV = false; }, {passive: true});
+        el.addEventListener('touchmove', e => {
+            if (isV) return;
+            let dX = Math.abs(sX - e.touches[0].clientX), dY = Math.abs(sY - e.touches[0].clientY);
+            if (!isH && !isV) { if (dX > dY && dX > 10) isH = true; else if (dY > dX && dY > 10) isV = true; }
+            if (isH && e.cancelable) e.preventDefault();
+        }, {passive: false});
+        el.addEventListener('touchend', e => { if (isH) { let dX = sX - e.changedTouches[0].clientX; if (Math.abs(dX) > 50) callback(dX > 0 ? 1 : -1); } }, {passive: true});
+    }
+
+    function manualChange(vp, dir) {
+        const slides = vp.querySelectorAll('.slide'), dots = vp.querySelectorAll('.dot');
+        let curr = Array.from(slides).findIndex(el => el.classList.contains('active'));
+        slides[curr].classList.remove('active'); dots[curr].classList.remove('active');
+        curr = (curr + dir + slides.length) % slides.length;
+        slides[curr].classList.add('active'); dots[curr].classList.add('active');
+    }
+
+    function changeSlide(btn, dir, e) { e.stopPropagation(); manualChange(btn.parentElement, dir); }
+
+    function renderGallery() {
+        const grid = document.getElementById('portfolio-grid'); grid.innerHTML = '';
+        myWorks.forEach((w, i) => grid.appendChild(createCard(w, i)));
+    }
+
+    let cW = 0, cI = 0;
+    const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
+    function openLB(wIdx, iIdx) { cW = wIdx; cI = iIdx; lbImg.src = myWorks[cW].images[cI]; lb.style.display = 'flex'; }
+    function changeLBImg(dir, e) { if(e) e.stopPropagation(); const imgs = myWorks[cW].images; cI = (cI + dir + imgs.length) % imgs.length; lbImg.src = myWorks[cW].images[cI]; }
+    function closeLB(e) { if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.style.display = 'none'; }
+
+    let lSX = 0, lSY = 0;
+    lb.addEventListener('touchstart', e => { lSX = e.touches[0].clientX; lSY = e.touches[0].clientY; }, {passive: true});
+    lb.addEventListener('touchend', e => {
+        let dX = lSX - e.changedTouches[0].clientX, dY = lSY - e.changedTouches[0].clientY;
+        if (Math.abs(dX) > Math.abs(dY)) { if (Math.abs(dX) > 50) changeLBImg(dX > 0 ? 1 : -1); }
+        else if (Math.abs(dY) > 60) { cW = (cW + (dY > 0 ? 1 : -1) + myWorks.length) % myWorks.length; cI = 0; lbImg.src = myWorks[cW].images[cI]; }
+    }, {passive: true});
+
+    function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); updateUI(); }
+    function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
+    window.onscroll = () => { document.getElementById("progress-bar").style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + "%"; };
+    
+    /* ИСПРАВЛЕНИЕ: Вызываем всё напрямую, чтобы избежать рассинхрона загрузки */
+    discoverWorks(); 
+    if (typeof AOS !== 'undefined') {
+        AOS.init({ duration: 800, once: true });
+    }
+</script>
+</body>
+</html>
