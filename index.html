@@ -59,14 +59,16 @@
 
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
         .slide.active { opacity: 1; z-index: 5; pointer-events: auto; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; display: block; -webkit-user-drag: none; }
+        
+        /* ПРАВКА v1.1.0: Убираем обрезку изображений */
+        .slide img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; -webkit-user-drag: none; }
 
         .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
         .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-glass); }
         .dot.active { background: var(--accent); width: 15px; border-radius: 4px; }
 
-        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; }
-        #lightbox img { max-width: 90%; max-height: 85%; object-fit: contain; border: 2px solid #fff; border-radius: 15px; }
+        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; touch-action: none; }
+        #lightbox img { max-width: 95%; max-height: 90%; object-fit: contain; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; }
 
         footer { padding: 40px; text-align: center; color: #888; font-size: 12px; }
     </style>
@@ -75,8 +77,8 @@
 
 <canvas id="gradient-canvas"></canvas>
 <div id="progress-bar"></div>
-<div id="lightbox" onclick="this.style.display='none'"><img id="lb-img" src=""></div>
-<div class="site-version">v1.0.9</div>
+<div id="lightbox" onclick="closeLB(event)"><img id="lb-img" src=""></div>
+<div class="site-version">v1.2.1</div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
@@ -147,7 +149,6 @@
     };
 
     let currentLang = 'ru';
-    // Названия в массиве для корректного отображения по индексу
     const workNames = [
         "product visualisation", "product visualisation", "product visualisation", "product visualisation", "product visualisation",
         "interior visualisation", "character modeling", "exterior visualisation", "high-poly modeling", "environment creation low-poly"
@@ -180,7 +181,6 @@
         
         card.innerHTML = `<div class="slider-viewport">${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${workNames[i]}</h3><p style="font-size:12px;opacity:0.6">CGI Production</p></div>`;
         
-        // Прямая привязка событий свайпа к вьюпорту
         const vp = card.querySelector('.slider-viewport');
         if (work.images.length > 1) {
             let startX = 0;
@@ -203,22 +203,79 @@
     function renderGallery() {
         const grid = document.getElementById('portfolio-grid'); grid.innerHTML = '';
         myWorks.forEach((w, i) => grid.appendChild(createCard(w, i)));
-        AOS.refresh();
+        if(typeof AOS !== 'undefined') AOS.refresh();
     }
 
-    function openLB(w, i) { document.getElementById('lb-img').src = myWorks[w].images[i]; document.getElementById('lightbox').style.display = 'flex'; }
+    /* ЛОГИКА LIGHTBOX v1.2.1 */
+    let currentWorkIdx = 0;
+    let currentImgIdx = 0;
+    const lb = document.getElementById('lightbox');
+    let lbStartX = 0, lbStartY = 0;
+
+    function openLB(wIdx, iIdx) {
+        currentWorkIdx = wIdx;
+        currentImgIdx = iIdx;
+        updateLBImage();
+        lb.style.display = 'flex';
+    }
+
+    function updateLBImage() {
+        const img = document.getElementById('lb-img');
+        img.src = myWorks[currentWorkIdx].images[currentImgIdx];
+    }
+
+    function closeLB(e) {
+        if (e.target.id === 'lightbox' || e.target.id === 'lb-img') {
+            lb.style.display = 'none';
+        }
+    }
+
+    lb.addEventListener('touchstart', (e) => { 
+        lbStartX = e.touches[0].clientX; 
+        lbStartY = e.touches[0].clientY; 
+    }, {passive: true});
+
+    lb.addEventListener('touchend', (e) => {
+        let diffX = lbStartX - e.changedTouches[0].clientX;
+        let diffY = lbStartY - e.changedTouches[0].clientY;
+        const threshold = 60;
+
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            if (Math.abs(diffX) > threshold) {
+                const images = myWorks[currentWorkIdx].images;
+                currentImgIdx = (currentImgIdx + (diffX > 0 ? 1 : -1) + images.length) % images.length;
+                updateLBImage();
+            }
+        } else {
+            if (diffY > threshold) { // Свайп ВВЕРХ -> Следующий проект
+                currentWorkIdx = (currentWorkIdx + 1) % myWorks.length;
+                currentImgIdx = 0;
+                updateLBImage();
+            } else if (diffY < -threshold) { // Свайп ВНИЗ -> Предыдущий проект
+                currentWorkIdx = (currentWorkIdx - 1 + myWorks.length) % myWorks.length;
+                currentImgIdx = 0;
+                updateLBImage();
+            }
+        }
+    }, {passive: true});
+
     function toggleTheme() { 
         const isDark = document.body.getAttribute('data-theme') === 'dark';
         document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
         document.getElementById('theme-btn').innerText = isDark ? 'DARK' : 'LIGHT';
     }
-    function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied'); }
+
+    function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
     
     window.onscroll = () => { 
         const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         if (h > 0) document.getElementById("progress-bar").style.width = (window.scrollY / h) * 100 + "%"; 
     };
-    document.addEventListener('DOMContentLoaded', () => { updateUI(); AOS.init({ duration: 800, once: true }); });
+
+    document.addEventListener('DOMContentLoaded', () => { 
+        updateUI(); 
+        if(typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true }); 
+    });
 </script>
 </body>
 </html>
