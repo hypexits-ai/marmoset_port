@@ -9,7 +9,7 @@
         :root { 
             --bg: #0a0a0a; --text: #f5f5f5; --gray-light: rgba(20, 20, 25, 0.6); 
             --line: rgba(255,255,255,0.05); --accent: #fff; --border-glass: rgba(255, 255, 255, 0.3);
-            --glow: rgba(255, 255, 255, 0.5); --transition: 0.4s ease;
+            --glow: rgba(255, 255, 255, 0.5); --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         [data-theme="light"] {
             --bg: #ffffff; --text: #1a1a1a; --gray-light: rgba(255, 255, 255, 0.4); 
@@ -57,18 +57,28 @@
         .slider-viewport { position: relative; height: 350px; width: 100%; overflow: hidden; touch-action: pan-y; cursor: zoom-in; }
         @media (min-width: 768px) { .slider-viewport { height: 500px; } }
 
-        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
-        .slide.active { opacity: 1; z-index: 5; pointer-events: auto; }
+        /* ПРАВКА v1.3.0: Анимация появления слайдов */
+        .slide { position: absolute; inset: 0; opacity: 0; transform: scale(1.05); transition: opacity 0.6s ease, transform 0.6s ease; pointer-events: none; }
+        .slide.active { opacity: 1; transform: scale(1); z-index: 5; pointer-events: auto; }
         
-        /* ПРАВКА v1.1.0: Убираем обрезку изображений */
-        .slide img { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; -webkit-user-drag: none; }
+        /* ПРАВКА v1.3.0: Рамки в цвет темы */
+        .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); display: block; -webkit-user-drag: none; transition: background 0.5s; }
+
+        /* Стрелки для ПК */
+        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 20; opacity: 0; transition: opacity 0.3s; display: none; }
+        @media (hover: hover) { 
+            .slider-viewport:hover .nav-arrow { opacity: 1; } 
+            .nav-arrow { display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        }
+        .arrow-left { left: 10px; }
+        .arrow-right { right: 10px; }
 
         .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
-        .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-glass); }
+        .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; border: 1px solid var(--border-glass); transition: var(--transition); }
         .dot.active { background: var(--accent); width: 15px; border-radius: 4px; }
 
         #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; touch-action: none; }
-        #lightbox img { max-width: 95%; max-height: 90%; object-fit: contain; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; }
+        #lightbox img { max-width: 95%; max-height: 90%; object-fit: contain; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; transition: opacity 0.3s ease; }
 
         footer { padding: 40px; text-align: center; color: #888; font-size: 12px; }
     </style>
@@ -78,7 +88,7 @@
 <canvas id="gradient-canvas"></canvas>
 <div id="progress-bar"></div>
 <div id="lightbox" onclick="closeLB(event)"><img id="lb-img" src=""></div>
-<div class="site-version">v1.2.1</div>
+<div class="site-version">v1.3.0</div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
@@ -179,7 +189,13 @@
             d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
         });
         
-        card.innerHTML = `<div class="slider-viewport">${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${workNames[i]}</h3><p style="font-size:12px;opacity:0.6">CGI Production</p></div>`;
+        card.innerHTML = `
+            <div class="slider-viewport">
+                <button class="nav-arrow arrow-left" onclick="changeSlide(this, -1, event)">❮</button>
+                <button class="nav-arrow arrow-right" onclick="changeSlide(this, 1, event)">❯</button>
+                ${s}<div class="dots">${d}</div>
+            </div>
+            <div style="padding:20px"><h3>${workNames[i]}</h3><p style="font-size:12px;opacity:0.6">CGI Production</p></div>`;
         
         const vp = card.querySelector('.slider-viewport');
         if (work.images.length > 1) {
@@ -188,16 +204,25 @@
             vp.addEventListener('touchend', (e) => {
                 let diff = startX - e.changedTouches[0].clientX;
                 if (Math.abs(diff) > 50) {
-                    const slides = vp.querySelectorAll('.slide');
-                    const dots = vp.querySelectorAll('.dot');
-                    let curr = Array.from(slides).findIndex(el => el.classList.contains('active'));
-                    slides[curr].classList.remove('active'); dots[curr].classList.remove('active');
-                    curr = (curr + (diff > 0 ? 1 : -1) + slides.length) % slides.length;
-                    slides[curr].classList.add('active'); dots[curr].classList.add('active');
+                    manualChange(vp, diff > 0 ? 1 : -1);
                 }
             }, {passive: true});
         }
         return card;
+    }
+
+    function manualChange(vp, dir) {
+        const slides = vp.querySelectorAll('.slide');
+        const dots = vp.querySelectorAll('.dot');
+        let curr = Array.from(slides).findIndex(el => el.classList.contains('active'));
+        slides[curr].classList.remove('active'); dots[curr].classList.remove('active');
+        curr = (curr + dir + slides.length) % slides.length;
+        slides[curr].classList.add('active'); dots[curr].classList.add('active');
+    }
+
+    function changeSlide(btn, dir, event) {
+        event.stopPropagation();
+        manualChange(btn.parentElement, dir);
     }
 
     function renderGallery() {
@@ -206,7 +231,6 @@
         if(typeof AOS !== 'undefined') AOS.refresh();
     }
 
-    /* ЛОГИКА LIGHTBOX v1.2.1 */
     let currentWorkIdx = 0;
     let currentImgIdx = 0;
     const lb = document.getElementById('lightbox');
@@ -221,13 +245,15 @@
 
     function updateLBImage() {
         const img = document.getElementById('lb-img');
-        img.src = myWorks[currentWorkIdx].images[currentImgIdx];
+        img.style.opacity = '0';
+        setTimeout(() => {
+            img.src = myWorks[currentWorkIdx].images[currentImgIdx];
+            img.style.opacity = '1';
+        }, 150);
     }
 
     function closeLB(e) {
-        if (e.target.id === 'lightbox' || e.target.id === 'lb-img') {
-            lb.style.display = 'none';
-        }
+        if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.style.display = 'none';
     }
 
     lb.addEventListener('touchstart', (e) => { 
@@ -247,14 +273,12 @@
                 updateLBImage();
             }
         } else {
-            if (diffY > threshold) { // Свайп ВВЕРХ -> Следующий проект
+            if (diffY > threshold) {
                 currentWorkIdx = (currentWorkIdx + 1) % myWorks.length;
-                currentImgIdx = 0;
-                updateLBImage();
-            } else if (diffY < -threshold) { // Свайп ВНИЗ -> Предыдущий проект
+                currentImgIdx = 0; updateLBImage();
+            } else if (diffY < -threshold) {
                 currentWorkIdx = (currentWorkIdx - 1 + myWorks.length) % myWorks.length;
-                currentImgIdx = 0;
-                updateLBImage();
+                currentImgIdx = 0; updateLBImage();
             }
         }
     }, {passive: true});
