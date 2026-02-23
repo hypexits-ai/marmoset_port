@@ -83,7 +83,7 @@
     <button class="nav-arrow arrow-right" onclick="changeLBImg(1, event)">❯</button>
     <img id="lb-img" src="">
 </div>
-<div class="site-version">v1.6.6</div>
+<div class="site-version">v1.6.7</div>
 
 <nav>
     <div class="logo">Marm0SET_toolBAG</div>
@@ -150,35 +150,52 @@
             nav_contact: "КОНТАКТЫ", header_title: "Бескомпромиссный фотореализм", contact_title: "Связаться со мной",
             skills_title: "Ключевые навыки", help_title: "Помогу вам",
             skills: ["3D Моделирование: Детализированные и реалистичные модели", "Фотореалистичная Визуализация: Превращение моделей в захватывающие изображения", "Оптимизация для Игр/VR/AR: Ассеты для производительности", "3D Анимация: Оживление ваших моделей", "Различные Стили: Адаптация к вашим требованиям", "Профессиональный Софт: Blender, Substance, UE5, Unity", "Внимание к деталям и креативность"],
-            help: ["Улучшить маркетинг (визуализация продуктов)", "Оживить игры (3D ассеты)", "Визуализировать архитектуру", "Рассказать истории через анимацию"]
+            help: ["Улучшить маркетинг (визуализация продуктов)", "Оживить игры (3D ассеты)", "Визуализировать архитектуру", "Рассказать истории через анимацию"],
+            // ПРАВКА v1.6.7: Названия и разделы проектов
+            p1_n: "Marshall Headphones", p1_t: "Product Visualisation",
+            p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation",
+            p3_n: "Apple Vision Pro", p3_t: "Product Visualisation",
+            p4_n: "AirPods 5", p4_t: "Product Visualisation",
+            p5_n: "Apple Watch", p5_t: "Product Visualisation",
+            p6_n: "Интерьерная визуализация", p6_t: "Архивиз",
+            p7_n: "Создание персонажей", p7_t: "Low-poly",
+            p8_n: "Экстерьерная визуализация", p8_t: "Архивиз",
+            p9_n: "Военная техника", p9_t: "High-poly",
+            p10_n: "Игровое окружение", p10_t: "Game-ready environment",
+            p11_n: "Cinematics", p11_t: "AI and Photorealistic Visualization"
         },
         en: {
             nav_contact: "CONTACT", header_title: "Uncompromising Photorealism", contact_title: "Get in Touch",
             skills_title: "Key Skills", help_title: "How I Can Help",
             skills: ["3D Modeling: High-detail and realistic models", "Photorealistic Visualization: Stunning renders", "Game/VR/AR Optimization: Performance-ready assets", "3D Animation: Bringing models to life", "Versatile Styles: Adaptable to your needs", "Software: Blender, Substance, UE5, Unity", "Attention to Detail & Creativity"],
-            help: ["Boost marketing (product visualization)", "Level up games (3D assets)", "Visualize architecture", "Tell stories through animation"]
+            help: ["Boost marketing (product visualization)", "Level up games (3D assets)", "Visualize architecture", "Tell stories through animation"],
+            p1_n: "Marshall Headphones", p1_t: "Product Visualisation",
+            p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation",
+            p3_n: "Apple Vision Pro", p3_t: "Product Visualisation",
+            p4_n: "AirPods 5", p4_t: "Product Visualisation",
+            p5_n: "Apple Watch", p5_t: "Product Visualisation",
+            p6_n: "Interior Visualization", p6_t: "Archviz",
+            p7_n: "Character Creation", p7_t: "Low-poly",
+            p8_n: "Exterior Visualization", p8_t: "Archviz",
+            p9_n: "Military Vehicles", p9_t: "High-poly",
+            p10_n: "Game Environment", p10_t: "Game-ready environment",
+            p11_n: "Cinematics", p11_t: "AI and Photorealistic Visualization"
         }
     };
 
     let currentLang = 'ru';
     let myWorks = [];
 
-    // ПРАВКА v1.6.6: Ускоренная загрузка. Сначала текст, потом обложки, потом доп. фото.
     async function discoverWorks() {
-        myWorks = []; 
-        updateUI(); // Сначала рисуем текст "О себе"
-        
+        myWorks = []; updateUI(); 
         let pId = 1;
         while(pId < 50) {
             const firstImg = `images/p${pId}_1.webp`;
             const check = await fetch(firstImg, { method: 'HEAD' });
             if (check.ok) {
-                // Создаем проект только с одной картинкой для быстрой отрисовки
                 const work = { id: pId, images: [firstImg] };
                 myWorks.push(work);
-                renderGallery(); // Сразу добавляем карточку на экран
-                
-                // В фоне ищем остальные фото для этого проекта
+                renderGallery();
                 loadExtraImages(pId);
                 pId++;
             } else break;
@@ -190,11 +207,7 @@
         for(let i=2; i<=10; i++) {
             const path = `images/p${pId}_${i}.webp`;
             const check = await fetch(path, { method: 'HEAD' });
-            if(check.ok) {
-                work.images.push(path);
-                // Обновляем только конкретную карточку, чтобы не перерисовывать всё
-                updateCardImages(pId);
-            } else break;
+            if(check.ok) { work.images.push(path); updateCardImages(pId); } else break;
         }
     }
 
@@ -203,13 +216,10 @@
     function updateUI() {
         const tr = translations[currentLang];
         document.querySelectorAll('[data-tr]').forEach(el => { if(tr[el.getAttribute('data-tr')]) el.innerHTML = tr[el.getAttribute('data-tr')]; });
-        
         const sl = document.getElementById('skills-list'); sl.innerHTML = '';
         tr.skills.forEach(s => { const li = document.createElement('li'); li.innerText = s; sl.appendChild(li); });
-        
         const hl = document.getElementById('help-list'); hl.innerHTML = '';
         tr.help.forEach(h => { const li = document.createElement('li'); li.innerText = h; hl.appendChild(li); });
-
         document.getElementById('lang-btn').innerText = currentLang.toUpperCase();
         renderGallery();
     }
@@ -219,7 +229,6 @@
         card.id = `card-p${work.id}`;
         card.className = 'card';
         card.setAttribute('data-aos', window.innerWidth < 768 ? 'fade-up' : (i % 2 === 0 ? 'fade-right' : 'fade-left'));
-        
         updateCardContent(card, work, i);
         return card;
     }
@@ -230,15 +239,20 @@
             s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${imgUrl}" loading="lazy"></div>`;
             d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
         });
-        const title = (work.id === 11) ? "Cinematic" : "CGI Project #" + work.id;
-        card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow arrow-left" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow arrow-right" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${title}</h3><p style="font-size:11px;opacity:0.5;text-transform:uppercase;letter-spacing:1px">Production</p></div>`;
+
+        // ДИНАМИЧЕСКИЕ НАЗВАНИЯ v1.6.7
+        const tr = translations[currentLang];
+        const title = tr[`p${work.id}_n`] || "CGI Project #" + work.id;
+        const category = tr[`p${work.id}_t`] || "Production";
+
+        card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow arrow-left" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow arrow-right" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${title}</h3><p style="font-size:11px;opacity:0.5;text-transform:uppercase;letter-spacing:1px">${category}</p></div>`;
         
         const vp = card.querySelector('.slider-viewport');
         if (work.images.length > 1) {
             let startX = 0;
-            vp.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, {passive: true});
+            vp.addEventListener('touchstart', (e) => { startX = e.touches.clientX; }, {passive: true});
             vp.addEventListener('touchend', (e) => {
-                let diff = startX - e.changedTouches[0].clientX;
+                let diff = startX - e.changedTouches.clientX;
                 if (Math.abs(diff) > 40) manualChange(vp, diff > 0 ? 1 : -1);
             }, {passive: true});
         }
@@ -287,9 +301,9 @@
     function closeLB(e) { if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.style.display = 'none'; }
 
     let lbSX = 0, lbSY = 0;
-    lb.addEventListener('touchstart', e => { lbSX = e.touches[0].clientX; lbSY = e.touches[0].clientY; }, {passive: true});
+    lb.addEventListener('touchstart', e => { lbSX = e.touches.clientX; lbSY = e.touches.clientY; }, {passive: true});
     lb.addEventListener('touchend', e => {
-        let dX = lbSX - e.changedTouches[0].clientX, dY = lbSY - e.changedTouches[0].clientY;
+        let dX = lbSX - e.changedTouches.clientX, dY = lbSY - e.changedTouches.clientY;
         if (Math.abs(dX) > Math.abs(dY)) { if (Math.abs(dX) > 50) changeLBImg(dX > 0 ? 1 : -1); }
         else if (Math.abs(dY) > 50) {
             currentWorkIdx = (currentWorkIdx + (dY > 0 ? 1 : -1) + myWorks.length) % myWorks.length;
@@ -309,10 +323,7 @@
         if (h > 0) document.getElementById("progress-bar").style.width = (window.scrollY / h) * 100 + "%"; 
     };
 
-    document.addEventListener('DOMContentLoaded', () => { 
-        discoverWorks(); 
-        if(typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true }); 
-    });
+    document.addEventListener('DOMContentLoaded', () => { discoverWorks(); if(typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true }); });
 </script>
 </body>
 </html>
