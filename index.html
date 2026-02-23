@@ -21,49 +21,50 @@
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: background 0.5s; user-select: none; -webkit-user-select: none; }
         
         #gradient-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        #progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0%; z-index: 1000; }
+        #progress-bar { position: fixed; top: 0; left: 0; height: 5px; background: var(--accent); width: 0%; z-index: 1000; }
 
         nav { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--gray-light); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; border-bottom: 1px solid var(--line); box-sizing: border-box; }
-        .logo { font-weight: 900; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 8px 16px; border-radius: 25px; font-size: 11px; font-weight: 800; text-decoration: none; transition: 0.3s; }
+        .logo { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-ui { cursor: pointer; background: var(--gray-light); border: 1px solid var(--line); color: var(--text); padding: 10px 18px; border-radius: 25px; font-size: 11px; font-weight: 900; text-decoration: none; transition: 0.3s; }
         .btn-ui:hover { background: var(--accent); color: var(--bg); }
 
         header { padding: 80px 25px 40px; max-width: 1200px; margin: 0 auto; }
-        header h1 { font-size: 2.8rem; margin: 0; font-weight: 900; line-height: 1.1; text-transform: uppercase; letter-spacing: -2px; }
-        @media (min-width: 768px) { header h1 { font-size: 5rem; } }
+        header h1 { font-size: 3rem; margin: 0; font-weight: 900; line-height: 1.1; text-transform: uppercase; letter-spacing: -2px; }
+        @media (min-width: 768px) { header h1 { font-size: 5.5rem; } }
 
         .about-section { padding: 50px; max-width: 1200px; margin: 30px auto; width: 92%; box-sizing: border-box; }
-        .about-grid h3 { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; letter-spacing: -0.5px; }
-        .about-list { list-style: none; padding: 0; margin: 0; font-size: 1.1rem; line-height: 1.7; font-weight: 500; }
-        .about-list li { margin-bottom: 12px; opacity: 0.85; }
+        .about-grid h3 { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; margin-bottom: 25px; letter-spacing: -1px; }
+        .about-list { list-style: none; padding: 0; margin: 0; font-size: 1.2rem; line-height: 1.8; font-weight: 600; }
+        .about-list li { margin-bottom: 15px; opacity: 0.9; }
         .about-list li::before { content: "— "; color: var(--accent); font-weight: 900; }
 
-        .card { width: 100%; max-width: 600px; overflow: hidden; position: relative; margin: 0 auto; transition: transform 0.4s, border-color 0.3s; border-radius: 40px; }
-        .card:hover { transform: translateY(-5px); border-color: var(--glow) !important; }
-        .card h3 { font-size: 1.6rem; font-weight: 900; margin: 0 0 8px 0; letter-spacing: -0.5px; }
-        .card p { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6; margin: 0; color: var(--accent); }
+        .card { width: 100%; max-width: 600px; overflow: hidden; position: relative; margin: 0 auto; transition: transform 0.4s, border-color 0.3s; border-radius: 40px; min-height: 300px; }
+        .card:hover { transform: translateY(-8px); border-color: var(--glow) !important; }
+        .card h3 { font-size: 1.8rem; font-weight: 900; margin: 0 0 10px 0; letter-spacing: -0.5px; }
+        .card p { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; opacity: 0.7; margin: 0; color: var(--accent); }
 
         .gallery { display: grid; grid-template-columns: 1fr; gap: 40px; padding: 25px; width: 100%; box-sizing: border-box; }
         @media (min-width: 768px) { .gallery { grid-template-columns: repeat(2, 1fr); padding: 60px; gap: 80px; max-width: 1600px; margin: 0 auto; } }
 
         .slider-viewport { position: relative; height: 400px; width: 100%; overflow: hidden; touch-action: pan-y; background: var(--bg); }
-        @media (min-width: 768px) { .slider-viewport { height: 550px; } }
+        @media (min-width: 768px) { .slider-viewport { height: 600px; } }
 
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease; }
         .slide.active { opacity: 1; z-index: 5; }
         .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); }
 
-        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--accent); color: var(--bg); border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; z-index: 50; opacity: 0; transition: 0.3s; display: none; font-weight: 900; }
+        .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--accent); color: var(--bg); border: none; width: 55px; height: 55px; border-radius: 50%; cursor: pointer; z-index: 50; opacity: 0; transition: 0.3s; display: none; font-weight: 900; }
         @media (hover: hover) { .slider-viewport:hover .nav-arrow { opacity: 1; } .nav-arrow { display: flex; align-items: center; justify-content: center; } }
 
-        .dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
-        .dot { width: 8px; height: 8px; background: rgba(128,128,128,0.4); border-radius: 50%; transition: 0.3s; }
-        .dot.active { background: var(--accent); width: 24px; border-radius: 4px; }
+        .dots { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
+        .dot { width: 10px; height: 10px; background: rgba(128,128,128,0.4); border-radius: 50%; transition: 0.3s; }
+        .dot.active { background: var(--accent); width: 28px; border-radius: 5px; }
 
         #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; z-index: 2000; align-items: center; justify-content: center; }
-        #lightbox img { max-width: 95%; max-height: 90%; object-fit: contain; }
+        #lightbox img { max-width: 95%; max-height: 90%; object-fit: contain; border-radius: 20px; }
 
-        footer { padding: 80px 40px; text-align: center; font-weight: 800; font-size: 12px; letter-spacing: 2px; opacity: 0.5; }
+        .site-version { position: fixed; bottom: 20px; right: 20px; padding: 8px 15px; border-radius: 12px; font-size: 11px; font-weight: 900; background: var(--gray-light); backdrop-filter: blur(10px); border: 1px solid var(--border-glass); z-index: 999; }
+        footer { padding: 100px 40px; text-align: center; font-weight: 900; font-size: 13px; letter-spacing: 3px; opacity: 0.6; }
     </style>
 </head>
 <body data-theme="dark">
@@ -71,11 +72,11 @@
 <canvas id="gradient-canvas"></canvas>
 <div id="progress-bar"></div>
 <div id="lightbox" onclick="closeLB(event)">
-    <button class="nav-arrow arrow-left" style="left:20px" onclick="changeLBImg(-1, event)">❮</button>
-    <button class="nav-arrow arrow-right" style="right:20px" onclick="changeLBImg(1, event)">❯</button>
+    <button class="nav-arrow arrow-left" style="left:30px" onclick="changeLBImg(-1, event)">❮</button>
+    <button class="nav-arrow arrow-right" style="right:30px" onclick="changeLBImg(1, event)">❯</button>
     <img id="lb-img" src="">
 </div>
-<div class="site-version">v1.6.8</div>
+<div class="site-version">v1.6.9</div>
 
 <nav>
     <div class="logo">MARM0SET</div>
@@ -92,7 +93,7 @@
 
 <section class="about-section" data-aos="fade-up">
     <div class="about-grid">
-        <div style="margin-bottom: 40px;">
+        <div style="margin-bottom: 50px;">
             <h3 data-tr="skills_title">Ключевые навыки</h3>
             <ul class="about-list" id="skills-list"></ul>
         </div>
@@ -105,17 +106,17 @@
 
 <main class="gallery" id="portfolio-grid"></main>
 
-<section class="contact-section" id="contact" data-aos="fade-up" style="margin: 60px auto; padding: 80px 25px; max-width: 1200px; text-align: center; width: 92%;">
-    <h2 data-tr="contact_title" style="font-size: 2.5rem; font-weight: 900; margin-bottom: 40px; text-transform: uppercase;">Связаться со мной</h2>
-    <div style="font-weight: 800; line-height: 2.5; font-size: 1.2rem;">
-        <a href="https://kwork.ru" target="_blank" style="color:var(--text); text-decoration:none; border-bottom: 2px solid var(--accent);">💼 Kwork Profile</a><br>
+<section class="contact-section" id="contact" data-aos="fade-up" style="margin: 60px auto; padding: 100px 25px; max-width: 1200px; text-align: center; width: 92%;">
+    <h2 data-tr="contact_title" style="font-size: 3rem; font-weight: 900; margin-bottom: 50px; text-transform: uppercase; letter-spacing: -1px;">Связаться со мной</h2>
+    <div style="font-weight: 900; line-height: 2.8; font-size: 1.4rem;">
+        <a href="https://kwork.ru" target="_blank" style="color:var(--text); text-decoration:none; border-bottom: 3px solid var(--accent);">💼 Kwork Profile</a><br>
         <span onclick="copyToClipboard('hypexits@mail.ru')" style="cursor:pointer;">📧 hypexits@mail.ru</span><br>
         <span onclick="copyToClipboard('@WINDUP_MARMOSET')" style="cursor:pointer;">✈️ @WINDUP_MARMOSET</span><br>
         <span onclick="copyToClipboard('+79251803895')" style="cursor:pointer;">📞 +7 (925) 180-38-95</span>
     </div>
 </section>
 
-<footer>© 2024 MARMOSET_TOOLBAG • 3D VISUALIZATION STUDIO</footer>
+<footer>© 2024 MARMOSET_TOOLBAG • PREVIEW EDITION</footer>
 
 <script src="https://unpkg.com"></script>
 <script>
@@ -183,19 +184,28 @@
             const firstImg = `images/p${pId}_1.webp`;
             const check = await fetch(firstImg, { method: 'HEAD' });
             if (check.ok) {
-                let images = [firstImg];
-                myWorks.push({ id: pId, images: images });
+                const work = { id: pId, images: [firstImg] };
+                myWorks.push(work);
                 renderGallery();
-                // Ищем остальные фото в фоне
-                for(let i=2; i<=10; i++) {
-                    const next = `images/p${pId}_${i}.webp`;
-                    const nextCheck = await fetch(next, { method: 'HEAD' });
-                    if(nextCheck.ok) { images.push(next); updateCard(pId); } else break;
-                }
+                loadExtraImages(pId);
             } else break;
         }
     }
 
+    async function loadExtraImages(pId) {
+        let work = myWorks.find(w => w.id === pId);
+        for(let i=2; i<=10; i++) {
+            const path = `images/p${pId}_${i}.webp`;
+            const check = await fetch(path, { method: 'HEAD' });
+            if(check.ok) { 
+                work.images.push(path); 
+                updateCardHTML(pId); 
+            } else break;
+        }
+    }
+
+    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
+    
     function updateUI() {
         const tr = translations[currentLang];
         document.querySelectorAll('[data-tr]').forEach(el => { if(tr[el.getAttribute('data-tr')]) el.innerHTML = tr[el.getAttribute('data-tr')]; });
@@ -207,18 +217,16 @@
         renderGallery();
     }
 
-    function toggleLang() { currentLang = currentLang === 'ru' ? 'en' : 'ru'; updateUI(); }
-
     function createCard(work, i) {
         const card = document.createElement('div');
         card.id = `card-p${work.id}`;
         card.className = 'card';
         card.setAttribute('data-aos', 'fade-up');
-        updateCardHTML(card, work);
+        updateCardContent(card, work);
         return card;
     }
 
-    function updateCardHTML(card, work) {
+    function updateCardContent(card, work) {
         const tr = translations[currentLang];
         let s = '', d = '';
         work.images.forEach((img, idx) => {
@@ -227,6 +235,7 @@
         });
         const n = tr[`p${work.id}_n`] || "Project #" + work.id;
         const t = tr[`p${work.id}_t`] || "3D Visualisation";
+        
         card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow arrow-left" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow arrow-right" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:30px"><h3>${n}</h3><p>${t}</p></div>`;
         
         const vp = card.querySelector('.slider-viewport');
@@ -240,10 +249,10 @@
         }
     }
 
-    function updateCard(id) {
+    function updateCardHTML(id) {
         const card = document.getElementById(`card-p${id}`);
         const work = myWorks.find(w => w.id === id);
-        if (card && work) updateCardHTML(card, work);
+        if (card && work) updateCardContent(card, work);
     }
 
     function manualChange(vp, dir) {
@@ -259,7 +268,7 @@
 
     function renderGallery() {
         const grid = document.getElementById('portfolio-grid'); grid.innerHTML = '';
-        myWorks.forEach((w, i) => grid.appendChild(createCard(w, i)));
+        myWorks.forEach((w) => grid.appendChild(createCard(w)));
     }
 
     let currentWorkIdx = 0, currentImgIdx = 0;
