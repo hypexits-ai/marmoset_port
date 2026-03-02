@@ -69,7 +69,6 @@
         .demo-scene { position: absolute; inset: 0; opacity: 0; transition: transform 0.4s ease, opacity 0.4s ease; pointer-events: none; }
         .demo-scene.active { opacity: 1; pointer-events: auto; }
         .demo-img-day, .demo-img-night { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-        /* Ночная картинка лежит поверх дневной */
         .demo-img-night { opacity: 0; pointer-events: none; } 
 
         .card { width: 100%; max-width: 550px; overflow: hidden; position: relative; margin: 0 auto; transition: 0.3s; border: 1px solid var(--line); }
@@ -112,8 +111,8 @@
     <img id="lb-img" src="">
 </div>
 
-<!-- Обновляем до v1.7.7 -->
-<div class="site-version">v1.7.7</div>
+<!-- Обновляем до v1.7.9 -->
+<div class="site-version">v1.7.9</div>
 
 <nav>
     <div class="logo">MARMOSET</div>
@@ -130,7 +129,6 @@
 </header>
 
 <section class="about-section" data-aos="fade-up" style="max-width: 1100px; margin: 20px auto; width: 92%; padding-top: 30px;">
-    <!-- НОВОЕ: Профессиональный статус -->
     <h2 style="text-align: center; margin: 0 0 10px 0; font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;" data-tr="about_status">3D ARTIST / AI CREATOR</h2>
     
     <div class="about-grid">
@@ -139,7 +137,7 @@
     </div>
 </section>
 
-<!-- НОВАЯ СЕКЦИЯ: ИНТЕРАКТИВНОЕ ДЕМО -->
+<!-- ИНТЕРАКТИВНОЕ ДЕМО -->
 <section id="demo-section" data-aos="fade-up" style="max-width: 1000px; margin: 40px auto; width: 92%;">
     <h2 data-tr="demo_title" style="text-align:center; font-size: 1.8rem; margin-bottom: 20px;">Interactive Demo</h2>
     <div class="card" style="max-width: 100%;">
@@ -152,7 +150,6 @@
             <input type="range" id="demo-slider" min="0" max="100" value="0">
         </div>
         <div class="demo-viewport" id="demo-viewport">
-            <!-- Сюда скрипт вставит картинки -->
             <div class="dots" id="demo-dots"></div>
         </div>
     </div>
@@ -213,22 +210,21 @@
         }
     };
 
-    /* НАСТРОЙКИ КАРТИНОК */
+    /* НАСТРОЙКИ КАРТИНОК: Твои точные значения */
     const portfolioConfig =[
-        { id: 1, imgCount: 3 }, { id: 2, imgCount: 2 }, { id: 3, imgCount: 1 }, { id: 4, imgCount: 1 },
-        { id: 5, imgCount: 1 }, { id: 6, imgCount: 1 }, { id: 7, imgCount: 1 }, { id: 8, imgCount: 1 },
-        { id: 9, imgCount: 1 }, { id: 10, imgCount: 1 }, { id: 11, imgCount: 1 }
+        { id: 1, imgCount: 2 }, { id: 2, imgCount: 2 }, { id: 3, imgCount: 2 }, { id: 4, imgCount: 2 },
+        { id: 5, imgCount: 2 }, { id: 6, imgCount: 14 }, { id: 7, imgCount: 4 }, { id: 8, imgCount: 4 },
+        { id: 9, imgCount: 9 }, { id: 10, imgCount: 7 }, { id: 11, imgCount: 5 }
     ];
 
-    /* НАСТРОЙКИ ДЕМО-СЦЕН: Добавь сюда столько сцен, сколько отрендерил */
+    /* НАСТРОЙКИ ДЕМО-СЦЕН: 9 работ */
     const demoConfig =[
-        { id: 1 }, // Ищет images/demo1_day.webp и images/demo1_night.webp
-        { id: 2 }  // Ищет images/demo2_day.webp и images/demo2_night.webp
+        { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 },
+        { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }
     ];
 
     let currentLang = 'en', myWorks =[];
 
-    /* ЛОГИКА ИНТЕРАКТИВНОГО ДЕМО */
     function initDemo() {
         const vp = document.getElementById('demo-viewport');
         const dotsContainer = document.getElementById('demo-dots');
@@ -254,15 +250,13 @@
             setupSwipe(vp, (dir) => changeDemo(dir));
         }
 
-        // Логика ползунка День-Ночь
         const slider = document.getElementById('demo-slider');
         slider.addEventListener('input', (e) => updateSliderColor(e.target.value));
-        updateSliderColor(0); // Инициализация оранжевого цвета
+        updateSliderColor(0); 
     }
 
     function updateSliderColor(val) {
         const slider = document.getElementById('demo-slider');
-        // Математика цвета: от Оранжевого (255,140,0) к Синему (0,170,255)
         const r = Math.round(255 - (val / 100) * 255);
         const g = Math.round(140 + (val / 100) * 30);
         const b = Math.round((val / 100) * 255);
@@ -289,13 +283,11 @@
         scenes[curr].classList.add('active');
         if(dots[curr]) dots[curr].classList.add('active');
 
-        // Сброс ползунка на День при перелистывании работы
         const slider = document.getElementById('demo-slider');
         slider.value = 0;
         updateSliderColor(0);
     }
 
-    /* ОСНОВНАЯ ЛОГИКА САЙТА */
     function discoverWorks() {
         myWorks = portfolioConfig.map(p => {
             let images =[];
@@ -386,7 +378,6 @@
     function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
     window.onscroll = () => { document.getElementById("progress-bar").style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + "%"; };
     
-    // Инициализация
     initDemo();
     discoverWorks(); 
     if (typeof AOS !== 'undefined') { AOS.init({ duration: 800, once: true }); }
