@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Marm0SET_toolBAG | Portfolio</title>
     
-    <!-- Надежные ссылки на шрифты и анимации -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
 
@@ -34,11 +33,7 @@
         .site-version { position: fixed; bottom: 15px; right: 15px; padding: 5px 12px; border-radius: 10px; font-size: 10px; font-weight: 800; background: var(--gray-light); backdrop-filter: blur(10px); border: 1px solid var(--border-glass); opacity: 0.6; z-index: 999; }
 
         header { padding: 60px 20px 30px; max-width: 1000px; margin: 0 auto; text-align: center; }
-        
-        /* Адаптивный размер шрифта для всех устройств */
         header h1 { font-size: clamp(1.4rem, 6vw, 2.5rem); font-weight: 800; text-transform: uppercase; letter-spacing: -1px; margin: 0; line-height: 1.2; word-wrap: break-word; }
-        
-        /* Стили для подписи */
         .signature { display: block; font-size: clamp(0.9rem, 4vw, 1.2rem); font-style: italic; opacity: 0.7; margin-top: 15px; font-weight: 400; text-align: right; max-width: 80%; margin-left: auto; }
 
         .about-section, .contact-section, .card {
@@ -52,6 +47,30 @@
         @media (min-width: 768px) { .about-grid { grid-template-columns: 1fr 1fr; padding: 40px; } }
         .about-list { list-style: none; padding: 0; margin: 0; font-size: 0.95rem; line-height: 1.7; }
         .about-list li::before { content: "• "; color: var(--accent); font-weight: bold; }
+
+        /* ИНТЕРАКТИВНОЕ ДЕМО - СТИЛИ */
+        .demo-controls { padding: 25px 25px 15px; }
+        .demo-labels { display: flex; justify-content: space-between; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 12px; }
+        
+        #demo-slider {
+            -webkit-appearance: none; width: 100%; height: 12px; border-radius: 6px; outline: none; margin: 0;
+            background: linear-gradient(to right, rgb(255, 140, 0) 0%, rgba(128,128,128,0.3) 0%);
+            transition: 0.1s;
+        }
+        #demo-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 26px; height: 26px; border-radius: 50%;
+            background: var(--thumb-color, rgb(255, 140, 0));
+            border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            cursor: pointer; transition: background 0.1s;
+        }
+        
+        .demo-viewport { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #000; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; touch-action: pan-y; }
+        .demo-scene { position: absolute; inset: 0; opacity: 0; transition: transform 0.4s ease, opacity 0.4s ease; pointer-events: none; }
+        .demo-scene.active { opacity: 1; pointer-events: auto; }
+        .demo-img-day, .demo-img-night { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        /* Ночная картинка лежит поверх дневной */
+        .demo-img-night { opacity: 0; pointer-events: none; } 
 
         .card { width: 100%; max-width: 550px; overflow: hidden; position: relative; margin: 0 auto; transition: 0.3s; border: 1px solid var(--line); }
         @media (hover: hover) {
@@ -71,7 +90,7 @@
         .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); pointer-events: none; }
 
         .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--accent); color: var(--bg); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 100; display: none; font-weight: bold; }
-        @media (min-width: 768px) { .slider-viewport:hover .nav-arrow, #lightbox:hover .nav-arrow { display: flex; align-items: center; justify-content: center; } }
+        @media (min-width: 768px) { .slider-viewport:hover .nav-arrow, .demo-viewport:hover .nav-arrow, #lightbox:hover .nav-arrow { display: flex; align-items: center; justify-content: center; } }
         
         .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 20; pointer-events: none; }
         .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; }
@@ -83,7 +102,6 @@
         footer { padding: 50px 20px; text-align: center; opacity: 0.4; font-size: 11px; letter-spacing: 1px; }
     </style>
 </head>
-<!-- ИЗМЕНЕНИЕ 1: Светлая тема по умолчанию -->
 <body data-theme="light">
 
 <canvas id="gradient-canvas"></canvas>
@@ -94,16 +112,14 @@
     <img id="lb-img" src="">
 </div>
 
-<!-- Обновляем до v1.7.6 -->
-<div class="site-version">v1.7.6</div>
+<!-- Обновляем до v1.7.7 -->
+<div class="site-version">v1.7.7</div>
 
 <nav>
     <div class="logo">MARMOSET</div>
     <div class="nav-controls">
         <button class="btn-ui" onclick="toggleLang()" id="lang-btn">EN</button>
-        <!-- ИЗМЕНЕНИЕ 2: Кнопка темы теперь предлагает включить DARK, так как мы уже в LIGHT -->
         <button class="btn-ui" onclick="toggleTheme()" id="theme-btn">DARK</button>
-        <!-- ИЗМЕНЕНИЕ 3: Базовый HTML-текст теперь на английском -->
         <a href="#contact" class="btn-ui" data-tr="nav_contact">CONTACT</a>
     </div>
 </nav>
@@ -113,10 +129,32 @@
     <span class="signature" data-tr="header_name">— Alexey Salnikov</span>
 </header>
 
-<section class="about-section" data-aos="fade-up" style="max-width: 1100px; margin: 20px auto; width: 92%;">
+<section class="about-section" data-aos="fade-up" style="max-width: 1100px; margin: 20px auto; width: 92%; padding-top: 30px;">
+    <!-- НОВОЕ: Профессиональный статус -->
+    <h2 style="text-align: center; margin: 0 0 10px 0; font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;" data-tr="about_status">3D ARTIST / AI CREATOR</h2>
+    
     <div class="about-grid">
         <div><h3 data-tr="skills_title" style="margin-top:0">Key Skills</h3><ul class="about-list" id="skills-list"></ul></div>
         <div><h3 data-tr="help_title" style="margin-top:0">How I Can Help</h3><ul class="about-list" id="help-list"></ul></div>
+    </div>
+</section>
+
+<!-- НОВАЯ СЕКЦИЯ: ИНТЕРАКТИВНОЕ ДЕМО -->
+<section id="demo-section" data-aos="fade-up" style="max-width: 1000px; margin: 40px auto; width: 92%;">
+    <h2 data-tr="demo_title" style="text-align:center; font-size: 1.8rem; margin-bottom: 20px;">Interactive Demo</h2>
+    <div class="card" style="max-width: 100%;">
+        <div class="demo-controls">
+            <div class="demo-labels">
+                <span data-tr="demo_day">DAY</span>
+                <span data-tr="demo_night">NIGHT</span>
+            </div>
+            <!-- Ползунок -->
+            <input type="range" id="demo-slider" min="0" max="100" value="0">
+        </div>
+        <div class="demo-viewport" id="demo-viewport">
+            <!-- Сюда скрипт вставит картинки -->
+            <div class="dots" id="demo-dots"></div>
+        </div>
     </div>
 </section>
 
@@ -157,44 +195,111 @@
     const translations = {
         ru: {
             nav_contact: "КОНТАКТЫ", header_title: "Бескомпромиссный фотореализм", header_name: "— Сальников Алексей",
+            about_status: "3D ARTIST / AI CREATOR",
             contact_title: "Связаться со мной", skills_title: "Ключевые навыки", help_title: "Помогу вам",
-            skills: ["3D Моделирование", "Фотореалистичная Визуализация", "Оптимизация для Игр/VR/AR", "3D Анимация", "Различные Стили", "Софт: Blender, Substance, UE5, Unity"],
-            help: ["Маркетинг продуктов", "3D ассеты для игр", "Архитектурная визуализация", "Анимация"],
+            skills:["3D Моделирование", "Фотореалистичная Визуализация", "Оптимизация для Игр/VR/AR", "3D Анимация", "Различные Стили", "Софт: Blender, Substance, UE5, Unity"],
+            help:["Маркетинг продуктов", "3D ассеты для игр", "Архитектурная визуализация", "Анимация"],
+            demo_title: "Интерактивное демо", demo_day: "ДЕНЬ", demo_night: "НОЧЬ",
             p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Интерьер", p6_t: "Архивиз", p7_n: "Персонажи", p7_t: "Low-poly", p8_n: "Экстерьер", p8_t: "Архивиз", p9_n: "Техника", p9_t: "High-poly", p10_n: "Окружение", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders"
         },
         en: {
             nav_contact: "CONTACT", header_title: "Uncompromising Photorealism", header_name: "— Alexey Salnikov",
+            about_status: "3D ARTIST / AI CREATOR",
             contact_title: "Get in Touch", skills_title: "Key Skills", help_title: "How I Can Help",
-            skills: ["3D Modeling", "Photorealistic Renders", "Game Assets Optimization", "3D Animation", "Styles Adaptation", "Software: Blender, UE5"],
-            help: ["Product Marketing", "Game Assets", "Architecture", "Animation"],
+            skills:["3D Modeling", "Photorealistic Renders", "Game Assets Optimization", "3D Animation", "Styles Adaptation", "Software: Blender, UE5"],
+            help:["Product Marketing", "Game Assets", "Architecture", "Animation"],
+            demo_title: "Interactive Demo", demo_day: "DAY", demo_night: "NIGHT",
             p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Interior", p6_t: "Archviz", p7_n: "Characters", p7_t: "Low-poly", p8_n: "Exterior", p8_t: "Archviz", p9_n: "Military", p9_t: "High-poly", p10_n: "Environment", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders"
         }
     };
 
-    /* НАСТРОЙКА КАРТИНОК */
-    const portfolioConfig = [
-        { id: 1, imgCount: 2 }, 
-        { id: 2, imgCount: 2 },
-        { id: 3, imgCount: 2 },
-        { id: 4, imgCount: 2 },
-        { id: 5, imgCount: 2 },
-        { id: 6, imgCount: 14 },
-        { id: 7, imgCount: 4 },
-        { id: 8, imgCount: 4 },
-        { id: 9, imgCount: 9 },
-        { id: 10, imgCount: 7 },
-        { id: 11, imgCount: 5 }
+    /* НАСТРОЙКИ КАРТИНОК */
+    const portfolioConfig =[
+        { id: 1, imgCount: 3 }, { id: 2, imgCount: 2 }, { id: 3, imgCount: 1 }, { id: 4, imgCount: 1 },
+        { id: 5, imgCount: 1 }, { id: 6, imgCount: 1 }, { id: 7, imgCount: 1 }, { id: 8, imgCount: 1 },
+        { id: 9, imgCount: 1 }, { id: 10, imgCount: 1 }, { id: 11, imgCount: 1 }
     ];
 
-    /* ИЗМЕНЕНИЕ 4: Английский язык по умолчанию */
-    let currentLang = 'en', myWorks = [];
+    /* НАСТРОЙКИ ДЕМО-СЦЕН: Добавь сюда столько сцен, сколько отрендерил */
+    const demoConfig =[
+        { id: 1 }, // Ищет images/demo1_day.webp и images/demo1_night.webp
+        { id: 2 }  // Ищет images/demo2_day.webp и images/demo2_night.webp
+    ];
 
+    let currentLang = 'en', myWorks =[];
+
+    /* ЛОГИКА ИНТЕРАКТИВНОГО ДЕМО */
+    function initDemo() {
+        const vp = document.getElementById('demo-viewport');
+        const dotsContainer = document.getElementById('demo-dots');
+        if (demoConfig.length === 0) { document.getElementById('demo-section').style.display = 'none'; return; }
+
+        demoConfig.forEach((d, i) => {
+            const scene = document.createElement('div');
+            scene.className = `demo-scene ${i === 0 ? 'active' : ''}`;
+            scene.innerHTML = `
+                <img src="images/demo${d.id}_day.webp" class="demo-img-day">
+                <img src="images/demo${d.id}_night.webp" class="demo-img-night">
+            `;
+            vp.appendChild(scene);
+
+            const dot = document.createElement('div');
+            dot.className = `dot ${i === 0 ? 'active' : ''}`;
+            dotsContainer.appendChild(dot);
+        });
+
+        if (demoConfig.length > 1) {
+            vp.innerHTML += `<button class="nav-arrow" style="left:10px" onclick="changeDemo(-1, event)">❮</button>
+                             <button class="nav-arrow" style="right:10px" onclick="changeDemo(1, event)">❯</button>`;
+            setupSwipe(vp, (dir) => changeDemo(dir));
+        }
+
+        // Логика ползунка День-Ночь
+        const slider = document.getElementById('demo-slider');
+        slider.addEventListener('input', (e) => updateSliderColor(e.target.value));
+        updateSliderColor(0); // Инициализация оранжевого цвета
+    }
+
+    function updateSliderColor(val) {
+        const slider = document.getElementById('demo-slider');
+        // Математика цвета: от Оранжевого (255,140,0) к Синему (0,170,255)
+        const r = Math.round(255 - (val / 100) * 255);
+        const g = Math.round(140 + (val / 100) * 30);
+        const b = Math.round((val / 100) * 255);
+        const color = `rgb(${r}, ${g}, ${b})`;
+
+        slider.style.background = `linear-gradient(to right, ${color} ${val}%, rgba(128,128,128,0.3) ${val}%)`;
+        slider.style.setProperty('--thumb-color', color);
+
+        const activeNightImg = document.querySelector('.demo-scene.active .demo-img-night');
+        if(activeNightImg) activeNightImg.style.opacity = val / 100;
+    }
+
+    function changeDemo(dir, e) {
+        if(e) e.stopPropagation();
+        const scenes = document.querySelectorAll('.demo-scene');
+        const dots = document.querySelectorAll('#demo-dots .dot');
+        let curr = Array.from(scenes).findIndex(el => el.classList.contains('active'));
+        
+        scenes[curr].classList.remove('active');
+        if(dots[curr]) dots[curr].classList.remove('active');
+        
+        curr = (curr + dir + scenes.length) % scenes.length;
+        
+        scenes[curr].classList.add('active');
+        if(dots[curr]) dots[curr].classList.add('active');
+
+        // Сброс ползунка на День при перелистывании работы
+        const slider = document.getElementById('demo-slider');
+        slider.value = 0;
+        updateSliderColor(0);
+    }
+
+    /* ОСНОВНАЯ ЛОГИКА САЙТА */
     function discoverWorks() {
         myWorks = portfolioConfig.map(p => {
-            let images = [];
-            for (let i = 1; i <= p.imgCount; i++) {
-                images.push(`images/p${p.id}_${i}.webp`);
-            }
+            let images =[];
+            for (let i = 1; i <= p.imgCount; i++) { images.push(`images/p${p.id}_${i}.webp`); }
             return { id: p.id, images: images };
         });
         updateUI();
@@ -211,8 +316,6 @@
         tr.help.forEach(h => { const li = document.createElement('li'); li.innerText = h; hl.appendChild(li); });
         
         document.getElementById('lang-btn').innerText = currentLang.toUpperCase();
-        
-        // ИЗМЕНЕНИЕ 5: Динамическое изменение текста кнопки темы
         document.getElementById('theme-btn').innerText = document.body.getAttribute('data-theme') === 'dark' ? 'LIGHT' : 'DARK';
         
         renderGallery();
@@ -283,11 +386,10 @@
     function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
     window.onscroll = () => { document.getElementById("progress-bar").style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + "%"; };
     
+    // Инициализация
+    initDemo();
     discoverWorks(); 
-    if (typeof AOS !== 'undefined') {
-        AOS.init({ duration: 800, once: true });
-    }
+    if (typeof AOS !== 'undefined') { AOS.init({ duration: 800, once: true }); }
 </script>
 </body>
 </html>
-
