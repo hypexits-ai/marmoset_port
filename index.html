@@ -111,8 +111,8 @@
     <img id="lb-img" src="">
 </div>
 
-<!-- Обновляем до v1.7.10 -->
-<div class="site-version">v1.7.10</div>
+<!-- Обновляем до v1.7.11 -->
+<div class="site-version">v1.7.11</div>
 
 <nav>
     <div class="logo">MARMOSET</div>
@@ -131,7 +131,6 @@
 <section class="about-section" data-aos="fade-up" style="max-width: 1100px; margin: 20px auto; width: 92%; padding-top: 30px;">
     <h2 style="text-align: center; margin: 0 0 10px 0; font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;" data-tr="about_status">3D ARTIST / AI CREATOR</h2>
     
-    <!-- НОВОЕ: Описание опыта -->
     <p data-tr="about_desc" style="text-align: center; max-width: 800px; margin: 0 auto 30px; font-size: 0.95rem; line-height: 1.6; opacity: 0.7; padding: 0 20px; font-weight: 600;"></p>
 
     <div class="about-grid">
@@ -157,18 +156,19 @@
     </div>
 </section>
 
-<!-- НОВОЕ: РАБОТА С КРУПНЫМ БИЗНЕСОМ -->
+<!-- РАБОТА С КРУПНЫМ БИЗНЕСОМ -->
 <section id="b2b-section" data-aos="fade-up" style="max-width: 1000px; margin: 40px auto; width: 92%;">
     <h2 data-tr="b2b_title" style="text-align:center; font-size: 1.8rem; margin-bottom: 20px;">Enterprise Projects</h2>
     <div class="card" style="max-width: 100%;">
-        <!-- Блок с видео (автоплей, без звука) -->
         <div style="position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #000;">
             <video src="images/cubic_scroll.mp4" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;"></video>
         </div>
-        <!-- Текстовый блок под видео -->
         <div style="padding: 30px; text-align: center;">
             <p data-tr="b2b_desc" style="margin: 0 0 20px 0; font-size: 1rem; line-height: 1.6; opacity: 0.9; text-transform: none; letter-spacing: normal;"></p>
-            <a href="https://cubic.one" target="_blank" class="btn-ui" style="display: inline-block; font-size: 12px; padding: 12px 25px;" data-tr="b2b_link">VISIT CUBIC.ONE</a>
+            <!-- Обновленная ссылка -->
+            <a href="https://cubik.one/" target="_blank" class="btn-ui" style="display: inline-block; font-size: 12px; padding: 12px 25px;" data-tr="b2b_link">VISIT CUBIK.ONE</a>
+            <!-- НОВОЕ: Сноска VPN -->
+            <div data-tr="b2b_vpn" style="font-size: 10px; opacity: 0.5; margin-top: 15px; letter-spacing: 0.5px;">*VPN is required for access from Russia</div>
         </div>
     </div>
 </section>
@@ -216,7 +216,10 @@
             skills:["3D Моделирование", "Фотореалистичная Визуализация", "Оптимизация для Игр/VR/AR", "3D Анимация", "Различные Стили", "Софт: Blender, Substance, UE5, Unity"],
             help:["Маркетинг продуктов", "3D ассеты для игр", "Архитектурная визуализация", "Анимация"],
             demo_title: "Интерактивное демо", demo_day: "ДЕНЬ", demo_night: "НОЧЬ",
-            b2b_title: "Работа с крупным бизнесом", b2b_desc: "Полгода совместно с cubic.one работал над наполнением их сайта.", b2b_link: "ПЕРЕЙТИ НА CUBIC.ONE",
+            b2b_title: "Работа с крупным бизнесом", 
+            b2b_desc: "Полгода совместно с cubik.one работал над наполнением их сайта.", 
+            b2b_link: "ПЕРЕЙТИ НА CUBIK.ONE",
+            b2b_vpn: "*для доступа из России нужен VPN", /* Перевод VPN-уведомления */
             p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Интерьер", p6_t: "Архивиз", p7_n: "Персонажи", p7_t: "Low-poly", p8_n: "Экстерьер", p8_t: "Архивиз", p9_n: "Техника", p9_t: "High-poly", p10_n: "Окружение", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders"
         },
         en: {
@@ -227,7 +230,10 @@
             skills:["3D Modeling", "Photorealistic Renders", "Game Assets Optimization", "3D Animation", "Styles Adaptation", "Software: Blender, UE5"],
             help:["Product Marketing", "Game Assets", "Architecture", "Animation"],
             demo_title: "Interactive Demo", demo_day: "DAY", demo_night: "NIGHT",
-            b2b_title: "Enterprise Projects", b2b_desc: "Spent half a year collaborating with cubic.one, filling their website with 3D content.", b2b_link: "VISIT CUBIC.ONE",
+            b2b_title: "Enterprise Projects", 
+            b2b_desc: "Spent half a year collaborating with cubik.one, filling their website with 3D content.", 
+            b2b_link: "VISIT CUBIK.ONE",
+            b2b_vpn: "*VPN is required for access from Russia", /* Английское VPN-уведомление */
             p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Interior", p6_t: "Archviz", p7_n: "Characters", p7_t: "Low-poly", p8_n: "Exterior", p8_t: "Archviz", p9_n: "Military", p9_t: "High-poly", p10_n: "Environment", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders"
         }
     };
