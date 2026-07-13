@@ -86,13 +86,13 @@
 
         .slide { position: absolute; inset: 0; opacity: 0; transition: 0.5s; pointer-events: none; }
         .slide.active { opacity: 1; pointer-events: auto; }
-        .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); pointer-events: none; }
+        .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); pointer-events: none; cursor: pointer; }
 
         .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--accent); color: var(--bg); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 100; display: none; font-weight: bold; }
         @media (min-width: 768px) { .slider-viewport:hover .nav-arrow, .demo-viewport:hover .nav-arrow, #lightbox:hover .nav-arrow { display: flex; align-items: center; justify-content: center; } }
         
         .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 20; pointer-events: none; }
-        .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; }
+        .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; transition: 0.3s; }
         .dot.active { background: var(--accent); width: 15px; border-radius: 4px; }
 
         #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.96); display: none; z-index: 2000; align-items: center; justify-content: center; touch-action: none; }
@@ -111,8 +111,8 @@
     <img id="lb-img" src="">
 </div>
 
-<!-- Обновляем до v1.7.11 -->
-<div class="site-version">v1.7.11</div>
+<!-- Обновляем до v1.7.12 -->
+<div class="site-version">v1.7.12</div>
 
 <nav>
     <div class="logo">MARMOSET</div>
@@ -165,10 +165,35 @@
         </div>
         <div style="padding: 30px; text-align: center;">
             <p data-tr="b2b_desc" style="margin: 0 0 20px 0; font-size: 1rem; line-height: 1.6; opacity: 0.9; text-transform: none; letter-spacing: normal;"></p>
-            <!-- Обновленная ссылка -->
             <a href="https://cubik.one/" target="_blank" class="btn-ui" style="display: inline-block; font-size: 12px; padding: 12px 25px;" data-tr="b2b_link">VISIT CUBIK.ONE</a>
-            <!-- НОВОЕ: Сноска VPN -->
             <div data-tr="b2b_vpn" style="font-size: 10px; opacity: 0.5; margin-top: 15px; letter-spacing: 0.5px;">*VPN is required for access from Russia</div>
+        </div>
+    </div>
+</section>
+
+<!-- НОВОЕ: ИНФОГРАФИКА ДЛЯ МАРКЕТПЛЕЙСОВ -->
+<section id="infographics-section" data-aos="fade-up" style="max-width: 1000px; margin: 40px auto; width: 92%;">
+    <h2 data-tr="info_sec_title" style="text-align:center; font-size: 1.8rem; margin-bottom: 20px;">Infographics</h2>
+    <div class="card" style="margin: 0 auto;">
+        <div class="slider-viewport" id="info-viewport">
+            <button class="nav-arrow" style="left:10px" onclick="changeInfoSlide(-1, event)">❮</button>
+            <button class="nav-arrow" style="right:10px" onclick="changeInfoSlide(1, event)">❯</button>
+            
+            <div class="slide active"><img src="images/i1.webp" onclick="openInfoLB(0)" style="pointer-events: auto;"></div>
+            <div class="slide"><img src="images/i2.webp" onclick="openInfoLB(1)" style="pointer-events: auto;"></div>
+            <div class="slide"><img src="images/i3.webp" onclick="openInfoLB(2)" style="pointer-events: auto;"></div>
+            <div class="slide"><img src="images/i4.webp" onclick="openInfoLB(3)" style="pointer-events: auto;"></div>
+            
+            <div class="dots" id="info-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+        <div style="padding: 20px; box-sizing: border-box; min-height: 85px;">
+            <h3 id="info-text-title" style="font-size: 1.25rem; font-weight: 800; margin: 0 0 5px 0; transition: opacity 0.2s ease;">Gaming Headphones Red Dragon</h3>
+            <p data-tr="info_subtitle" style="margin: 0; font-size: 10px; text-transform: uppercase; opacity: 0.5; letter-spacing: 1px;">Marketplace Design</p>
         </div>
     </div>
 </section>
@@ -207,6 +232,12 @@
     }
     animate();
 
+    /* СЛОВАРИ ДЛЯ ИНФОГРАФИКИ */
+    const infoTitles = {
+        ru: ["Наушники игровые Red Dragon", "Кроссовки NIKE AIR MAX 90", "Кроссовки NIKE AIR FORCE 1", "Кабель для зарядки Type-C"],
+        en: ["Gaming Headphones Red Dragon", "Sneakers NIKE AIR MAX 90", "Sneakers NIKE AIR FORCE 1", "Type-C Charging Cable"]
+    };
+
     const translations = {
         ru: {
             nav_contact: "КОНТАКТЫ", header_title: "Бескомпромиссный фотореализм", header_name: "— Сальников Алексей",
@@ -219,7 +250,8 @@
             b2b_title: "Работа с крупным бизнесом", 
             b2b_desc: "Полгода совместно с cubik.one работал над наполнением их сайта.", 
             b2b_link: "ПЕРЕЙТИ НА CUBIK.ONE",
-            b2b_vpn: "*для доступа из России нужен VPN", /* Перевод VPN-уведомления */
+            b2b_vpn: "*для доступа из России нужен VPN",
+            info_sec_title: "Инфографика", info_subtitle: "Дизайн для маркетплейсов", /* Переводы Инфографики */
             p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Интерьер", p6_t: "Архивиз", p7_n: "Персонажи", p7_t: "Low-poly", p8_n: "Экстерьер", p8_t: "Архивиз", p9_n: "Техника", p9_t: "High-poly", p10_n: "Окружение", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders"
         },
         en: {
@@ -233,7 +265,8 @@
             b2b_title: "Enterprise Projects", 
             b2b_desc: "Spent half a year collaborating with cubik.one, filling their website with 3D content.", 
             b2b_link: "VISIT CUBIK.ONE",
-            b2b_vpn: "*VPN is required for access from Russia", /* Английское VPN-уведомление */
+            b2b_vpn: "*VPN is required for access from Russia",
+            info_sec_title: "Infographics", info_subtitle: "Marketplace Design",
             p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Interior", p6_t: "Archviz", p7_n: "Characters", p7_t: "Low-poly", p8_n: "Exterior", p8_t: "Archviz", p9_n: "Military", p9_t: "High-poly", p10_n: "Environment", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders"
         }
     };
@@ -251,6 +284,45 @@
 
     let currentLang = 'en', myWorks =[];
 
+    /* ЛОГИКА ИНФОГРАФИКИ */
+    let infoCurr = 0;
+    const infoImages = ['images/i1.webp', 'images/i2.webp', 'images/i3.webp', 'images/i4.webp'];
+
+    function initInfo() {
+        setupSwipe(document.getElementById('info-viewport'), (dir) => changeInfoSlide(dir));
+        updateInfoText(true);
+    }
+
+    function changeInfoSlide(dir, e) {
+        if(e) e.stopPropagation();
+        const vp = document.getElementById('info-viewport');
+        const slides = vp.querySelectorAll('.slide');
+        const dots = vp.querySelectorAll('#info-dots .dot');
+        const titleEl = document.getElementById('info-text-title');
+
+        slides[infoCurr].classList.remove('active');
+        dots[infoCurr].classList.remove('active');
+
+        infoCurr = (infoCurr + dir + slides.length) % slides.length;
+
+        slides[infoCurr].classList.add('active');
+        dots[infoCurr].classList.add('active');
+
+        // Плавная смена текста
+        titleEl.style.opacity = 0;
+        setTimeout(() => {
+            updateInfoText();
+            titleEl.style.opacity = 1;
+        }, 200);
+    }
+
+    function updateInfoText(instant = false) {
+        const titleEl = document.getElementById('info-text-title');
+        if(titleEl) titleEl.innerText = infoTitles[currentLang][infoCurr];
+        if(!instant && titleEl) titleEl.style.opacity = 1;
+    }
+
+    /* ЛОГИКА ДЕМО */
     function initDemo() {
         const vp = document.getElementById('demo-viewport');
         const dotsContainer = document.getElementById('demo-dots');
@@ -314,6 +386,7 @@
         updateSliderColor(0);
     }
 
+    /* ОСНОВНАЯ ЛОГИКА */
     function discoverWorks() {
         myWorks = portfolioConfig.map(p => {
             let images =[];
@@ -336,6 +409,7 @@
         document.getElementById('lang-btn').innerText = currentLang.toUpperCase();
         document.getElementById('theme-btn').innerText = document.body.getAttribute('data-theme') === 'dark' ? 'LIGHT' : 'DARK';
         
+        updateInfoText(true); // Обновляем текст инфографики при смене языка
         renderGallery();
     }
 
@@ -346,13 +420,13 @@
         card.className = 'card'; card.setAttribute('data-aos', 'fade-up');
         let s = '', d = '';
         work.images.forEach((img, idx) => {
-            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${img}"></div>`;
+            s += `<div class="slide ${idx === 0 ? 'active' : ''}" onclick="openLB(${i}, ${idx})"><img src="${img}" style="pointer-events: auto;"></div>`;
             d += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
         });
         const tr = translations[currentLang];
         const n = tr[`p${work.id}_n`] || "Project " + work.id;
         const t = tr[`p${work.id}_t`] || "3D Visualization";
-        card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow" style="left:10px" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow" style="right:10px" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:20px"><h3>${n}</h3><p>${t}</p></div>`;
+        card.innerHTML = `<div class="slider-viewport"><button class="nav-arrow" style="left:10px" onclick="changeSlide(this, -1, event)">❮</button><button class="nav-arrow" style="right:10px" onclick="changeSlide(this, 1, event)">❯</button>${s}<div class="dots">${d}</div></div><div style="padding:20px; box-sizing: border-box; min-height: 85px;"><h3 style="margin:0 0 5px 0;">${n}</h3><p style="margin:0;">${t}</p></div>`;
         
         const vp = card.querySelector('.slider-viewport');
         if (work.images.length > 1) setupSwipe(vp, (dir) => manualChange(vp, dir));
@@ -386,10 +460,22 @@
         myWorks.forEach((w, i) => grid.appendChild(createCard(w, i)));
     }
 
+    /* LIGHTBOX (ПОЛНОЭКРАННЫЙ ПРОСМОТР) */
     let cW = 0, cI = 0;
     const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
+    
     function openLB(wIdx, iIdx) { cW = wIdx; cI = iIdx; lbImg.src = myWorks[cW].images[cI]; lb.style.display = 'flex'; }
-    function changeLBImg(dir, e) { if(e) e.stopPropagation(); const imgs = myWorks[cW].images; cI = (cI + dir + imgs.length) % imgs.length; lbImg.src = myWorks[cW].images[cI]; }
+    
+    // Специальная функция для открытия инфографики в Lightbox
+    function openInfoLB(idx) { cW = 'info'; cI = idx; lbImg.src = infoImages[cI]; lb.style.display = 'flex'; }
+    
+    function changeLBImg(dir, e) { 
+        if(e) e.stopPropagation(); 
+        const imgs = cW === 'info' ? infoImages : myWorks[cW].images; 
+        cI = (cI + dir + imgs.length) % imgs.length; 
+        lbImg.src = imgs[cI]; 
+    }
+    
     function closeLB(e) { if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.style.display = 'none'; }
 
     let lSX = 0, lSY = 0;
@@ -397,14 +483,17 @@
     lb.addEventListener('touchend', e => {
         let dX = lSX - e.changedTouches[0].clientX, dY = lSY - e.changedTouches[0].clientY;
         if (Math.abs(dX) > Math.abs(dY)) { if (Math.abs(dX) > 50) changeLBImg(dX > 0 ? 1 : -1); }
-        else if (Math.abs(dY) > 60) { cW = (cW + (dY > 0 ? 1 : -1) + myWorks.length) % myWorks.length; cI = 0; lbImg.src = myWorks[cW].images[cI]; }
+        // Свайп вверх/вниз для переключения проектов (отключено для инфографики, чтобы не сбить логику)
+        else if (Math.abs(dY) > 60 && cW !== 'info') { cW = (cW + (dY > 0 ? 1 : -1) + myWorks.length) % myWorks.length; cI = 0; lbImg.src = myWorks[cW].images[cI]; }
     }, {passive: true});
 
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); updateUI(); }
     function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
     window.onscroll = () => { document.getElementById("progress-bar").style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + "%"; };
     
+    // Инициализация
     initDemo();
+    initInfo();
     discoverWorks(); 
     if (typeof AOS !== 'undefined') { AOS.init({ duration: 800, once: true }); }
 </script>
