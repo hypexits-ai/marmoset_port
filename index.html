@@ -111,8 +111,8 @@
     <img id="lb-img" src="">
 </div>
 
-<!-- Обновляем до v1.7.12 -->
-<div class="site-version">v1.7.12</div>
+<!-- Обновляем до v1.7.13 -->
+<div class="site-version">v1.7.13</div>
 
 <nav>
     <div class="logo">MARMOSET</div>
@@ -171,7 +171,7 @@
     </div>
 </section>
 
-<!-- НОВОЕ: ИНФОГРАФИКА ДЛЯ МАРКЕТПЛЕЙСОВ -->
+<!-- ИНФОГРАФИКА ДЛЯ МАРКЕТПЛЕЙСОВ -->
 <section id="infographics-section" data-aos="fade-up" style="max-width: 1000px; margin: 40px auto; width: 92%;">
     <h2 data-tr="info_sec_title" style="text-align:center; font-size: 1.8rem; margin-bottom: 20px;">Infographics</h2>
     <div class="card" style="margin: 0 auto;">
@@ -232,7 +232,6 @@
     }
     animate();
 
-    /* СЛОВАРИ ДЛЯ ИНФОГРАФИКИ */
     const infoTitles = {
         ru: ["Наушники игровые Red Dragon", "Кроссовки NIKE AIR MAX 90", "Кроссовки NIKE AIR FORCE 1", "Кабель для зарядки Type-C"],
         en: ["Gaming Headphones Red Dragon", "Sneakers NIKE AIR MAX 90", "Sneakers NIKE AIR FORCE 1", "Type-C Charging Cable"]
@@ -251,8 +250,10 @@
             b2b_desc: "Полгода совместно с cubik.one работал над наполнением их сайта.", 
             b2b_link: "ПЕРЕЙТИ НА CUBIK.ONE",
             b2b_vpn: "*для доступа из России нужен VPN",
-            info_sec_title: "Инфографика", info_subtitle: "Дизайн для маркетплейсов", /* Переводы Инфографики */
-            p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Интерьер", p6_t: "Архивиз", p7_n: "Персонажи", p7_t: "Low-poly", p8_n: "Экстерьер", p8_t: "Архивиз", p9_n: "Техника", p9_t: "High-poly", p10_n: "Окружение", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders"
+            info_sec_title: "Инфографика", info_subtitle: "Дизайн для маркетплейсов",
+            p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Интерьер", p6_t: "Архивиз", p7_n: "Персонажи", p7_t: "Low-poly", p8_n: "Экстерьер", p8_t: "Архивиз", p9_n: "Техника", p9_t: "High-poly", p10_n: "Окружение", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders",
+            /* НОВОЕ: Перевод 12-го проекта */
+            p12_n: "Другие коммерческие работы", p12_t: "Разное"
         },
         en: {
             nav_contact: "CONTACT", header_title: "Uncompromising Photorealism", header_name: "— Alexey Salnikov",
@@ -267,14 +268,17 @@
             b2b_link: "VISIT CUBIK.ONE",
             b2b_vpn: "*VPN is required for access from Russia",
             info_sec_title: "Infographics", info_subtitle: "Marketplace Design",
-            p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Interior", p6_t: "Archviz", p7_n: "Characters", p7_t: "Low-poly", p8_n: "Exterior", p8_t: "Archviz", p9_n: "Military", p9_t: "High-poly", p10_n: "Environment", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders"
+            p1_n: "Marshall Headphones", p1_t: "Product Visualisation", p2_n: "Nintendo Switch 2", p2_t: "Product Visualisation", p3_n: "Apple Vision Pro", p3_t: "Product Visualisation", p4_n: "AirPods 5", p4_t: "Product Visualisation", p5_n: "Apple Watch", p5_t: "Product Visualisation", p6_n: "Interior", p6_t: "Archviz", p7_n: "Characters", p7_t: "Low-poly", p8_n: "Exterior", p8_t: "Archviz", p9_n: "Military", p9_t: "High-poly", p10_n: "Environment", p10_t: "Game-ready", p11_n: "Cinematics", p11_t: "Photorealistic renders",
+            /* НОВОЕ: Перевод 12-го проекта */
+            p12_n: "Other Commercial Works", p12_t: "Mixed"
         }
     };
 
+    /* ОБНОВЛЕНИЕ: Добавлен 12-й проект с 12 картинками */
     const portfolioConfig =[
         { id: 1, imgCount: 2 }, { id: 2, imgCount: 2 }, { id: 3, imgCount: 2 }, { id: 4, imgCount: 2 },
         { id: 5, imgCount: 2 }, { id: 6, imgCount: 14 }, { id: 7, imgCount: 4 }, { id: 8, imgCount: 4 },
-        { id: 9, imgCount: 9 }, { id: 10, imgCount: 7 }, { id: 11, imgCount: 5 }
+        { id: 9, imgCount: 9 }, { id: 10, imgCount: 7 }, { id: 11, imgCount: 5 }, { id: 12, imgCount: 12 }
     ];
 
     const demoConfig =[
@@ -284,7 +288,6 @@
 
     let currentLang = 'en', myWorks =[];
 
-    /* ЛОГИКА ИНФОГРАФИКИ */
     let infoCurr = 0;
     const infoImages = ['images/i1.webp', 'images/i2.webp', 'images/i3.webp', 'images/i4.webp'];
 
@@ -308,7 +311,6 @@
         slides[infoCurr].classList.add('active');
         dots[infoCurr].classList.add('active');
 
-        // Плавная смена текста
         titleEl.style.opacity = 0;
         setTimeout(() => {
             updateInfoText();
@@ -322,7 +324,6 @@
         if(!instant && titleEl) titleEl.style.opacity = 1;
     }
 
-    /* ЛОГИКА ДЕМО */
     function initDemo() {
         const vp = document.getElementById('demo-viewport');
         const dotsContainer = document.getElementById('demo-dots');
@@ -386,7 +387,6 @@
         updateSliderColor(0);
     }
 
-    /* ОСНОВНАЯ ЛОГИКА */
     function discoverWorks() {
         myWorks = portfolioConfig.map(p => {
             let images =[];
@@ -409,7 +409,7 @@
         document.getElementById('lang-btn').innerText = currentLang.toUpperCase();
         document.getElementById('theme-btn').innerText = document.body.getAttribute('data-theme') === 'dark' ? 'LIGHT' : 'DARK';
         
-        updateInfoText(true); // Обновляем текст инфографики при смене языка
+        updateInfoText(true);
         renderGallery();
     }
 
@@ -460,13 +460,10 @@
         myWorks.forEach((w, i) => grid.appendChild(createCard(w, i)));
     }
 
-    /* LIGHTBOX (ПОЛНОЭКРАННЫЙ ПРОСМОТР) */
     let cW = 0, cI = 0;
     const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
     
     function openLB(wIdx, iIdx) { cW = wIdx; cI = iIdx; lbImg.src = myWorks[cW].images[cI]; lb.style.display = 'flex'; }
-    
-    // Специальная функция для открытия инфографики в Lightbox
     function openInfoLB(idx) { cW = 'info'; cI = idx; lbImg.src = infoImages[cI]; lb.style.display = 'flex'; }
     
     function changeLBImg(dir, e) { 
@@ -483,7 +480,6 @@
     lb.addEventListener('touchend', e => {
         let dX = lSX - e.changedTouches[0].clientX, dY = lSY - e.changedTouches[0].clientY;
         if (Math.abs(dX) > Math.abs(dY)) { if (Math.abs(dX) > 50) changeLBImg(dX > 0 ? 1 : -1); }
-        // Свайп вверх/вниз для переключения проектов (отключено для инфографики, чтобы не сбить логику)
         else if (Math.abs(dY) > 60 && cW !== 'info') { cW = (cW + (dY > 0 ? 1 : -1) + myWorks.length) % myWorks.length; cI = 0; lbImg.src = myWorks[cW].images[cI]; }
     }, {passive: true});
 
@@ -491,7 +487,6 @@
     function copyToClipboard(t) { navigator.clipboard.writeText(t); alert('Copied: ' + t); }
     window.onscroll = () => { document.getElementById("progress-bar").style.width = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100 + "%"; };
     
-    // Инициализация
     initDemo();
     initInfo();
     discoverWorks(); 
