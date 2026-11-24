@@ -1,6 +1,16 @@
-.studio-section { width:92%; max-width:1000px; margin:clamp(48px,8vw,100px) auto; scroll-margin-top:80px; }
+.studio-section {
+    box-sizing: border-box;
+    width: 92%;
+    max-width: 1000px;
+    margin: clamp(48px,8vw,100px) auto;
+    padding: clamp(16px,3.5vw,40px);
+    scroll-margin-top: 80px;
+    border: 1px solid white;
+    border-radius: clamp(18px,3vw,30px);
+}
+[data-theme="light"] .studio-section { box-shadow: 0 1px 7px rgb(0 0 0 / 15%); }
 .studio-section h2 { margin:0 0 24px; font-size:clamp(38px,6vw,76px); line-height:.99; letter-spacing:-.055em; text-align:left; }
-.studio-header { display:grid; grid-template-columns:1fr 1.1fr; align-items:start; gap:6%; margin-bottom:32px; padding-top:28px; text-align:left; }
+.studio-header { display:grid; grid-template-columns:1fr 1.1fr; align-items:start; gap:6%; margin-bottom:32px; text-align:left; }
 .studio-role { font-size:.85rem; letter-spacing:.02em; }
 .studio-copy { font-size:1rem; line-height:1.62; }
 .studio-copy p { margin:0 0 12px; }
