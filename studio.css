@@ -1,0 +1,14 @@
+.studio-panel {text-align:center;padding:clamp(22px,5vw,60px) 0 28px;margin-top:28px!important;max-width:none}
+.card.studio-panel:hover {transform:none}
+.studio-panel h3 {font-size:clamp(32px,7vw,82px);line-height:1;letter-spacing:-.055em;margin:0 0 16px}
+.studio-panel .studio-copy {max-width:56ch;margin:0 auto 18px;padding:0 20px;font-size:1rem;line-height:1.55;text-transform:none;letter-spacing:normal;opacity:.85}
+.studio-drum {position:relative;height:clamp(210px,36vw,370px);overflow:hidden;perspective:950px;touch-action:pan-y;margin-top:18px}
+.studio-card {position:absolute;top:5%;left:19%;width:62%;height:90%;border:1px solid var(--line);padding:0;border-radius:14px;background:var(--bg);color:var(--text);overflow:hidden;cursor:pointer;transition:transform .4s,filter .4s,opacity .4s}
+.studio-card img {width:100%;height:100%;object-fit:contain}
+.studio-caption {display:block;font-weight:700;margin-top:10px}
+.arc {display:block;width:min(70%,440px);height:44px;margin:0 auto;cursor:grab;touch-action:none;color:var(--text)}
+.arc:active {cursor:grabbing}
+.cubic-works {padding:0 4% 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(125px,40%),1fr));gap:8px}
+.cubic-works button {aspect-ratio:4/3;background:var(--bg);padding:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:zoom-in}
+.cubic-works img {width:100%;height:100%;object-fit:cover}
+@media(prefers-reduced-motion:reduce){.studio-card{transition:none}}
