@@ -1,4 +1,10 @@
 .studio-section {
+    --bg: #fff;
+    --text: #1a1a1a;
+    --gray-light: #f7f7f7;
+    --line: #dedede;
+    background-color: var(--bg);
+    color: var(--text);
     box-sizing: border-box;
     width: 92%;
     max-width: 1000px;
