@@ -15,8 +15,8 @@ for (const [id, name, count] of [
 ]) {
     const tile = document.createElement('button');
     tile.type = 'button';
-    tile.innerHTML = `<img loading="lazy" decoding="async" src="images/thumbs/p${id}_1.webp" alt="">
-        <span>${name}<span aria-hidden="true">↗</span></span>`;
+    tile.setAttribute('aria-label', name);
+    tile.innerHTML = `<img loading="lazy" decoding="async" src="images/thumbs/p${id}_1.webp" alt="">`;
     tile.onclick = () => openStudio(id, count, 0);
     studioGrid.append(tile);
 }

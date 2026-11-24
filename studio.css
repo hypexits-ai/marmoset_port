@@ -24,8 +24,6 @@
 .studio-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:26px 20px; }
 .studio-grid button { padding:0; border:0; background:transparent; color:inherit; text-align:left; font:inherit; cursor:zoom-in; }
 .studio-grid img { display:block; width:100%; aspect-ratio:3/2; object-fit:contain; }
-.studio-grid button > span { display:flex; justify-content:space-between; align-items:center; padding:10px 2px; font-size:1.15rem; font-weight:650; }
-.studio-grid button span span { font-size:.95rem; opacity:.55; }
 @media(max-width:650px) {
     .studio-header { grid-template-columns:1fr; gap:18px; }
     .studio-grid { gap:16px 12px; }
