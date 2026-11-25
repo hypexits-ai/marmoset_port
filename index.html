@@ -89,14 +89,13 @@
         .slide img { width: 100%; height: 100%; object-fit: contain; background: var(--bg); pointer-events: none; cursor: pointer; }
 
         .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: var(--accent); color: var(--bg); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 100; display: none; font-weight: bold; }
-        @media (min-width: 768px) { .slider-viewport:hover .nav-arrow, .demo-viewport:hover .nav-arrow, #lightbox:hover .nav-arrow { display: flex; align-items: center; justify-content: center; } }
+        @media (min-width: 768px) { .slider-viewport:hover .nav-arrow, .demo-viewport:hover .nav-arrow { display: flex; align-items: center; justify-content: center; } }
         
         .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 20; pointer-events: none; }
         .dot { width: 6px; height: 6px; background: rgba(128,128,128,0.4); border-radius: 50%; transition: 0.3s; }
         .dot.active { background: var(--accent); width: 15px; border-radius: 4px; }
 
-        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.96); display: none; z-index: 2000; align-items: center; justify-content: center; touch-action: none; }
-        #lightbox img { max-width: 92%; max-height: 85%; object-fit: contain; border-radius: 15px; pointer-events: none; }
+
 
         footer { padding: 50px 20px; text-align: center; opacity: 0.4; font-size: 11px; letter-spacing: 1px; }
     </style>
@@ -105,11 +104,11 @@
 
 <canvas id="gradient-canvas"></canvas>
 <div id="progress-bar"></div>
-<div id="lightbox" onclick="closeLB(event)">
-    <button class="nav-arrow" style="left:20px" onclick="changeLBImg(-1, event)">❮</button>
-    <button class="nav-arrow" style="right:20px" onclick="changeLBImg(1, event)">❯</button>
-    <img id="lb-img" src="">
-</div>
+<dialog id="lightbox" onclick="closeLB(event)" aria-label="Gallery">
+    <button class="lb-close" onclick="lb.close()" aria-label="Close / Закрыть">×</button>
+    <img id="lb-img" alt="">
+    <div id="lb-dots"></div>
+</dialog>
 
 <!-- Обновляем до v1.7.13 -->
 <div class="site-version">v1.7.13</div>
@@ -151,6 +150,7 @@
             <a href="https://maverickframe.com/" target="_blank" rel="noopener">maverickframe.com ↗</a>
         </div>
     </header>
+    <h3 data-tr="studio_selection">Selected studio projects</h3>
     <div class="studio-grid"></div>
 </section>
 
@@ -262,8 +262,8 @@
             skills:["3D Моделирование", "Фотореалистичная Визуализация", "Оптимизация для Игр/VR/AR", "3D Анимация", "Различные Стили", "Софт: Blender, Substance, UE5, Unity"],
             help:["Маркетинг продуктов", "3D ассеты для игр", "Архитектурная визуализация", "Анимация"],
             demo_title: "Интерактивное демо", demo_day: "ДЕНЬ", demo_night: "НОЧЬ",
-            studio_role: "3D-художник · Сейчас в студии", studio_copy: "Maverick Frame Studio — лондонская CGI-студия, основанная в 2016 году. Команда создаёт предметные рендеры и анимацию для запуска продуктов. Один и тот же объект можно показать в разных материалах, разобрать на детали или поместить в интерьер ещё до первой фотосъёмки.", studio_detail: "В архитектурных проектах студия превращает чертежи в изображения будущих зданий, панорамы и виртуальные туры. Среди других направлений — визуализация яхт, автомобилей и самолётов, а также CGI для рекламных кампаний.", studio_works: "Мои работы для Cubik.One", b2b_title: "Работа с крупным бизнесом", 
-            b2b_desc: "Полгода совместно с cubik.one работал над наполнением их сайта.", 
+            studio_role: "Работаю в студии 3D-художником и визуализатором. Отвечаю за моделирование и финальные рендеры.", studio_copy: "Maverick Frame Studio — лондонская CGI-студия, основанная в 2016 году. Команда создаёт предметные рендеры и анимацию для запуска продуктов. Один и тот же объект можно показать в разных материалах, разобрать на детали или поместить в интерьер ещё до первой фотосъёмки.", studio_detail: "В архитектурных проектах студия превращает чертежи в изображения будущих зданий, панорамы и виртуальные туры. Среди других направлений — визуализация яхт, автомобилей и самолётов, а также CGI для рекламных кампаний.", studio_selection: "Избранные проекты для студии", studio_works: "Примеры работ для Cubik.One", b2b_title: "Работа с крупным бизнесом", 
+            b2b_desc: "В течение полугода я создавал 3D-контент для всего сайта Cubik.One. Ниже — несколько работ из этого проекта.", 
             b2b_link: "ПЕРЕЙТИ НА CUBIK.ONE",
             b2b_vpn: "*для доступа из России нужен VPN",
             info_sec_title: "Инфографика", info_subtitle: "Дизайн для маркетплейсов",
@@ -279,8 +279,8 @@
             skills:["3D Modeling", "Photorealistic Renders", "Game Assets Optimization", "3D Animation", "Styles Adaptation", "Software: Blender, UE5"],
             help:["Product Marketing", "Game Assets", "Architecture", "Animation"],
             demo_title: "Interactive Demo", demo_day: "DAY", demo_night: "NIGHT",
-            studio_role: "3D Artist · Current position", studio_copy: "Founded in London in 2016, Maverick Frame Studio creates CGI for product launches. Its stills and animations show how an object is made, how its finishes catch the light and how it sits in a room, even before the first photo shoot.", studio_detail: "For architects and developers, the studio turns drawings into exterior views, panoramas and virtual tours of unbuilt spaces. Its wider practice spans yachts, cars and aircraft, alongside CGI for advertising campaigns.", studio_works: "My work for Cubik.One", b2b_title: "Enterprise Projects", 
-            b2b_desc: "Spent half a year collaborating with cubik.one, filling their website with 3D content.", 
+            studio_role: "I work at the studio as a 3D artist and visualiser, responsible for modelling and final renders.", studio_copy: "Founded in London in 2016, Maverick Frame Studio creates CGI for product launches. Its stills and animations show how an object is made, how its finishes catch the light and how it sits in a room, even before the first photo shoot.", studio_detail: "For architects and developers, the studio turns drawings into exterior views, panoramas and virtual tours of unbuilt spaces. Its wider practice spans yachts, cars and aircraft, alongside CGI for advertising campaigns.", studio_selection: "Selected studio projects", studio_works: "Selected work for Cubik.One", b2b_title: "Enterprise Projects", 
+            b2b_desc: "Over six months I created 3D content for the entire Cubik.One website. This selection shows a few pieces from that collaboration.", 
             b2b_link: "VISIT CUBIK.ONE",
             b2b_vpn: "*VPN is required for access from Russia",
             info_sec_title: "Infographics", info_subtitle: "Marketplace Design",
@@ -483,7 +483,30 @@
     const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
 
     /* Сразу показываем уже загруженную миниатюру, затем подменяем её оригиналом, когда он догрузится */
+    function galleryImages() {
+        return cW === 'studio' ? studioImages : cW === 'info' ? infoImages : myWorks[cW].images;
+    }
+
+    function updateGalleryDots() {
+        const dots = document.getElementById('lb-dots');
+        const images = galleryImages();
+        if (dots.childElementCount !== images.length) {
+            dots.replaceChildren();
+            images.forEach((_, index) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.onclick = () => { cI = index; showLB(galleryImages()[index]); };
+                dots.append(dot);
+            });
+        }
+        Array.from(dots.children).forEach((dot, index) => {
+            dot.setAttribute('aria-label', (currentLang === 'ru' ? 'Кадр ' : 'Image ') + (index + 1) + ' / ' + images.length);
+            dot.setAttribute('aria-current', String(index === cI));
+        });
+    }
+
     function showLB(full) {
+        updateGalleryDots();
         lbFull = full;
         lbImg.src = thumbOf(full);
         const big = new Image();
@@ -491,17 +514,17 @@
         big.src = full;
     }
 
-    function openLB(wIdx, iIdx) { cW = wIdx; cI = iIdx; showLB(myWorks[cW].images[cI]); lb.style.display = 'flex'; }
-    function openInfoLB(idx) { cW = 'info'; cI = idx; showLB(infoImages[cI]); lb.style.display = 'flex'; }
+    function openLB(wIdx, iIdx) { cW = wIdx; cI = iIdx; showLB(myWorks[cW].images[cI]); lb.showModal(); }
+    function openInfoLB(idx) { cW = 'info'; cI = idx; showLB(infoImages[cI]); lb.showModal(); }
 
     function changeLBImg(dir, e) {
         if(e) e.stopPropagation();
-        const imgs = cW === 'studio' ? studioImages : cW === 'info' ? infoImages : myWorks[cW].images;
+        const imgs = galleryImages();
         cI = (cI + dir + imgs.length) % imgs.length;
         showLB(imgs[cI]);
     }
     
-    function closeLB(e) { if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.style.display = 'none'; }
+    function closeLB(e) { if (e.target.id === 'lightbox' || e.target.id === 'lb-img') lb.close(); }
 
     let lSX = 0, lSY = 0;
     lb.addEventListener('touchstart', e => { lSX = e.touches[0].clientX; lSY = e.touches[0].clientY; }, {passive: true});
