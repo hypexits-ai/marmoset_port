@@ -4,7 +4,7 @@ function openStudio(id, count, index) {
     cW = 'studio';
     cI = index;
     showLB(studioImages[index]);
-    lb.style.display = 'flex';
+    lb.showModal();
 }
 const studioGrid = document.querySelector('.studio-grid');
 for (const [id, name, count] of [
@@ -27,8 +27,8 @@ for(let i=0;i<11;i++) {
     document.querySelector('.cubic-works').append(button);
 }
 document.addEventListener('keydown',event=>{
-    if(lb.style.display!=='flex') return;
-    if(event.key==='Escape') lb.style.display='none';
+    if(!lb.open) return;
+
     if(event.key==='ArrowRight'||event.key==='ArrowLeft') changeLBImg(event.key==='ArrowRight'?1:-1,event);
 });
 
